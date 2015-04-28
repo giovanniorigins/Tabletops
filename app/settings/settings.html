@@ -1,0 +1,65 @@
+<ion-view view-title="Settings">
+    <ion-content>
+        <ul class="list">
+            <li class="item item-icon-left item-toggle">
+                <i class="icon ion-android-notifications"></i>
+                Notifications
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" local-forage="{key: 'notifications', scopeKey: 'settings.notifications', defaultValue: false}" ng-model="settings.notifications">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+            <li class="item item-icon-left item-toggle">
+                <i class="icon ion-ios-location-outline"></i>
+                Use Location
+                <label class="toggle toggle-assertive">
+                    <input type="checkbox" local-forage="{key: 'geolocation', scopeKey: 'settings.geolocation', defaultValue: false}" ng-model="settings.geolocation">
+                    <div class="track">
+                        <div class="handle"></div>
+                    </div>
+                </label>
+            </li>
+
+            <li class="item item-icon-left" ng-click="rateApp()">
+                <i class="icon ion-heart"></i>
+                Rate Tabletops App
+            </li>
+            <li class="item item-icon-left" ui-sref="tabs.usage">
+                <i class="icon ion-ios-analytics"></i>
+                Share Usage Data
+            </li>
+            <!--<li class="item item-icon-left" ui-sref="about">
+                <i class="icon ion-ios-information-outline"></i>
+                About Tabletops
+            </li>-->
+            <li class="item item-icon-left" ui-sref="tabs.faq">
+                <i class="icon ion-help"></i>
+                FAQs
+            </li>
+            <li class="item item-icon-left" ng-click="feedbackModal()">
+                <i class="icon ion-chatbox"></i>
+                Send Feedback
+            </li>
+            <li class="item item-icon-left" ui-sref="tabs.terms">
+                <i class="icon ion-ios-book"></i>
+                Terms & Conditions
+            </li>
+            <li class="item item-icon-left" ui-sref="tabs.privacy">
+                <i class="icon ion-eye"></i>
+                Privacy Policy
+            </li>
+            <li class="item" ui-sref="intro">
+                Show Tutorial
+            </li>
+            <li class="item">
+                App Version: 1.0.0
+            </li>
+            <li class="item">
+                Copyright &copy; 2015 Tabletops
+            </li>
+
+        </ul>
+    </ion-content>
+</ion-view>
