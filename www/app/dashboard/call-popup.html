@@ -1,0 +1,32 @@
+<ion-popover-view>
+    <ion-content>
+
+        <ion-list>
+            <!--<div class="item item-divider" ng-repeat-start="loc in listing.locations | groupBy: 'province_id'" ng-bind="::loc.province"></div>
+            <div class="item" ng-show="loc.phone_1 || loc.phone_2">
+                <div class="button-bar bar-balanced">
+                    <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}"
+                       class="button icon ion-ios-telephone"> {{::loc.phone_1}}</a>
+                    <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}"
+                       class="button icon ion-ios-telephone"> {{::loc.phone_2}}</a>
+                </div>
+            </div>
+            <span ng-repeat-end></span>-->
+
+            <ion-item ng-repeat="loc in listing.locations">
+                <h4 ng-bind="::loc.name"></h4>
+                <p>
+                    <a ng-show="::loc.phone_1" ng-href="tel:{{::loc.phone_1}}" class="button button-outline button-balanced button-small">
+                        <i class="icon ion-ios-telephone"></i>&nbsp;
+                        {{::loc.phone_1}}
+                    </a>
+                    <a ng-show="::loc.phone_2" ng-href="tel:{{::loc.phone_2}}" class="button button-outline button-balanced button-small">
+                        <i class="icon ion-ios-telephone"></i>&nbsp;
+                        {{::loc.phone_2}}
+                    </a>
+                </p>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-popover-view>
