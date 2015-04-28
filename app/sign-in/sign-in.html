@@ -1,0 +1,75 @@
+<ion-view view-title="Sign-In" hide-nav-bar="true" style="background-image: url('img/bgs/cs21.jpg'); background-position: center center; background-size: cover">
+    <ion-content class="padding">
+        <div class="col col-80 col-offset-10">
+            <div style="padding-top: 60px; padding-bottom: 30px">
+                <img src="img/logo-white_red.png" alt="Tabletops" width="100%"/>
+            </div>
+
+            <div class="padding" ng-init="showForm = false;showAccountForm = false">
+                <button class="button icon-left ion-social-facebook button button-block button-positive" ng-click="signIn(user)" ng-hide="showAccountForm||showForm">
+                    Login with Facebook
+                </button>
+
+                <button class="button icon-left ion-email button button-block button-dark" ng-click="showForm = !showForm" ng-hide="showAccountForm">
+                    <span ng-hide="showForm">Login with Email</span>
+                    <span ng-show="showForm">Go Back</span>
+                </button>
+                <div class="animated fast" ng-show="showForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showForm]">
+                    <form class="list list-inset" name="loginForm">
+                        <label class="item item-input">
+                            <span class="input-label">Email</span>
+                            <input type="text" ng-model="user.email" required>
+                        </label>
+                        <label class="item item-input">
+                            <span class="input-label">Password</span>
+                            <input type="password" ng-model="user.password" required>
+                        </label>
+                    </form>
+                    <button class="button icon-left ion-log-in button button-block button-balanced" ng-disabled="!loginForm.$valid" ng-click="login()">
+                        Sign in
+                    </button>
+                </div>
+
+                <button class="button icon-left ion-log-in button button-block button-light" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
+                    <span ng-hide="showAccountForm">Create an Account</span>
+                    <span ng-show="showAccountForm">Go Back</span>
+                </button>
+
+                <div class="animated fast" ng-show="showAccountForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showAccountForm]">
+                    <form class="list list-inset" name="accountForm">
+                        <label class="item item-input">
+                            <span class="input-label">First Name</span>
+                            <input type="text" ng-model="user.first" required>
+                        </label>
+                        <label class="item item-input">
+                            <span class="input-label">Last Name</span>
+                            <input type="text" ng-model="user.last" required>
+                        </label>
+                        <label class="item item-input">
+                            <span class="input-label">Username</span>
+                            <input type="text" ng-model="user.username" required>
+                        </label>
+                        <label class="item item-input">
+                            <span class="input-label">Password</span>
+                            <input type="password" ng-model="user.password" required>
+                        </label>
+                    </form>
+                    <button class="button icon-left ion-log-in button button-block button-balanced" ng-disabled="!accountForm.$valid" ng-click="submitAccount(user)">
+                        Join Us
+                    </button>
+                </div>
+
+
+                <small>
+                    <a class="light" ui-sref="forgotpassword">Forgot password</a>
+                </small>
+            </div>
+        </div>
+    </ion-content>
+    <div class="bar bar-footer bar-dark item-input-inset">
+        <button class="button button-clear button-block" ui-sref="dashboard">
+            Continue without Login
+            <i class="icon ion-ios-arrow-right"></i>
+        </button>
+    </div>
+</ion-view>

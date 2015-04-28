@@ -1,0 +1,26 @@
+<ion-popover-view>
+    <ion-header-bar>
+        <h1 class="title">{{selectedLoc.name}}</h1>
+    </ion-header-bar>
+    <ion-content class="">
+        <ion-list type="">
+            <div class="item">
+                {{selectedLoc.address_1}} {{selectedLoc.address_2}}<br/>
+                {{selectedLoc.locality}}<br/>
+                {{selectedLoc.province}}
+            </div>
+            <div class="item" ng-show="selectedLoc.phone_1 || selectedLoc.phone_2">
+                <span ng-show="selectedLoc.phone_1"><i class="icon ion-ios-telephone"></i>&nbsp;{{selectedLoc.phone_1}}</span>
+                <br ng-show="selectedLoc.phone_1 && selectedLoc.phone_2"/>
+                <span ng-show="selectedLoc.phone_2"><i class="icon ion-ios-telephone"></i>&nbsp;{{selectedLoc.phone_2}}</span>
+            </div>
+            <ion-item ng-repeat="openHour in selectedLoc.opening_hours" style="padding: 4px 16px;">
+                <b>{{valById(hoursDays, openHour.day).name}}</b><br/>
+                {{valById(startHours, openHour.open).name}} - {{valById(endHours, openHour.close).name}}
+            </ion-item>
+            <div class="item" ng-if="!selectedLoc.opening_hours.length">
+                No Open hours currently available.
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-popover-view>
