@@ -40,7 +40,6 @@ angular.module('tabletops.controllers', [])
             maximumAge: 599000
         };
 
-        alert('MainCtrl Running');
         /*$scope.myLocation = $cordovaGeolocation.watchPosition($scope.geoOptions);*/
 
         var watch = $cordovaGeolocation.watchPosition($scope.geoOptions);
@@ -129,7 +128,6 @@ angular.module('tabletops.controllers', [])
 
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage) {
-        alert('Splash Running');
         AuthenticationService.me();
     })
     .controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {

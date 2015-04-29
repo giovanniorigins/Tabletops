@@ -54,10 +54,12 @@ angular.module('tabletops.config', [])
     })*/
 
 // Only required for development in browser, not cordova!
-    /*.config(['$cordovaFacebook', function ($cordovaFacebook) {
-        var appID = 646933472119700;
-        $cordovaFacebook.browserInit(appID);
-    }])*/
+    .config(['$cordovaFacebook', function ($cordovaFacebook) {
+        document.addEventListener("deviceready", function () {
+            var appID = 646933472119700;
+            $cordovaFacebook.browserInit(appID);
+        }, false);
+    }])
     .constant('HoursDays', [{id: '0', name: 'Sun'}, {id: '1', name: 'Mon'}, {id: '2', name: 'Tue'}, {
         id: '3',
         name: 'Wed'
