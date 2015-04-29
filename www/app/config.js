@@ -9,7 +9,7 @@ angular.module('tabletops.config', [])
     }])
 
     // Tabs Configuration
-    .config(['$ionicConfigProvider', function($ionicConfigProvider) {
+    .config(['$ionicConfigProvider', function ($ionicConfigProvider) {
         //$ionicConfigProvider.tabs.position('bottom'); //other values: top
     }])
 
@@ -20,11 +20,11 @@ angular.module('tabletops.config', [])
         $httpProvider.interceptors.push(function ($rootScope) {
             return {
                 request: function (config) {
-                    if (config.url.indexOf('https://analytics.ionic.io') == -1 )
+                    if (config.url.indexOf('https://analytics.ionic.io') == -1)
                         $rootScope.$broadcast('loading:show');
                     return config
                 },
-                requestError: function(rejection) {
+                requestError: function (rejection) {
                     console.log(rejection);
                     $rootScope.$broadcast('loading:hide');
                 },
@@ -34,7 +34,7 @@ angular.module('tabletops.config', [])
                     $rootScope.$broadcast('loading:hide');
                     return response
                 },
-                responseError: function(rejection) {
+                responseError: function (rejection) {
                     console.log(rejection);
                     $rootScope.$broadcast('loading:hide');
                     return rejection
@@ -59,55 +59,55 @@ angular.module('tabletops.config', [])
     })
 
 // Only required for development in browser, not cordova!
-/*.config(['$cordovaFacebook', function($cordovaFacebook) {
- var appID = 646933472119700;
- $cordovaFacebook.browserInit(appID);
- }])*/
-.constant('HoursDays', [{id: '0', name: 'Sun'}, {id: '1', name: 'Mon'}, {id: '2', name: 'Tue'}, {
+    .config(['$cordovaFacebook', function ($cordovaFacebook) {
+        var appID = 646933472119700;
+        $cordovaFacebook.browserInit(appID);
+    }])
+    .constant('HoursDays', [{id: '0', name: 'Sun'}, {id: '1', name: 'Mon'}, {id: '2', name: 'Tue'}, {
         id: '3',
         name: 'Wed'
     }, {id: '4', name: 'Thu'}, {id: '5', name: 'Fri'}, {id: '6', name: 'Sat'}])
-.constant('StartHours', [{id: "0.0", name: "12:00 AM"}, {id: "0.5", name: "12:30 AM"}, {
-    id: "1.0",
-    name: "1:00 AM"
-}, {id: "1.5", name: "1:30 AM"}, {id: "2.0", name: "2:00 AM"}, {id: "2.5", name: "2:30 AM"}, {
-    id: "3.0",
-    name: "3:00 AM"
-}, {id: "3.5", name: "3:30 AM"}, {id: "4.0", name: "4:00 AM"}, {id: "4.5", name: "4:30 AM"}, {
-    id: "5.0",
-    name: "5:00 AM"
-}, {id: "5.5", name: "5:30 AM"}, {id: "6.0", name: "6:00 AM"}, {id: "6.5", name: "6:30 AM"}, {
-    id: "7.0",
-    name: "7:00 AM"
-}, {id: "7.5", name: "7:30 AM"}, {id: "8.0", name: "8:00 AM"}, {id: "8.5", name: "8:30 AM"}, {
-    id: "9.0",
-    name: "9:00 AM"
-}, {id: "9.5", name: "9:30 AM"}, {id: "10.0", name: "10:00 AM"}, {
-    id: "10.5",
-    name: "10:30 AM"
-}, {id: "11.0", name: "11:00 AM"}, {id: "11.5", name: "11:30 AM"}, {
-    id: "12.0",
-    name: "12:00 PM"
-}, {id: "12.5", name: "12:30 PM"}, {id: "13.0", name: "1:00 PM"}, {
-    id: "13.5",
-    name: "1:30 PM"
-}, {id: "14.0", name: "2:00 PM"}, {id: "14.5", name: "2:30 PM"}, {id: "15.0", name: "3:00 PM"}, {
-    id: "15.5",
-    name: "3:30 PM"
-}, {id: "16.0", name: "4:00 PM"}, {id: "16.5", name: "4:30 PM"}, {id: "17.0", name: "5:00 PM"}, {
-    id: "17.5",
-    name: "5:30 PM"
-}, {id: "18.0", name: "6:00 PM"}, {id: "18.5", name: "6:30 PM"}, {id: "19.0", name: "7:00 PM"}, {
-    id: "19.5",
-    name: "7:30 PM"
-}, {id: "20.0", name: "8:00 PM"}, {id: "20.5", name: "8:30 PM"}, {id: "21.0", name: "9:00 PM"}, {
-    id: "21.5",
-    name: "9:30 PM"
-}, {id: "22.0", name: "10:00 PM"}, {id: "22.5", name: "10:30 PM"}, {
-    id: "23.0",
-    name: "11:00 PM"
-}, {id: "23.5", name: "11:30 PM"}])
-.constant('EndHours', [{id: "0.5", name: "12:30 AM"}, {id: "1.0", name: "1:00 AM"}, {
+    .constant('StartHours', [{id: "0.0", name: "12:00 AM"}, {id: "0.5", name: "12:30 AM"}, {
+        id: "1.0",
+        name: "1:00 AM"
+    }, {id: "1.5", name: "1:30 AM"}, {id: "2.0", name: "2:00 AM"}, {id: "2.5", name: "2:30 AM"}, {
+        id: "3.0",
+        name: "3:00 AM"
+    }, {id: "3.5", name: "3:30 AM"}, {id: "4.0", name: "4:00 AM"}, {id: "4.5", name: "4:30 AM"}, {
+        id: "5.0",
+        name: "5:00 AM"
+    }, {id: "5.5", name: "5:30 AM"}, {id: "6.0", name: "6:00 AM"}, {id: "6.5", name: "6:30 AM"}, {
+        id: "7.0",
+        name: "7:00 AM"
+    }, {id: "7.5", name: "7:30 AM"}, {id: "8.0", name: "8:00 AM"}, {id: "8.5", name: "8:30 AM"}, {
+        id: "9.0",
+        name: "9:00 AM"
+    }, {id: "9.5", name: "9:30 AM"}, {id: "10.0", name: "10:00 AM"}, {
+        id: "10.5",
+        name: "10:30 AM"
+    }, {id: "11.0", name: "11:00 AM"}, {id: "11.5", name: "11:30 AM"}, {
+        id: "12.0",
+        name: "12:00 PM"
+    }, {id: "12.5", name: "12:30 PM"}, {id: "13.0", name: "1:00 PM"}, {
+        id: "13.5",
+        name: "1:30 PM"
+    }, {id: "14.0", name: "2:00 PM"}, {id: "14.5", name: "2:30 PM"}, {id: "15.0", name: "3:00 PM"}, {
+        id: "15.5",
+        name: "3:30 PM"
+    }, {id: "16.0", name: "4:00 PM"}, {id: "16.5", name: "4:30 PM"}, {id: "17.0", name: "5:00 PM"}, {
+        id: "17.5",
+        name: "5:30 PM"
+    }, {id: "18.0", name: "6:00 PM"}, {id: "18.5", name: "6:30 PM"}, {id: "19.0", name: "7:00 PM"}, {
+        id: "19.5",
+        name: "7:30 PM"
+    }, {id: "20.0", name: "8:00 PM"}, {id: "20.5", name: "8:30 PM"}, {id: "21.0", name: "9:00 PM"}, {
+        id: "21.5",
+        name: "9:30 PM"
+    }, {id: "22.0", name: "10:00 PM"}, {id: "22.5", name: "10:30 PM"}, {
+        id: "23.0",
+        name: "11:00 PM"
+    }, {id: "23.5", name: "11:30 PM"}])
+    .constant('EndHours', [{id: "0.5", name: "12:30 AM"}, {id: "1.0", name: "1:00 AM"}, {
         id: "1.5",
         name: "1:30 AM"
     }, {id: "2.0", name: "2:00 AM"}, {id: "2.5", name: "2:30 AM"}, {id: "3.0", name: "3:00 AM"}, {
@@ -160,8 +160,8 @@ angular.module('tabletops.config', [])
         name: "5:30 AM- Next Day"
     }, {id: "30.0", name: "6:00 AM- Next Day"}])
 
-    .filter('groupBy', function(){
-        return function(items,group){
+    .filter('groupBy', function () {
+        return function (items, group) {
             _.groupBy(items, group)
         }
     })
