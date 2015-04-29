@@ -8,6 +8,7 @@
 angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deploy', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
     .run(function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage) {
+        alert('App Running');
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
