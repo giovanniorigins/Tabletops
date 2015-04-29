@@ -40,6 +40,7 @@ angular.module('tabletops.controllers', [])
             maximumAge: 599000
         };
 
+        alert('MainCtrl Running');
         /*$scope.myLocation = $cordovaGeolocation.watchPosition($scope.geoOptions);*/
 
         var watch = $cordovaGeolocation.watchPosition($scope.geoOptions);
@@ -128,6 +129,7 @@ angular.module('tabletops.controllers', [])
 
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage) {
+        alert('Splash Running');
         AuthenticationService.me();
     })
     .controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
@@ -196,7 +198,7 @@ angular.module('tabletops.controllers', [])
             AuthenticationService.logout();
         });
     })
-    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, AuthenticationService) {
+    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval) {
         $scope.getNearby = function () {
             $scope.qData = {app_search: true, range: 5, limit: 5};
             if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
