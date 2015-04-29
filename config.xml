@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.tabletops837246" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.gorigins.tabletops" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Tabletops</name>
   <description>
         An Ionic Framework and Cordova project.
     </description>
-  <author email="jerezb31@gma.com" href="http://gorigins.com/">
+  <author email="jerezb31@gmail.com" href="http://gorigins.com/">
       Jerez Bain
     </author>
   <content src="index.html"/>
@@ -13,12 +13,12 @@
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="BackupWebStorage" value="none"/>
-    <preference name="BackupWebStorage" value="none" />
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="3000"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
+    <icon src="icon.png" />
   <platform name="android">
     <icon src="resources\android\icon\drawable-ldpi-icon.png" density="ldpi"/>
     <icon src="resources\android\icon\drawable-mdpi-icon.png" density="mdpi"/>
@@ -67,5 +67,18 @@
     <splash src="resources\ios\splash\Default@2x~iphone.png" width="640" height="960"/>
     <splash src="resources\ios\splash\Default~iphone.png" width="320" height="480"/>
   </platform>
-  <icon src="resources\android\icon\drawable-xhdpi-icon.png"/>
+  <!--<icon src="resources\android\icon\drawable-xhdpi-icon.png"/>-->
+    <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.11.0">
+        <param name="APP_ID" value="646933472119700" />
+        <param name="APP_NAME" value="Tabletops" />
+    </gap:plugin>
+    <gap:plugin name="com.ohh2ahh.plugins.appavailability" />
+    <gap:plugin name="org.pushandplay.cordova.apprate" />
+    <gap:plugin name="nl.x-services.plugins.socialsharing" source="plugins.cordova.io" />
+    <feature name="PushPlugin">
+        <param name="ios-package" value="PushPlugin" />
+    </feature>
+    <gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1" />
+    <gap:plugin name="nl.x-services.plugins.toast" />
+
 </widget>
