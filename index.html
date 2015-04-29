@@ -52,7 +52,7 @@
     <script src="www/js/services.js"></script>
 </head>
 <body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak>
-
+<ion-side-menus>
     <ion-nav-bar class="bar-assertive">
     <ion-nav-buttons side="primary">
         <!--<button class="button button-icon ion-navicon" ng-click="toggleLeft()"
@@ -62,19 +62,18 @@
             <i class="ion-chevron-left"></i> Back
         </ion-nav-back-button>
         <ion-nav-buttons side="secondary">
-            <button class="button button-icon ion-compass" ng-click="selectProvinces()"
-                    ng-hide="$exposeAside.active"></button>
+            <!--<button class="button button-icon ion-compass" ng-click="selectProvinces()"
+                    ng-hide="$exposeAside.active"></button>-->
         </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-nav-view></ion-nav-view>
 
-    <ion-side-menus>
-    <!--<ion-side-menu-content drag-content="false">
+    <ion-side-menu-content drag-content="true">
+        <ion-nav-view></ion-nav-view>
     </ion-side-menu-content>
 
     <ion-side-menu side="left">
         <ion-content scroll="false">
-            &lt;!&ndash;<div ng-if="user.id">
+            <!--<div ng-if="user.id">
                 &lt;!&ndash; SIDEBAR USERPIC &ndash;&gt;
                 <div class="profile-userpic">
                     <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="" width="100px">
@@ -89,16 +88,16 @@
                         Developer
                     </div>&ndash;&gt;
                 </div>
-            </div>&ndash;&gt;
+            </div>-->
 
-            &lt;!&ndash; END SIDEBAR USER TITLE &ndash;&gt;
-            &lt;!&ndash; SIDEBAR BUTTONS &ndash;&gt;
+            <!-- END SIDEBAR USER TITLE -->
+            <!-- SIDEBAR BUTTONS -->
             <div class="profile-userbuttons" ng-if="!user.id">
                 <a menu-close type="button" class="button button-block icon ion-log-in button-clear" ui-sref="signin" ui-sref-active="active">
                     Sign in
                 </a>
             </div>
-            &lt;!&ndash; END SIDEBAR BUTTONS &ndash;&gt;
+            <!-- END SIDEBAR BUTTONS -->
             <div class="list">
                 <a ng-if="user.id" class="item item-avatar" href="#">
                     <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="">
@@ -185,13 +184,13 @@
                     Services
                 </div>
 
-                &lt;!&ndash;<li class="item item-icon-right item-checkbox" ng-repeat="toggle in filters.toggles">
+                <!--<li class="item item-icon-right item-checkbox" ng-repeat="toggle in filters.toggles">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="filters.selected" ng-true-value="'{{::toggle.slug}}'" name="{{::toggle.slug}}">
                     </label>
                     {{::toggle.name}}
                     <i ng-class="::toggle.icon"></i>
-                </li>&ndash;&gt;
+                </li>-->
 
                 <ion-checkbox class="item-icon-right item-checkbox" ng-model="toggle.selected"
                               ng-repeat="toggle in filters.toggles">
@@ -207,7 +206,7 @@
                 </ion-item>
             </ion-list>
         </ion-content>
-    </ion-side-menu>-->
+    </ion-side-menu>
 </ion-side-menus>
 </body>
 </html>
