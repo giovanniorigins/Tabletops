@@ -92,7 +92,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/dashboard",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/dashboard/dashboard.html",
+                        templateUrl: "www/app/dashboard/dashboard.html",
                         controller: 'DashboardCtrl'
                     }
                 }
@@ -101,7 +101,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/dashboard/search?search",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/restaurants/index.html",
+                        templateUrl: "www/app/restaurants/index.html",
                         controller: 'RestaurantsCtrl'
                     }
                 }
@@ -110,7 +110,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/dashboard/medleys/:slug",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/restaurants/index.html",
+                        templateUrl: "www/app/restaurants/index.html",
                         controller: 'RestaurantsCtrl'
                     }
                 }
@@ -119,7 +119,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/dashboard/cuisines?search",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/dashboard/cuisines.html",
+                        templateUrl: "www/app/dashboard/cuisines.html",
                         controller: 'CuisinesCtrl'
                     }
                 }
@@ -128,7 +128,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/dashboard/cuisines/:id?search",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/dashboard/cuisine.html",
+                        templateUrl: "www/app/dashboard/cuisine.html",
                         controller: 'CuisineCtrl'
                     }
                 }
@@ -137,7 +137,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: '/dashboard/cuisines/:cuisine_id/restaurants/:id',
                 views: {
                     'dashboard-tab': {
-                        templateUrl: 'app/common/restaurant.html',
+                        templateUrl: 'www/app/common/restaurant.html',
                         controller: 'RestaurantCtrl',
                         resolve: {
                             listing: function (Listing, $stateParams, $http) {
@@ -151,7 +151,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: '/dashboard/restaurants/:id',
                 views: {
                     'dashboard-tab': {
-                        templateUrl: 'app/common/restaurant.html',
+                        templateUrl: 'www/app/common/restaurant.html',
                         controller: 'RestaurantCtrl',
                         resolve: {
                             listing: function (Listing, $stateParams, $http) {
@@ -165,7 +165,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/favorites",
                 views: {
                     'favorites-tab': {
-                        templateUrl: "app/favorites/favorites.html",
+                        templateUrl: "www/app/favorites/favorites.html",
                         controller: 'FavoritesCtrl'
                     }
                 }
@@ -174,7 +174,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: '/favorites/:id',
                 views: {
                     'favorites-tab': {
-                        templateUrl: 'app/common/restaurant.html',
+                        templateUrl: 'www/app/common/restaurant.html',
                         controller: 'RestaurantCtrl',
                         resolve: {
                             listing: function (Listing, $stateParams, $http) {
@@ -188,7 +188,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/map",
                 views: {
                     'map-tab': {
-                        templateUrl: "app/map/map.html",
+                        templateUrl: "www/app/map/map.html",
                         controller: 'MapCtrl'
                     }
                 }
@@ -197,7 +197,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/restaurants",
                 views: {
                     'restaurants-tab': {
-                        templateUrl: "app/restaurants/index.html",
+                        templateUrl: "www/app/restaurants/index.html",
                         controller: 'RestaurantsCtrl'
                     }
                 }
@@ -206,7 +206,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: '/restaurants/:id',
                 views: {
                     'restaurants-tab': {
-                        templateUrl: 'app/restaurants/restaurant.html',
+                        templateUrl: 'www/app/restaurants/restaurant.html',
                         controller: 'RestaurantCtrl',
                         resolve: {
                             listing: function (Listing, $stateParams, $http) {
@@ -220,7 +220,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url: "/settings",
                 views: {
                     'settings-tab': {
-                        templateUrl: "app/settings/settings.html",
+                        templateUrl: "www/app/settings/settings.html",
                         controller: 'SettingsCtrl'
                     }
                 }
@@ -229,7 +229,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url:'/settings/usage',
                 views: {
                     'settings-tab': {
-                        templateUrl: 'app/settings/usage.html',
+                        templateUrl: 'www/app/settings/usage.html',
                         controller: 'SettingsCtrl',
                     }
                 }
@@ -238,7 +238,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url:'/settings/faq',
                 views: {
                     'settings-tab': {
-                        templateUrl: 'app/settings/faq.html',
+                        templateUrl: 'www/app/settings/faq.html',
                         controller: 'SettingsCtrl',
                     }
                 }
@@ -247,7 +247,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url:'/settings/terms',
                 views: {
                     'settings-tab': {
-                        templateUrl: 'app/settings/terms.html',
+                        templateUrl: 'www/app/settings/terms.html',
                         controller: 'SettingsCtrl',
                     }
                 }
@@ -256,7 +256,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
                 url:'/settings/privacy',
                 views: {
                     'settings-tab': {
-                        templateUrl: 'app/settings/privacy.html',
+                        templateUrl: 'www/app/settings/privacy.html',
                         controller: 'SettingsCtrl',
                     }
                 }
@@ -265,27 +265,27 @@ angular.module('tabletops', ['ionic', 'ionic.service.core', 'ionic.service.deplo
             // Sign In
             .state('splash', {
                 url: '/splash',
-                templateUrl: 'app/splash/splash.html',
+                templateUrl: 'www/app/splash/splash.html',
                 controller: 'SplashCtrl',
             })
             .state('intro', {
                 url: '/intro',
-                templateUrl: 'app/splash/intro.html',
+                templateUrl: 'www/app/splash/intro.html',
                 controller: 'IntroCtrl',
             })
             .state('signin', {
                 url: '/sign-in',
-                templateUrl: 'app/sign-in/sign-in.html',
+                templateUrl: 'www/app/sign-in/sign-in.html',
                 controller: 'SignInCtrl',
             })
             .state('getStarted', {
                 url: '/get-started',
-                templateUrl: 'app/sign-in/sign-in.html',
+                templateUrl: 'www/app/sign-in/sign-in.html',
                 controller: 'SignInCtrl'
             })
             .state('forgotpassword', {
                 url: '/forgot-password',
-                templateUrl: 'app/sign-in/forgot-password.html'
+                templateUrl: 'www/app/sign-in/forgot-password.html'
             })
 
         // if none of the above states are matched, use this as the fallback
