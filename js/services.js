@@ -104,7 +104,7 @@ angular.module('tabletops.services', [])
             FbCheckLogin: function () {
                 $cordovaFacebook.getLoginStatus()
                     .then(function (success) {
-                        alert(success.status);
+                        //alert(success.status);
                         if (success.status === 'connected') {
                             // the user is logged in and has authenticated your
                             // app, and response.authResponse supplies
@@ -131,6 +131,7 @@ angular.module('tabletops.services', [])
             },
             FbLogin: function () {
                 $cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
+                    alert('Logging in');
                     .then(function(response) {
                         // success
                         if (response.status === 'connected') {
@@ -156,25 +157,26 @@ angular.module('tabletops.services', [])
                 $cordovaFacebook.api("me", ["public_profile, email"])
                     .then(function(success) {
                         // success
-                        console.log('API Me Data');
-                        console.log(success);
+                        //console.log('API Me Data');
+                        //console.log(success);
 
                         var user = {
-                            id: success.userID,
-                            fname: success.firstName,
-                            lname: success.lastName,
-                            full_name: success.firstName+' '+success.lastName,
-                            avatar: success.photoURL,
+                            id: success.id,
+                            fname: success.first_name,
+                            lname: success.last_name,
+                            full_name: success.name,
+                            //avatar: success.photoURL,
                             email: email,
                             profiles: success
                         };
 
-                        $localForage.setItem('user', user).then(function (data) {
-                            $rootScope.user = data;
+                        $localForage.setItem('user', user).then(function () {
+                            console.log(user);
+                            $rootScope.user = user;
                             $rootScope.isLoggedin = true;
                             $state.go('tabs.dashboard');
                             $rootScope.$broadcast('event:auth-loginConfirmed');
-                        })
+                        });
                     }, function (error) {
                         // error
                         alert('Facebook API Error');
