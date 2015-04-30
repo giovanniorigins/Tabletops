@@ -115,6 +115,7 @@ angular.module('tabletops.services', [])
                                 accessToken = success.authResponse.accessToken;
                             $localForage.setItem('useFacebook', true).then(function () {
                                 $localForage.setItem('authorizationToken', accessToken).then(function (data) {
+                                    return $rootScope.$broadcast('event:auth-loginConfirmed');
                                     return service.FbMe();
                                 });
                             });
