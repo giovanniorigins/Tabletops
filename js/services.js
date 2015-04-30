@@ -66,71 +66,53 @@ angular.module('tabletops.services', [])
             },
             me: function () {
                 $localForage.getItem('authorizationToken').then(function (token) {
-                    if (token) {
-                        $http.post(ApiEndpoint.api + '/me', {}, {
-                            ignoreAuthModule: true,
-                            headers: {
-                                Authorization: 'Bearer ' + token
-                            }
-                        })
-                            .success(function (data) {
-                                if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
-                                    $rootScope.user = data.user;
-                                    $localForage.setItem('user', data.user).then(function () {
-                                        $localForage.getItem('pastInitialStart').then(function (res) {
-                                            if (!!res)
-                                                $state.go('dashboard', null, { location: "replace" });
-                                            else
-                                                $state.go('intro', null, { location: "replace" });
-                                        });
-                                        console.log(data);
-                                    });
-                                } else {
-                                    $state.go('signin');
+
+                    $localForage.getItem('useFacebook').then(function (facebook) {
+                        if (facebook) {
+                            return service.FbMe();
+                        } else if (token) {
+                            $http.post(ApiEndpoint.api + '/me', {}, {
+                                ignoreAuthModule: true,
+                                headers: {
+                                    Authorization: 'Bearer ' + token
                                 }
                             })
-                            .finally(function (data) {
+                                .success(function (data) {
+                                    if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
+                                        $rootScope.user = data.user;
+                                        $localForage.setItem('user', data.user).then(function () {
+                                            $localForage.getItem('pastInitialStart').then(function (res) {
+                                                if (!!res)
+                                                    return $state.go('dashboard', null, { location: "replace" });
+                                                else
+                                                     return $state.go('intro', null, { location: "replace" });
+                                            });
+                                            console.log(data);
+                                        });
+                                    } else {
+                                        return $state.go('signin');
+                                    }
+                                })
+                                .finally(function (data) {
 
-                            });
-                    } else {
-                        $state.go('signin');
-                    }
+                                });
+                        } else {
+                            return $state.go('signin');
+                        }
+                    });
 
                 });
 
             },
-            FBlogin: function () {
+            FbLogin: function () {
                 $cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
                     .then(function(response) {
                         // success
                         if (response.status === 'connected') {
                             console.log('Facebook login succeeded');
                             var user = {
-                                id: response.authResponse.userID
+
                             };
-
-                            $cordovaFacebook.api("me", ["public_profile"])
-                                .then(function(success) {
-                                    // success
-                                    console.log('API Data');
-                                    console.log(success);
-                                    angular.extend(user, {
-                                        fname: success.firstName,
-                                        lname: success.lastName,
-                                        full_name: success.firstName+' '+success.lastName,
-                                        avatar: success.photoURL,
-                                        email: email
-                                    });
-
-                                    $localForage.setItem('user', user).then(function (data) {
-                                        $rootScope.user = data;
-                                        $state.go('dashboard', null, { location: "replace" });
-                                    })
-                                }, function (error) {
-                                    // error
-                                    alert('Facebook API');
-                                    alert(error);
-                                });
                         } else {
                             alert('Facebook login failed');
                             alert(error);
@@ -140,6 +122,31 @@ angular.module('tabletops.services', [])
                         console.log('Error');
                         console.log(error);
 
+                    });
+            },
+            FbMe: function () {
+                $cordovaFacebook.api("me", ["public_profile", "email"])
+                    .then(function(success) {
+                        // success
+                        console.log('API Data');
+                        console.log(success);
+                        angular.extend(user, {
+                            id: success.userID,
+                            fname: success.firstName,
+                            lname: success.lastName,
+                            full_name: success.firstName+' '+success.lastName,
+                            avatar: success.photoURL,
+                            email: email
+                        });
+
+                        $localForage.setItem('user', user).then(function (data) {
+                            $rootScope.user = data;
+                            $state.go('dashboard', null, { location: "replace" });
+                        })
+                    }, function (error) {
+                        // error
+                        alert('Facebook API');
+                        alert(error);
                     });
             }
         };

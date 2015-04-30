@@ -164,17 +164,18 @@ angular.module('tabletops.controllers', [])
                     // and signed request each expire
                     var uid = success.authResponse.userID,
                         accessToken = success.authResponse.accessToken;
-                    $localForage.setItem('authorizationToken', accessToken).then(function (data) {
-                        AuthenticationService.me();
+                    $localForage.setItem('useFacebook', true).then(function () {
+                        $localForage.setItem('authorizationToken', accessToken).then(function (data) {
+                            return AuthenticationService.me();
+                        });
                     });
                 } /*else if (success.status === 'not_authorized') {
                  // the user is logged in to Facebook,
                  // but has not authenticated your app
                  }*/ else {
                     // the user isn't logged in to Facebook.
-                    AuthenticationService.me();
-                 }
-
+                    return AuthenticationService.me();
+                }
             }, function (error) {
                 // error
             });
@@ -217,7 +218,7 @@ angular.module('tabletops.controllers', [])
         };
 
         $scope.signInFacebook = function () {
-            AuthenticationService.FBlogin();
+            AuthenticationService.FbLogin();
         };
 
         $scope.$on('event:auth-loginRequired', function(e, rejection) {
