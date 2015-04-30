@@ -23,7 +23,7 @@ var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository) {
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state, $localForage, Province, ListingRepository) {
         $scope.navTitle = '<img class="title-image" src="img/logo2.png" style="margin-top: 8px" />';
 
         $scope.settings = {
@@ -152,6 +152,11 @@ angular.module('tabletops.controllers', [])
             ListingRepository.initCaller(obj);
         };
 
+        $scope.$on('event:auth-loginConfirmed', function() {
+            $rootScope.isLoggedin = true;
+            $state.go('tabs.dashboard');
+        });
+
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform, $cordovaFacebook) {
         $ionicPlatform.ready(function() {
@@ -202,13 +207,6 @@ angular.module('tabletops.controllers', [])
         $scope.$on('event:auth-loginRequired', function(e, rejection) {
             console.log('handling login required');
             $state.go('signin');
-        });
-
-        $scope.$on('event:auth-loginConfirmed', function() {
-            $scope.username = null;
-            $scope.password = null;
-            $rootScope.isLoggedin = true;
-            $state.go('tabs.dashboard');
         });
 
         $scope.$on('event:auth-login-failed', function(e, status) {

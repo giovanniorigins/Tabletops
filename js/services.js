@@ -160,7 +160,7 @@ angular.module('tabletops.services', [])
                         //console.log('API Me Data');
                         //console.log(success);
 
-                        var user = {
+                        $rootScope.user = {
                             id: success.id,
                             fname: success.first_name,
                             lname: success.last_name,
@@ -169,14 +169,13 @@ angular.module('tabletops.services', [])
                             email: email,
                             profiles: success
                         };
+                        console.log(user);
+                        $rootScope.isLoggedin = true;
 
                         $localForage.setItem('user', user).then(function () {
-                            console.log(user);
-                            $rootScope.user = user;
-                            $rootScope.isLoggedin = true;
-                            $state.go('tabs.dashboard');
                             $rootScope.$broadcast('event:auth-loginConfirmed');
                         });
+                        $state.go('tabs.dashboard');
                     }, function (error) {
                         // error
                         alert('Facebook API Error');
