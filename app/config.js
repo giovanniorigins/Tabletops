@@ -38,8 +38,8 @@ angular.module('tabletops.config', [])
         })
     })
 
-    /*.config(function ($cordovaAppRateProvider) {
-        document.addEventListener("deviceready", function () {
+    /*.config(function ($ionicPlatform, $cordovaAppRateProvider) {
+        $ionicPlatform.ready(function() {
             var prefs = {
                 language: 'en',
                 appName: 'Tabletops',
@@ -50,15 +50,15 @@ angular.module('tabletops.config', [])
                 windowsURL: 'ms-windows-store:Review?name=<...>'
             };
             $cordovaAppRateProvider.setPreferences(prefs)
-        }, false);
+        });
     })*/
 
 // Only required for development in browser, not cordova!
-    /*.config(['$cordovaFacebook', function ($cordovaFacebook) {
-        document.addEventListener("deviceready", function () {
+    /*.config(['$cordovaFacebook', function ($ionicPlatform $cordovaFacebook) {
+        $ionicPlatform.ready(function() {
             var appID = 646933472119700;
             $cordovaFacebook.browserInit(appID);
-        }, false);
+        });
     }])*/
     .constant('HoursDays', [{id: '0', name: 'Sun'}, {id: '1', name: 'Mon'}, {id: '2', name: 'Tue'}, {
         id: '3',

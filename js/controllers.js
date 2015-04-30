@@ -22,18 +22,43 @@ var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
 };
 
 angular.module('tabletops.controllers', [])
-    .controller('MainCtrl', function ($rootScope, $scope, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $ionicLoading, $http, $localForage, Province, ListingRepository) {
+    .controller('MainCtrl',
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository) {
         $scope.navTitle = '<img class="title-image" src="img/logo2.png" style="margin-top: 8px" />';
 
         $scope.settings = {
             geolocation: false,
             province: {}
         };
+
         // Handle Settings
         $localForage.getItem('province').then(function(data) {
             $scope.settings.province = data;
         });
 
+        // Handle Network Status
+        $ionicPlatform.ready(function() {
+
+            var type = $cordovaNetwork.getNetwork();
+
+            var isOnline = $cordovaNetwork.isOnline();
+
+            var isOffline = $cordovaNetwork.isOffline();
+
+
+            // listen for Online event
+            $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+                $rootScope.onlineState = networkState;
+            });
+
+            // listen for Offline event
+            $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+                $rootScope.offlineState = networkState;
+            });
+
+        });
+
+        // Handle Geolocation
         $scope.geoOptions = {
             enableHighAccuracy: true,
             timeout: 600000,
