@@ -73,6 +73,9 @@
     <gap:plugin name="nl.x-services.plugins.socialsharing" source="plugins.cordova.io"/>
     <gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1"/>
     <gap:plugin name="nl.x-services.plugins.toast"/>
+    <gap:platform name="ios"/>
+    <gap:platform name="android"/>
+    <gap:platform name="winphone"/>
     <platform name="android">
         <icon src="resources\android\icon\drawable-ldpi-icon.png" density="ldpi"/>
         <icon src="resources\android\icon\drawable-mdpi-icon.png" density="mdpi"/>
@@ -121,5 +124,4 @@
         <splash src="resources\ios\splash\Default@2x~iphone.png" width="640" height="960"/>
         <splash src="resources\ios\splash\Default~iphone.png" width="320" height="480"/>
     </platform>
-    <gap:platform name="winphone"/>
 </widget>
