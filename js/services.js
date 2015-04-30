@@ -168,7 +168,7 @@ angular.module('tabletops.services', [])
 
                         $localForage.setItem('user', user).then(function (data) {
                             $rootScope.user = data;
-                            $state.go('tabs.dashboard', null, { location: "replace" });
+                            return $rootScope.$broadcast('event:auth-loginConfirmed');
                         })
                     }, function (error) {
                         // error
