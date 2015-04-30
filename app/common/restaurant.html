@@ -140,7 +140,7 @@
             </ion-scroll>
 
             <!-- Menus -->
-            <h5 class="padding-horizontal assertive" ng-if="::listing.restaurant.menus[0].sections.length">Menus</h5>
+            <h5 class="padding-horizontal assertive" ng-if="::listing.restaurant.menus[0].sections.length || listing.restaurant.menus[0].photo.length">Menus</h5>
             <div ng-repeat="menu in listing.restaurant.menus" ng-if="::listing.restaurant.menus[0].sections.length">
                 <ion-item class="item-stable"
                           ng-click="toggleThisGroup(menu)"

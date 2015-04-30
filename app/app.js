@@ -101,7 +101,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 url: "/dashboard/search?search",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/restaurants/index.html",
+                        templateUrl: "app/listings/index.html",
                         controller: 'RestaurantsCtrl'
                     }
                 }
@@ -110,7 +110,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 url: "/dashboard/medleys/:slug",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/restaurants/index.html",
+                        templateUrl: "app/listings/index.html",
                         controller: 'RestaurantsCtrl'
                     }
                 }
@@ -128,7 +128,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 url: "/dashboard/cuisines/:id?search",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/dashboard/cuisine.html",
+                        templateUrl: "app/listings/cuisine.html",
                         controller: 'CuisineCtrl'
                     }
                 }
@@ -165,7 +165,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 url: "/favorites",
                 views: {
                     'favorites-tab': {
-                        templateUrl: "app/favorites/favorites.html",
+                        templateUrl: "app/listings/favorites.html",
                         controller: 'FavoritesCtrl'
                     }
                 }

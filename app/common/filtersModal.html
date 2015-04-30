@@ -1,0 +1,66 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">Filters</h1>
+    </ion-header-bar>
+    <ion-content>
+        <label class="item item-input item-select">
+            <div class="input-label">
+                Cuisine
+            </div>
+            <select ng-model="filters.cuisine" ng-options="c.value as c.name for c in cuisines"></select>
+        </label>
+
+        <label class="item item-input item-select">
+            <div class="input-label">
+                Type
+            </div>
+            <select ng-model="filters.type">
+                <option selected>Any</option>
+                <option value="fine-dining">Fine Dining</option>
+                <option value="casual-dining">Casual Dining</option>
+                <option value="cafe-and-quick-eats">Cafe & Quick Eats</option>
+                <option value="bars-and-lounges">Bars & Lounges</option>
+                <option value="night-club">Night Clubs</option>
+                <option value="bakeries">Bakeries</option>
+            </select>
+        </label>
+
+        <label class="item item-input item-select" ng-if="filters">
+            <div class="input-label">
+                Sort by
+            </div>
+            <select ng-model="filters.sort" ng-options="sort.value as sort.name for sort in sorts"></select>
+        </label>
+
+        <label class="item item-input item-select">
+            <div class="input-label">
+                Price Range
+            </div>
+            <select>
+                <option selected value="0">Any</option>
+                <option value="1">$ (-$15)</option>
+                <option value="2">$$ ($15-$25)</option>
+                <option value="3">$$$ ($25-$35)</option>
+                <option value="4">$$$$ ($35+)</option>
+            </select>
+        </label>
+
+        <div class="item item-divider">
+            Services
+        </div>
+
+        <!--<li class="item item-icon-right item-checkbox" ng-repeat="toggle in filters.toggles">
+            <label class="checkbox">
+                <input type="checkbox" ng-model="filters.selected" ng-true-value="'{{::toggle.slug}}'" name="{{::toggle.slug}}">
+            </label>
+            {{::toggle.name}}
+            <i ng-class="::toggle.icon"></i>
+        </li>-->
+
+        <ion-checkbox class="item-icon-right item-checkbox" ng-model="toggle.selected"
+                      ng-repeat="toggle in filters.toggles">
+            {{::toggle.name}}
+            <i ng-class="::toggle.icon"></i>
+        </ion-checkbox>
+    </ion-content>
+</ion-modal-view>

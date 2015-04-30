@@ -198,12 +198,12 @@ angular.module('tabletops.services', [])
                             var newData = _.reject(data, function(a) { return a.id == obj.id});
                             $localForage.setItem('favorites', newData);
                             $rootScope.favorites = newData;
-                            $cordovaToast.showShortBottom('<i class="icon ion-heart-broken calm"></i>');
+                            $cordovaToast.showShortBottom('\f31d Awww, unfav\'d...');
                         } else { // add it
                             data.push(obj.id);
                             $localForage.setItem('favorites', data);
                             $rootScope.favorites = data;
-                            $cordovaToast.showShortBottom('<i class="icon ion-heart calm"></i>');
+                            $cordovaToast.showShortBottom('\f141 Fav\'d!');
                         }
                     }
 
@@ -225,12 +225,12 @@ angular.module('tabletops.services', [])
                             var newData = _.reject(data, function(a) { return a.id == obj.id});
                             $localForage.setItem('been', newData);
                             $rootScope.been = newData;
-                            $cordovaToast.showShortBottom('<i class="icon ion-heart-broken calm"></i>');
+                            $cordovaToast.showShortBottom('\f12a Guess you haven\'t been here...');
                         } else { // add it
                             data.push(obj.id);
                             $localForage.setItem('been', data);
                             $rootScope.been = data;
-                            $cordovaToast.showShortBottom('<i class="icon ion-heart calm"></i>');
+                            $cordovaToast.showShortBottom('\f122 Been Here!');
                         }
                     }
 
@@ -270,3 +270,31 @@ angular.module('tabletops.services', [])
         };
         return repo;
     }])
+    /*.factory('', ['$scope', '$ionicModal', function ($scope, $ionicModal) {
+        $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.modal = modal;
+        });
+        //Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function() {
+            $scope.modal.remove();
+        });
+        // Execute action on hide modal
+        $scope.$on('modal.hidden', function() {
+            // Execute action
+        });
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function() {
+            // Execute action
+        });
+        return {
+            openFiltersModal: function () {
+                $scope.modal.show();
+            },
+            closeFiltersModal: function () {
+                $scope.modal.hide();
+            }
+        }
+    }])*/

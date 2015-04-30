@@ -23,7 +23,7 @@ var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository) {
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository, $ionicModal) {
         $scope.navTitle = '<img class="title-image" src="img/logo2.png" style="margin-top: 8px" />';
 
         $scope.settings = {
@@ -281,12 +281,12 @@ angular.module('tabletops.controllers', [])
             return document.getElementById('dashboard').offsetWidth - 21;
         };
     })
-    .controller('FavoritesCtrl', function ($scope, $localForage, Listing) {
+    .controller('FavoritesCtrl', function ($scope, $localForage, Listing, $ionicModal) {
         $scope.refresh = function () {
             $localForage.getItem('favorites').then(function (data) {
                 if (data && data.length > 0) {
                     Listing.query({ids: angular.toJson(data)}, function (res) {
-                        $scope.favorites = res;
+                        $scope.faves = res;
                         $scope.$broadcast('scroll.refreshComplete');
                     });
                 }
@@ -294,6 +294,32 @@ angular.module('tabletops.controllers', [])
         };
 
         $scope.refresh();
+
+        // FiltersModal
+        $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.modal = modal;
+        });
+        $scope.openFiltersModal = function() {
+            $scope.modal.show();
+        };
+        $scope.closeFiltersModal = function() {
+            $scope.modal.hide();
+        };
+        //Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function() {
+            $scope.modal.remove();
+        });
+        // Execute action on hide modal
+        $scope.$on('modal.hidden', function() {
+            // Execute action
+        });
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function() {
+            // Execute action
+        });
 
     })
     .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage',
@@ -486,7 +512,7 @@ angular.module('tabletops.controllers', [])
         };
         $scope.refresh();
     })
-    .controller('CuisineCtrl', function ($rootScope, $scope, $localForage, Cuisine, $stateParams, ListingRepository) {
+    .controller('CuisineCtrl', function ($rootScope, $scope, $localForage, Cuisine, $stateParams, ListingRepository, $ionicModal) {
         $scope.refresh = function () {
             Cuisine.get({id: $stateParams.id, restaurants: true}, function (res) {
                 $scope.cuisine = res;
@@ -494,9 +520,35 @@ angular.module('tabletops.controllers', [])
             });
         };
         $scope.refresh();
+
+        // FiltersModal
+        $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.modal = modal;
+        });
+        $scope.openFiltersModal = function() {
+            $scope.modal.show();
+        };
+        $scope.closeFiltersModal = function() {
+            $scope.modal.hide();
+        };
+        //Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function() {
+            $scope.modal.remove();
+        });
+        // Execute action on hide modal
+        $scope.$on('modal.hidden', function() {
+            // Execute action
+        });
+        // Execute action on remove modal
+        $scope.$on('modal.removed', function() {
+            // Execute action
+        });
     })
-    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository',
-        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository) {
+    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal',
+        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal) {
             console.log($stateParams);
             $rootScope.cuisines = Cuisine.query();
 
@@ -555,6 +607,32 @@ angular.module('tabletops.controllers', [])
                 $rootScope.filters = {
                     toggles: {}
                 };
+            });
+
+            // FiltersModal
+            $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function(modal) {
+                $scope.modal = modal;
+            });
+            $scope.openFiltersModal = function() {
+                $scope.modal.show();
+            };
+            $scope.closeFiltersModal = function() {
+                $scope.modal.hide();
+            };
+            //Cleanup the modal when we're done with it!
+            $scope.$on('$destroy', function() {
+                $scope.modal.remove();
+            });
+            // Execute action on hide modal
+            $scope.$on('modal.hidden', function() {
+                // Execute action
+            });
+            // Execute action on remove modal
+            $scope.$on('modal.removed', function() {
+                // Execute action
             });
     }])
     .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', 'leafletData', 'leafletBoundsHelpers', 'HoursDays', 'StartHours', 'EndHours', 'ListingRepository',
