@@ -104,6 +104,7 @@ angular.module('tabletops.services', [])
             FbCheckLogin: function () {
                 $cordovaFacebook.getLoginStatus()
                     .then(function (success) {
+                        alert(success.status);
                         if (success.status === 'connected') {
                             // the user is logged in and has authenticated your
                             // app, and response.authResponse supplies
