@@ -5,6 +5,7 @@
     <description>An Ionic Framework and Cordova project.</description>
     <author href="http://gorigins.com" email="jerezb31@gmail.com">Jerez Bain</author>
     <access origin="*" />
+    <access origin="*.gorigins.com" />
     <!-- Core/Common Preferences -->
     <preference name="phonegap-version" value="3.7.0"/>
     <preference name="orientation" value="default"/>
