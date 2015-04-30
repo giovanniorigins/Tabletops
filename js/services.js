@@ -103,7 +103,20 @@ angular.module('tabletops.services', [])
                 $cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_self', { location: 'no', toolbar: 'no'})
                     .then(function(event) {
                         // success
-                        console.log(event);
+                        //console.log(event);
+                        $rootScope.$on('$cordovaInAppBrowser:loadstop', function(e, event){
+                            /*// insert CSS via code / file
+                            $cordovaInAppBrowser.insertCSS({
+                                code: 'body {background-color:blue;}'
+                            });
+
+                            // insert Javascript via code / file
+                            $cordovaInAppBrowser.executeScript({
+                                file: 'script.js'
+                            });*/
+                            console.log(e);
+                            console.log(event);
+                        });
                     })
                     .catch(function(event) {
                         // error
