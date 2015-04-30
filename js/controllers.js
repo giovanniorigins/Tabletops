@@ -23,7 +23,7 @@ var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository, $ionicModal) {
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaFacebook, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository, $ionicModal) {
         $scope.navTitle = '<img class="title-image" src="img/logo2.png" style="margin-top: 8px" />';
 
         $scope.settings = {
@@ -48,14 +48,15 @@ angular.module('tabletops.controllers', [])
 
             // listen for Online event
             $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+                console.log('App Online');
                 $rootScope.onlineState = networkState;
             });
 
             // listen for Offline event
             $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+                console.log('App Offline');
                 $rootScope.offlineState = networkState;
             });
-
         });
 
         // Handle Geolocation
@@ -153,7 +154,31 @@ angular.module('tabletops.controllers', [])
 
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage) {
-        AuthenticationService.me();
+        $cordovaFacebook.getLoginStatus()
+            .then(function(success) {
+                if (success.status === 'connected') {
+                    // the user is logged in and has authenticated your
+                    // app, and response.authResponse supplies
+                    // the user's ID, a valid access token, a signed
+                    // request, and the time the access token
+                    // and signed request each expire
+                    var uid = success.authResponse.userID,
+                        accessToken = success.authResponse.accessToken;
+                    $localForage.setItem('authorizationToken', accessToken).then(function (data) {
+                        AuthenticationService.me();
+                    });
+                } /*else if (success.status === 'not_authorized') {
+                 // the user is logged in to Facebook,
+                 // but has not authenticated your app
+                 }*/ else {
+                    // the user isn't logged in to Facebook.
+                    AuthenticationService.me();
+                 }
+
+            }, function (error) {
+                // error
+            });
+
     })
     .controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
 

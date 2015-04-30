@@ -106,7 +106,7 @@ angular.module('tabletops.services', [])
                         if (response.status === 'connected') {
                             console.log('Facebook login succeeded');
                             var user = {
-                                id: success.authResponse.userID
+                                id: response.authResponse.userID
                             };
 
                             $cordovaFacebook.api("me", ["public_profile"])
