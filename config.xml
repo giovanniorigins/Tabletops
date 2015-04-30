@@ -5,7 +5,7 @@
     <description>An Ionic Framework and Cordova project.</description>
     <author href="http://gorigins.com" email="jerezb31@gmail.com">Jerez Bain</author>
     <access origin="*" />
-    <access origin="*.gorigins.com" />
+    <!--<access origin="*.gorigins.com" />-->
     <!-- Core/Common Preferences -->
     <preference name="phonegap-version" value="3.7.0"/>
     <preference name="orientation" value="default"/>
@@ -35,7 +35,6 @@
     <preference name="android-minSdkVersion" value="7"/>
     <preference name="android-installLocation" value="internalOnly"/>
     <!--Other Preferences-->
-    <preference name="stay-in-webview" value="true"/>
     <preference name="show-splash-screen-spinner" value="true"/>
     <preference name="auto-hide-splash-screen" value="true"/>
     <preference name="TopActivityIndicator" value="gray"/>
@@ -46,23 +45,23 @@
     <feature name="StatusBar">
         <param name="ios-package" value="CDVStatusBar" onload="true"/>
     </feature>
-    <gap:plugin name="org.apache.cordova.battery-status"/>
-    <gap:plugin name="org.apache.cordova.camera"/>
+    <!--<gap:plugin name="org.apache.cordova.battery-status"/>-->
+    <!--<gap:plugin name="org.apache.cordova.camera"/>-->
     <gap:plugin name="org.apache.cordova.console"/>
-    <gap:plugin name="org.apache.cordova.contacts"/>
+    <!--<gap:plugin name="org.apache.cordova.contacts"/>-->
     <gap:plugin name="org.apache.cordova.device"/>
-    <gap:plugin name="org.apache.cordova.device-orientation"/>
-    <gap:plugin name="org.apache.cordova.device-motion"/>
-    <gap:plugin name="org.apache.cordova.dialogs"/>
-    <gap:plugin name="org.apache.cordova.file-transfer"/>
+    <!--<gap:plugin name="org.apache.cordova.device-orientation"/>-->
+    <!--<gap:plugin name="org.apache.cordova.device-motion"/>-->
+    <!--<gap:plugin name="org.apache.cordova.dialogs"/>-->
+    <!--<gap:plugin name="org.apache.cordova.file-transfer"/>-->
     <gap:plugin name="org.apache.cordova.geolocation"/>
-    <gap:plugin name="org.apache.cordova.globalization"/>
+    <!--<gap:plugin name="org.apache.cordova.globalization"/>-->
     <gap:plugin name="org.apache.cordova.inappbrowser"/>
-    <gap:plugin name="org.apache.cordova.media"/>
-    <gap:plugin name="org.apache.cordova.media-capture"/>
+    <!--<gap:plugin name="org.apache.cordova.media"/>-->
+    <!--<gap:plugin name="org.apache.cordova.media-capture"/>-->
     <gap:plugin name="org.apache.cordova.network-information"/>
     <gap:plugin name="org.apache.cordova.splashscreen"/>
-    <gap:plugin name="org.apache.cordova.vibration"/>
+    <!--<gap:plugin name="org.apache.cordova.vibration"/>-->
     <gap:plugin name="com.phonegap.plugins.pushplugin"/>
     <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0">
         <param name="APP_ID" value="646933472119700"/>
