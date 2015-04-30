@@ -4,13 +4,13 @@
     <name>Tabletops</name>
     <description>An Ionic Framework and Cordova project.</description>
     <author href="http://gorigins.com" email="jerezb31@gmail.com">Jerez Bain</author>
-    <access origin="*"/>
+    <access origin="*" />
     <!-- Core/Common Preferences -->
     <preference name="phonegap-version" value="3.7.0"/>
     <preference name="orientation" value="default"/>
     <preference name="fullscreen" value="false"/>
     <preference name="DisallowOverscroll" value="true"/>
-    <preference name="HideKeyboardFormAccessoryBar" value="false"/>
+    <preference name="HideKeyboardFormAccessoryBar" value="true"/>
     <preference name="BackgroundColor" value="0x000000"/>
     <!--iOS Preferences-->
     <preference name="target-device" value="universal"/>
@@ -23,6 +23,7 @@
     <preference name="AllowInlineMediaPlayback" value="true"/>
     <preference name="BackupWebStorage" value="none"/>
     <preference name="SuppressesIncrementalRendering" value="false"/>
+    <preference name="ios-statusbarstyle" value="lightcontent"/>
     <!--Android Preferences-->
     <preference name="KeepRunning" value="true"/>
     <preference name="LoadUrlTimeoutValue" value="20000"/>
@@ -34,7 +35,6 @@
     <preference name="android-installLocation" value="internalOnly"/>
     <!--Other Preferences-->
     <preference name="stay-in-webview" value="true"/>
-    <preference name="ios-statusbarstyle" value="lightcontent"/>
     <preference name="show-splash-screen-spinner" value="true"/>
     <preference name="auto-hide-splash-screen" value="true"/>
     <preference name="TopActivityIndicator" value="gray"/>
