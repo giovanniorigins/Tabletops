@@ -54,12 +54,12 @@ angular.module('tabletops.config', [])
     })*/
 
 // Only required for development in browser, not cordova!
-    .config(['$cordovaFacebook', function ($ionicPlatform, $cordovaFacebook) {
+    /*.config(['$cordovaFacebook', function ($ionicPlatform, $cordovaFacebook) {
         $ionicPlatform.ready(function() {
             var appID = 646933472119700;
             $cordovaFacebook.browserInit(appID);
         });
-    }])
+    }])*/
     .constant('HoursDays', [{id: '0', name: 'Sun'}, {id: '1', name: 'Mon'}, {id: '2', name: 'Tue'}, {
         id: '3',
         name: 'Wed'
