@@ -23,7 +23,7 @@ var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository, $ionicModal) {
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository) {
         $scope.navTitle = '<img class="title-image" src="img/logo2.png" style="margin-top: 8px" />';
 
         $scope.settings = {

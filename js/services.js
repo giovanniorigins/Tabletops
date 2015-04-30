@@ -134,6 +134,7 @@ angular.module('tabletops.services', [])
                     .then(function(response) {
                         // success
                         if (response.status === 'connected') {
+                            alert('Facebook login succeeded');
                             console.log('Facebook login succeeded');
                             $localForage.setItem('useFacebook', true);
                             $localForage.setItem('authorizationToken', accessToken).then(function (data) {
@@ -142,12 +143,13 @@ angular.module('tabletops.services', [])
                         } else {
                             alert('Facebook login failed');
                             alert(error);
+                            return $state.go('signin');
                         }
                     }, function (error) {
                         // error
                         console.log('Error');
                         console.log(error);
-
+                        return $state.go('signin');
                     });
             },
             FbMe: function () {
@@ -169,12 +171,15 @@ angular.module('tabletops.services', [])
 
                         $localForage.setItem('user', user).then(function (data) {
                             $rootScope.user = data;
-                            return $rootScope.$broadcast('event:auth-loginConfirmed');
+                            $rootScope.isLoggedin = true;
+                            $state.go('tabs.dashboard');
+                            $rootScope.$broadcast('event:auth-loginConfirmed');
                         })
                     }, function (error) {
                         // error
                         alert('Facebook API Error');
                         alert(error);
+                        return $state.go('signin');
                     });
             }
         };
