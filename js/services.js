@@ -77,25 +77,22 @@ angular.module('tabletops.services', [])
                                     Authorization: 'Bearer ' + token
                                 }
                             })
-                                .success(function (data) {
-                                    if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
-                                        $rootScope.user = data.user;
-                                        $localForage.setItem('user', data.user).then(function () {
-                                            $localForage.getItem('pastInitialStart').then(function (res) {
-                                                if (!!res)
-                                                    return $state.go('dashboard', null, { location: "replace" });
-                                                else
-                                                     return $state.go('intro', null, { location: "replace" });
-                                            });
-                                            console.log(data);
+                            .success(function (data) {
+                                if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
+                                    $rootScope.user = data.user;
+                                    $localForage.setItem('user', data.user).then(function () {
+                                        $localForage.getItem('pastInitialStart').then(function (res) {
+                                            if (!!res)
+                                                return $state.go('dashboard', null, { location: "replace" });
+                                            else
+                                                 return $state.go('intro', null, { location: "replace" });
                                         });
-                                    } else {
-                                        return $state.go('signin');
-                                    }
-                                })
-                                .finally(function (data) {
-
-                                });
+                                        console.log(data);
+                                    });
+                                } else {
+                                    return $state.go('signin');
+                                }
+                            });
                         } else {
                             return $state.go('signin');
                         }
@@ -110,9 +107,10 @@ angular.module('tabletops.services', [])
                         // success
                         if (response.status === 'connected') {
                             console.log('Facebook login succeeded');
-                            var user = {
-
-                            };
+                            $localForage.setItem('useFacebook', true);
+                            $localForage.setItem('authorizationToken', accessToken).then(function (data) {
+                                return service.FbMe();
+                            });
                         } else {
                             alert('Facebook login failed');
                             alert(error);
@@ -130,14 +128,15 @@ angular.module('tabletops.services', [])
                         // success
                         console.log('API Data');
                         console.log(success);
-                        angular.extend(user, {
+
+                        var user = {
                             id: success.userID,
                             fname: success.firstName,
                             lname: success.lastName,
                             full_name: success.firstName+' '+success.lastName,
                             avatar: success.photoURL,
                             email: email
-                        });
+                        };
 
                         $localForage.setItem('user', user).then(function (data) {
                             $rootScope.user = data;
