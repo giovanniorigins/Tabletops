@@ -23,7 +23,7 @@ var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaFacebook, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository, $ionicModal) {
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $localForage, Province, ListingRepository, $ionicModal) {
         $scope.navTitle = '<img class="title-image" src="img/logo2.png" style="margin-top: 8px" />';
 
         $scope.settings = {
@@ -153,7 +153,7 @@ angular.module('tabletops.controllers', [])
         };
 
     })
-    .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage) {
+    .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $cordovaFacebook) {
         $cordovaFacebook.getLoginStatus()
             .then(function(success) {
                 if (success.status === 'connected') {
