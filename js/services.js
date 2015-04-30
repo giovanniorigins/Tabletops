@@ -100,46 +100,41 @@ angular.module('tabletops.services', [])
 
             },
             FBlogin: function () {
-                /*$cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_self', { location: 'no', toolbar: 'no'})
-                    .then(function(event) {
-                        // success
-                        //console.log(event);
-                        $rootScope.$on('$cordovaInAppBrowser:loadstop', function(e, event){
-                            // insert CSS via code / file
-                            $cordovaInAppBrowser.insertCSS({
-                                code: 'body {background-color:blue;}'
-                            });
-
-                            // insert Javascript via code / file
-                            $cordovaInAppBrowser.executeScript({
-                                file: 'script.js'
-                            });
-                            console.log(e);
-                            console.log(event);
-                        });
-                    })
-                    .catch(function(event) {
-                        // error
-                    });*/
                 $cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
-                    .then(function(success) {
-                        // { id: "634565435",
-                        //   lastName: "bob"
-                        //   ...
-                        // }
-                        console.log('Success');
-                        console.log(success);
-                        var user = {
-                            fname: success.firstName,
-                            lname: success.lastName,
-                            full_name: success.firstName+' '+success.lastName,
-                            avatar: success.photoURL,
-                            email: email
-                        };
-                        $localForage.setItem('user', user).then(function (data) {
-                            $rootScope.user = data;
-                            $state.go('dashboard', null, { location: "replace" });
-                        })
+                    .then(function(response) {
+                        // success
+                        if (response.status === 'connected') {
+                            console.log('Facebook login succeeded');
+                            var user = {
+                                id: success.authResponse.userID
+                            };
+
+                            $cordovaFacebook.api("me", ["public_profile"])
+                                .then(function(success) {
+                                    // success
+                                    console.log('API Data');
+                                    console.log(success);
+                                    angular.extend(user, {
+                                        fname: success.firstName,
+                                        lname: success.lastName,
+                                        full_name: success.firstName+' '+success.lastName,
+                                        avatar: success.photoURL,
+                                        email: email
+                                    });
+
+                                    $localForage.setItem('user', user).then(function (data) {
+                                        $rootScope.user = data;
+                                        $state.go('dashboard', null, { location: "replace" });
+                                    })
+                                }, function (error) {
+                                    // error
+                                    alert('Facebook API');
+                                    alert(error);
+                                });
+                        } else {
+                            alert('Facebook login failed');
+                            alert(error);
+                        }
                     }, function (error) {
                         // error
                         console.log('Error');
