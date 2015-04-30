@@ -127,6 +127,8 @@ angular.module('tabletops.services', [])
                         //   lastName: "bob"
                         //   ...
                         // }
+                        console.log('Success');
+                        console.log(success);
                         var user = {
                             fname: success.firstName,
                             lname: success.lastName,
@@ -140,6 +142,9 @@ angular.module('tabletops.services', [])
                         })
                     }, function (error) {
                         // error
+                        console.log('Error');
+                        console.log(error);
+
                     });
             }
         };
