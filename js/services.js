@@ -100,14 +100,14 @@ angular.module('tabletops.services', [])
 
             },
             FBlogin: function () {
-                /*$cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_self')
+                $cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_self', { location: 'no', toolbar: 'no'})
                     .then(function(event) {
                         // success
                         console.log(event);
                     })
                     .catch(function(event) {
                         // error
-                    });*/
+                    });
                 /*$cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
                     .then(function(success) {
                         // { id: "634565435",
