@@ -52,7 +52,7 @@ angular.module('tabletops.config', [])
             $cordovaAppRateProvider.setPreferences(prefs)
         });
     })*/
-    .config(function($cordovaInAppBrowserProvider) {
+    /*.config(function($cordovaInAppBrowserProvider) {
 
         var defaultOptions = {
             location: 'no',
@@ -63,7 +63,7 @@ angular.module('tabletops.config', [])
         document.addEventListener(function () {
             $cordovaInAppBrowserProvider.setDefaultOptions(defaultOptions)
         }, false);
-    })
+    })*/
     .constant('HoursDays', [{id: '0', name: 'Sun'}, {id: '1', name: 'Mon'}, {id: '2', name: 'Tue'}, {
         id: '3',
         name: 'Wed'
