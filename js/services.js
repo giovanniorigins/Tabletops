@@ -130,8 +130,8 @@ angular.module('tabletops.services', [])
                     });
             },
             FbLogin: function () {
+                alert('Logging in');
                 $cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
-                    alert('Logging in');
                     .then(function(response) {
                         // success
                         if (response.status === 'connected') {
