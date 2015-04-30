@@ -110,7 +110,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 url: "/dashboard/medleys/:slug",
                 views: {
                     'dashboard-tab': {
-                        templateUrl: "app/listings/index.html",
+                        templateUrl: "app/listings/restaurants.html",
                         controller: 'RestaurantsCtrl'
                     }
                 }
