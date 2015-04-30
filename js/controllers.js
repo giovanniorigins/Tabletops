@@ -153,32 +153,34 @@ angular.module('tabletops.controllers', [])
         };
 
     })
-    .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $cordovaFacebook) {
-        $cordovaFacebook.getLoginStatus()
-            .then(function(success) {
-                if (success.status === 'connected') {
-                    // the user is logged in and has authenticated your
-                    // app, and response.authResponse supplies
-                    // the user's ID, a valid access token, a signed
-                    // request, and the time the access token
-                    // and signed request each expire
-                    var uid = success.authResponse.userID,
-                        accessToken = success.authResponse.accessToken;
-                    $localForage.setItem('useFacebook', true).then(function () {
-                        $localForage.setItem('authorizationToken', accessToken).then(function (data) {
-                            return AuthenticationService.me();
+    .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform, $cordovaFacebook) {
+        $ionicPlatform.ready(function() {
+            $cordovaFacebook.getLoginStatus()
+                .then(function (success) {
+                    if (success.status === 'connected') {
+                        // the user is logged in and has authenticated your
+                        // app, and response.authResponse supplies
+                        // the user's ID, a valid access token, a signed
+                        // request, and the time the access token
+                        // and signed request each expire
+                        var uid = success.authResponse.userID,
+                            accessToken = success.authResponse.accessToken;
+                        $localForage.setItem('useFacebook', true).then(function () {
+                            $localForage.setItem('authorizationToken', accessToken).then(function (data) {
+                                return AuthenticationService.FbMe();
+                            });
                         });
-                    });
-                } /*else if (success.status === 'not_authorized') {
-                 // the user is logged in to Facebook,
-                 // but has not authenticated your app
-                 }*/ else {
-                    // the user isn't logged in to Facebook.
-                    return AuthenticationService.me();
-                }
-            }, function (error) {
-                // error
-            });
+                    } /*else if (success.status === 'not_authorized') {
+                     // the user is logged in to Facebook,
+                     // but has not authenticated your app
+                     }*/ else {
+                        // the user isn't logged in to Facebook.
+                        return AuthenticationService.me();
+                    }
+                }, function (error) {
+                    // error
+                });
+        });
 
     })
     .controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {

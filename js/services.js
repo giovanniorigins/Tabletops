@@ -135,7 +135,8 @@ angular.module('tabletops.services', [])
                             lname: success.lastName,
                             full_name: success.firstName+' '+success.lastName,
                             avatar: success.photoURL,
-                            email: email
+                            email: email,
+                            profiles: success
                         };
 
                         $localForage.setItem('user', user).then(function (data) {
