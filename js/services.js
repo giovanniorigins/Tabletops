@@ -70,7 +70,7 @@ angular.module('tabletops.services', [])
                     $localForage.getItem('useFacebook').then(function (facebook) {
                         if (facebook) {
                             return service.FbMe();
-                        } else if (token) {
+                        } else if (token && !facebook) {
                             $http.post(ApiEndpoint.api + '/me', {}, {
                                 ignoreAuthModule: true,
                                 headers: {
@@ -100,6 +100,33 @@ angular.module('tabletops.services', [])
 
                 });
 
+            },
+            FbCheckLogin: function () {
+                $cordovaFacebook.getLoginStatus()
+                    .then(function (success) {
+                        if (success.status === 'connected') {
+                            // the user is logged in and has authenticated your
+                            // app, and response.authResponse supplies
+                            // the user's ID, a valid access token, a signed
+                            // request, and the time the access token
+                            // and signed request each expire
+                            var uid = success.authResponse.userID,
+                                accessToken = success.authResponse.accessToken;
+                            $localForage.setItem('useFacebook', true).then(function () {
+                                $localForage.setItem('authorizationToken', accessToken).then(function (data) {
+                                    return service.FbMe();
+                                });
+                            });
+                        } /*else if (success.status === 'not_authorized') {
+                         // the user is logged in to Facebook,
+                         // but has not authenticated your app
+                         }*/ else {
+                            // the user isn't logged in to Facebook.
+                            return service.me();
+                        }
+                    }, function (error) {
+                        // error
+                    });
             },
             FbLogin: function () {
                 $cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
@@ -141,7 +168,7 @@ angular.module('tabletops.services', [])
 
                         $localForage.setItem('user', user).then(function (data) {
                             $rootScope.user = data;
-                            $state.go('dashboard', null, { location: "replace" });
+                            $state.go('tabs.dashboard', null, { location: "replace" });
                         })
                     }, function (error) {
                         // error
