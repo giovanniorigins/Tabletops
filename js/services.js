@@ -123,10 +123,10 @@ angular.module('tabletops.services', [])
                     });
             },
             FbMe: function () {
-                $cordovaFacebook.api("me", ["public_profile", "email"])
+                $cordovaFacebook.api("me", ["public_profile, email"])
                     .then(function(success) {
                         // success
-                        console.log('API Data');
+                        console.log('API Me Data');
                         console.log(success);
 
                         var user = {
@@ -145,7 +145,7 @@ angular.module('tabletops.services', [])
                         })
                     }, function (error) {
                         // error
-                        alert('Facebook API');
+                        alert('Facebook API Error');
                         alert(error);
                     });
             }
