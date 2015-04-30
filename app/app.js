@@ -35,7 +35,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 // Handle response
             });
 
-        $rootScope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams, a) {
+        $rootScope.$on('$stateChangeSuccess', function (e, toState/*, toParams, fromState, fromParams, a*/) {
             console.log('To: ', toState);
             //console.log('Params: ', fromParams);
             $rootScope.filtersMenu = toState.name === "restaurants";
@@ -85,7 +85,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             .state('tabs', {
                 url: "/tab",
                 abstract: true,
-                templateUrl: "templates/tabs.html"
+                templateUrl: "app/common/tabs.html"
             })
 
             .state('tabs.dashboard', {
@@ -230,7 +230,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'settings-tab': {
                         templateUrl: 'app/settings/usage.html',
-                        controller: 'SettingsCtrl',
+                        controller: 'SettingsCtrl'
                     }
                 }
             })
@@ -239,7 +239,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'settings-tab': {
                         templateUrl: 'app/settings/faq.html',
-                        controller: 'SettingsCtrl',
+                        controller: 'SettingsCtrl'
                     }
                 }
             })
@@ -248,7 +248,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'settings-tab': {
                         templateUrl: 'app/settings/terms.html',
-                        controller: 'SettingsCtrl',
+                        controller: 'SettingsCtrl'
                     }
                 }
             })
@@ -257,7 +257,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'settings-tab': {
                         templateUrl: 'app/settings/privacy.html',
-                        controller: 'SettingsCtrl',
+                        controller: 'SettingsCtrl'
                     }
                 }
             })
@@ -266,17 +266,17 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             .state('splash', {
                 url: '/splash',
                 templateUrl: 'app/splash/splash.html',
-                controller: 'SplashCtrl',
+                controller: 'SplashCtrl'
             })
             .state('intro', {
                 url: '/intro',
                 templateUrl: 'app/splash/intro.html',
-                controller: 'IntroCtrl',
+                controller: 'IntroCtrl'
             })
             .state('signin', {
                 url: '/sign-in',
                 templateUrl: 'app/sign-in/sign-in.html',
-                controller: 'SignInCtrl',
+                controller: 'SignInCtrl'
             })
             .state('getStarted', {
                 url: '/get-started',
@@ -286,10 +286,10 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             .state('forgotpassword', {
                 url: '/forgot-password',
                 templateUrl: 'app/sign-in/forgot-password.html'
-            })
+            });
 
         // if none of the above states are matched, use this as the fallback
         //$urlRouterProvider.otherwise('/dashboard');
         $urlRouterProvider.otherwise('/splash');
 
-    })
+    });
