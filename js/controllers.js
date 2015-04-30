@@ -191,6 +191,10 @@ angular.module('tabletops.controllers', [])
             AuthenticationService.login($scope.user);
         };
 
+        $scope.signInFacebook = function () {
+            AuthenticationService.FBlogin();
+        };
+
         $scope.$on('event:auth-loginRequired', function(e, rejection) {
             console.log('handling login required');
             $state.go('signin');

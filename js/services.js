@@ -23,7 +23,7 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', function($rootScope, $http, authService, $localForage ,ApiEndpoint, $state) {
+    .factory('AuthenticationService', function($rootScope, $http, authService, $localForage ,ApiEndpoint, $state, $cordovaInAppBrowser) {
         var service = {
             login: function (user) {
                 $localForage.setItem('userCreds', user);
@@ -98,6 +98,36 @@ angular.module('tabletops.services', [])
 
                 });
 
+            },
+            FBlogin: function () {
+                $cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_self')
+                    .then(function(event) {
+                        // success
+                        console.log(event);
+                    })
+                    .catch(function(event) {
+                        // error
+                    });
+                /*$cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
+                    .then(function(success) {
+                        // { id: "634565435",
+                        //   lastName: "bob"
+                        //   ...
+                        // }
+                        var user = {
+                            fname: success.firstName,
+                            lname: success.lastName,
+                            full_name: success.firstName+' '+success.lastName,
+                            avatar: success.photoURL,
+                            email: email
+                        };
+                        $localForage.setItem('user', user).then(function (data) {
+                            $rootScope.user = data;
+                            $state.go('dashboard', null, { location: "replace" });
+                        })
+                    }, function (error) {
+                        // error
+                    });*/
             }
         };
         return service;
