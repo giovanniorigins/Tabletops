@@ -23,7 +23,7 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', function($rootScope, $http, authService, $localForage ,ApiEndpoint, $state, $cordovaInAppBrowser) {
+    .factory('AuthenticationService', function($rootScope, $http, authService, $localForage ,ApiEndpoint, $state, $cordovaFacebook) {
         var service = {
             login: function (user) {
                 $localForage.setItem('userCreds', user);
@@ -100,12 +100,12 @@ angular.module('tabletops.services', [])
 
             },
             FBlogin: function () {
-                $cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_self', { location: 'no', toolbar: 'no'})
+                /*$cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_self', { location: 'no', toolbar: 'no'})
                     .then(function(event) {
                         // success
                         //console.log(event);
                         $rootScope.$on('$cordovaInAppBrowser:loadstop', function(e, event){
-                            /*// insert CSS via code / file
+                            // insert CSS via code / file
                             $cordovaInAppBrowser.insertCSS({
                                 code: 'body {background-color:blue;}'
                             });
@@ -113,15 +113,15 @@ angular.module('tabletops.services', [])
                             // insert Javascript via code / file
                             $cordovaInAppBrowser.executeScript({
                                 file: 'script.js'
-                            });*/
+                            });
                             console.log(e);
                             console.log(event);
                         });
                     })
                     .catch(function(event) {
                         // error
-                    });
-                /*$cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
+                    });*/
+                $cordovaFacebook.login(["public_profile", "email", "user_friends", "offline_access", "read_friendlists", "user_friends"])
                     .then(function(success) {
                         // { id: "634565435",
                         //   lastName: "bob"
@@ -140,7 +140,7 @@ angular.module('tabletops.services', [])
                         })
                     }, function (error) {
                         // error
-                    });*/
+                    });
             }
         };
         return service;
