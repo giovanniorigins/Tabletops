@@ -95,7 +95,7 @@ var closestLocation = function (targetLocation, locationData) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state, $localForage, Province, ListingRepository, $ionicPopover) {
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state, $localForage, Province, ListingRepository, $ionicModal) {
         $scope.settings = {
             geolocation: false,
             province: {
@@ -153,7 +153,7 @@ angular.module('tabletops.controllers', [])
                 console.log(err);
             },
             function (position) {
-                console.log(position);
+                //console.log(position);
                 $scope.myLocation = position;
             });
 
@@ -185,7 +185,7 @@ angular.module('tabletops.controllers', [])
         $scope.setProvince = function (p) {
             $scope.settings.province = p;
             $localForage.setItem('province', p);
-            $scope.closeProvincePopover();
+            $scope.closeProvinceModal();
             $cordovaToast.showShortBottom(p.name + ' is now your default province.')
         };
 
@@ -242,25 +242,25 @@ angular.module('tabletops.controllers', [])
         });
 
         // .fromTemplateUrl() method
-        $ionicPopover.fromTemplateUrl('app/common/ProvincePopover.html', {
+        $ionicModal.fromTemplateUrl('app/common/ProvinceModal.html', {
             scope: $scope
-        }).then(function (popover) {
-            $scope.provPopover = popover;
+        }).then(function (modal) {
+            $scope.provModal = modal;
         });
 
 
-        $scope.openProvincePopover = function ($event) {
-            $scope.provPopover.show($event);
+        $scope.openProvinceModal = function ($event) {
+            $scope.provModal.show($event);
         };
-        $scope.closeProvincePopover = function () {
-            $scope.provPopover.hide();
+        $scope.closeProvinceModal = function () {
+            $scope.provModal.hide();
         };
         //Cleanup the popover when we're done with it!
         $scope.$on('$destroy', function () {
-            $scope.provPopover.remove();
+            $scope.provModal.remove();
         });
     })
-    .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform, $cordovaFacebook) {
+    .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
         $ionicPlatform.ready(function () {
             AuthenticationService.FbCheckLogin();
         });
@@ -330,7 +330,7 @@ angular.module('tabletops.controllers', [])
             AuthenticationService.logout();
         });
     })
-    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicPopover) {
+    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval) {
         $scope.getNearby = function () {
             $scope.qData = {app_search: true, range: 5, limit: 5};
             if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
