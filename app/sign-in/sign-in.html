@@ -7,69 +7,71 @@
 
             <div class="padding" ng-init="showForm = false;showAccountForm = false">
                 <button class="button icon-left ion-social-facebook button button-block button-positive" ng-click="signInFacebook()" ng-hide="showAccountForm||showForm">
-                    Login with Facebook
+                    LOGIN WITH FACEBOOK
                 </button>
-                <div class="horizontal-text"><span> your text </span></div>
+                <fieldset class="featured-header">
+                    <legend class="light">Or login with email</legend>
+                </fieldset>
 
-                <button class="button icon-left ion-email button button-block button-dark" ng-click="showForm = !showForm" ng-hide="showAccountForm">
-                    <span ng-hide="showForm">Login with Email</span>
-                    <span ng-show="showForm">Go Back</span>
-                </button>
+                <div class="row responsive-sm">
+                    <button class="col col-75 button button-block button-light" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
+                        <span ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
+                        <span ng-show="showAccountForm">GO BACK</span>
+                    </button>
+
+                    <button class="col col-25 button button-block button-dark" ng-click="showForm = !showForm" ng-hide="showAccountForm">
+                        <span ng-hide="showForm">LOGIN</span>
+                        <span ng-show="showForm">GO BACK</span>
+                    </button>
+                </div>
+
                 <div class="animated fast" ng-show="showForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showForm]">
                     <form class="list list-inset" name="loginForm">
                         <label class="item item-input">
                             <span class="input-label">Email</span>
-                            <input type="text" ng-model="user.email" required>
+                            <input type="text" placeholder="Email" ng-model="user.email" required>
                         </label>
                         <label class="item item-input">
                             <span class="input-label">Password</span>
-                            <input type="password" ng-model="user.password" required>
+                            <input type="password" placeholder="Password" ng-model="user.password" required>
                         </label>
                     </form>
                     <button class="button icon-left ion-log-in button button-block button-balanced" ng-disabled="!loginForm.$valid" ng-click="login()">
-                        Sign in
+                        LOGIN
                     </button>
-                </div>
+                    <button class="button button-block button-outline button-light" ui-sref="forgotpassword">FORGOT PASSWORD?</button>
 
-                <button class="button icon-left ion-log-in button button-block button-light" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
-                    <span ng-hide="showAccountForm">Create an Account</span>
-                    <span ng-show="showAccountForm">Go Back</span>
-                </button>
+                </div>
 
                 <div class="animated fast" ng-show="showAccountForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showAccountForm]">
                     <form class="list list-inset" name="accountForm">
-                        <label class="item item-input">
+                        <label class="item item-input item-floating-label">
                             <span class="input-label">First Name</span>
-                            <input type="text" ng-model="user.first" required>
+                            <input type="text" placeholder="First Name" ng-model="user.first" required>
                         </label>
-                        <label class="item item-input">
+                        <label class="item item-input item-floating-label">
                             <span class="input-label">Last Name</span>
-                            <input type="text" ng-model="user.last" required>
+                            <input type="text" placeholder="Last Name" ng-model="user.last" required>
                         </label>
-                        <label class="item item-input">
+                        <label class="item item-input item-floating-label">
                             <span class="input-label">Username</span>
-                            <input type="text" ng-model="user.username" required>
+                            <input type="text" placeholder="Username" ng-model="user.username" required>
                         </label>
-                        <label class="item item-input">
+                        <label class="item item-input item-floating-label">
                             <span class="input-label">Password</span>
-                            <input type="password" ng-model="user.password" required>
+                            <input type="password" placeholder="Password" ng-model="user.password" required>
                         </label>
                     </form>
                     <button class="button icon-left ion-log-in button button-block button-balanced" ng-disabled="!accountForm.$valid" ng-click="submitAccount(user)">
-                        Join Us
+                        JOIN US
                     </button>
                 </div>
-
-
-                <small>
-                    <a class="light" ui-sref="forgotpassword">Forgot password</a>
-                </small>
             </div>
         </div>
     </ion-content>
     <div class="bar bar-footer bar-dark item-input-inset">
         <button class="button button-clear button-block" ui-sref="tabs.dashboard">
-            Continue without Login
+            CONTINUE WITHOUT LOGIN
             <i class="icon ion-ios-arrow-right"></i>
         </button>
     </div>
