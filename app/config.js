@@ -16,7 +16,7 @@ angular.module('tabletops.config', [])
         $ionicPlatform.ready(function() {
             helloProvider.init({
                 facebook: CIDs.facebook
-            });
+            }, {});
         });
     })
 
