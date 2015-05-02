@@ -116,11 +116,11 @@ angular.module('tabletops.controllers', [])
         // Handle Network Status
         $ionicPlatform.ready(function () {
 
-            /*var type = $cordovaNetwork.getNetwork();
+            var type = $cordovaNetwork.getNetwork();
 
              var isOnline = $cordovaNetwork.isOnline();
 
-             var isOffline = $cordovaNetwork.isOffline();*/
+             var isOffline = $cordovaNetwork.isOffline();
 
 
             // listen for Online event
