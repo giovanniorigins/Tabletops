@@ -248,7 +248,6 @@ angular.module('tabletops.controllers', [])
             $scope.provModal = modal;
         });
 
-
         $scope.openProvinceModal = function ($event) {
             $scope.provModal.show($event);
         };

@@ -1,0 +1,15 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <button class="button button-icon icon ion-ios-arrow-left" ng-click="openProvinceModal()"></button>
+        <h1 class="title">Select your province</h1>
+        <button class="button button-icon icon ion-ios-navigate" ng-click="selectClosestProvince()"></button>
+    </ion-header-bar>
+    <ion-content class="">
+        <ion-list>
+            <!--<ion-item ng-repeat="p in provinces" ng-class="{true:'active'}[settings.province.slug == p.slug]" ng-click="setProvince(p)" menu-close>
+                {{::p.name}}
+            </ion-item>-->
+            <ion-radio ng-repeat="p in provinces" ng-model="settings.province" ng-value="p" ng-change="setProvince(p)">{{::p.name}}</ion-radio>
+        </ion-list>
+    </ion-content>
+</ion-modal-view>

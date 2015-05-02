@@ -1,0 +1,38 @@
+<ion-view view-title="Favorites">
+    <div class="bar bar-subheader item-input-inset">
+        <label class="item-input-wrapper">
+            <i class="icon ion-ios7-search placeholder-icon"></i>
+            <input type="search" placeholder="Search" ng-model="filters.search">
+        </label>
+        <button class="button button-icon icon ion-ios-settings" ng-click="toggleRight()"
+                ng-hide="$exposeAside.active"></button>
+    </div>
+    <ion-content class="has-subheader">
+        <ion-refresher
+                pulling-text="Pull to refresh..."
+                on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list>
+            <ion-item ng-repeat="res in favorites|filter:filters.search|orderBy:filters.sort" class="item-avatar" ui-sref="tabs.favorite({id: res.slug})">
+                <img ng-src="{{::res.logo.path}}">
+                <h2>{{::res.name}}</h2>
+                <p class="row row-no-padding">
+                    <span class="col col-50">
+                        <span ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></span>
+                    </span>
+                    <span class="col col-50 text-right">
+                       <span ng-bind-html="::showDollars(res.restaurant.price_range)"></span>
+                    </span>
+                </p>
+                <p>
+                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
+                </p>
+                <ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
+                <ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>
+                <ion-option-button class="button-positive" ng-click="shareThis(res)">&nbsp;<i class="icon ion-ios-upload"></i></ion-option-button>
+                <ion-option-button class="button-dark" ng-click="beenHere(res)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[been(res.id)]"></i></ion-option-button>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+
+</ion-view>
