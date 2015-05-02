@@ -90,11 +90,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         });
     })
 
-    .config(function ($stateProvider, $urlRouterProvider, helloProvider, CIDs) {
-        helloProvider.init({
-            facebook: CIDs.facebook
-        });
-
+    .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
             // Tabs
             .state('tabs', {

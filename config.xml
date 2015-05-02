@@ -77,6 +77,7 @@
     <gap:platform name="ios"/>
     <gap:platform name="android"/>
     <!--<gap:platform name="winphone"/>-->
+    <icon src="icon.png"/>
     <icon src="resources\android\icon\drawable-ldpi-icon.png" gap:platform="android" density="ldpi"/>
     <icon src="resources\android\icon\drawable-mdpi-icon.png" gap:platform="android" density="mdpi"/>
     <icon src="resources\android\icon\drawable-hdpi-icon.png" gap:platform="android" density="hdpi"/>

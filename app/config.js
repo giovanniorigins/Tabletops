@@ -1,4 +1,8 @@
 angular.module('tabletops.config', [])
+    .constant('CIDs', {
+        facebook: '646933472119700'
+    })
+
     // App Identifier
     .config(['$ionicAppProvider', function ($ionicAppProvider) {
         $ionicAppProvider.identify({
@@ -7,6 +11,14 @@ angular.module('tabletops.config', [])
             api_write_key: '75b5d94940459ffdb9931c83d5def7ee78cd7f6686ce5782a7f963e3b1a7d1bbb9508ba5aec7d80883b320958fcd2149966ac93cfff7edc9937dbd864f632e0b865cc74823cbb40716f85d32f45b6dfa54abfa4440c1fb649bda66443085201d0179f6732b9579fd5d15dc1ea670474bc27e4e06fb3fed65ef4f54b45a991eb19a3a1c436595815329593c3267953852'
         });
     }])
+
+    .config(function ($ionicPlatform, helloProvider, CIDs) {
+        $ionicPlatform.ready(function() {
+            helloProvider.init({
+                facebook: CIDs.facebook
+            });
+        });
+    })
 
     // HTTP Defaults
     .config(function ($httpProvider) {
@@ -52,9 +64,6 @@ angular.module('tabletops.config', [])
             $cordovaAppRateProvider.setPreferences(prefs)
         });
     })*/
-    .constant('CIDs', {
-        facebook: '646933472119700'
-    })
     .constant('HoursDays', [{id: '0', name: 'Sun'}, {id: '1', name: 'Mon'}, {id: '2', name: 'Tue'}, {
         id: '3',
         name: 'Wed'
