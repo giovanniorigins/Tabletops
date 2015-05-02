@@ -23,7 +23,7 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state, $cordovaFacebook, hello) {
+    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state/*, hello*/) {
         var service = {
             login: function (user) {
                 $localForage.setItem('userCreds', user);
@@ -105,7 +105,7 @@ angular.module('tabletops.services', [])
 
             },
             FbCheckLogin: function () {
-                var online = hello.getAuthResponse('facebook');
+                /*var online = hello.getAuthResponse('facebook');
                 $rootScope.$watch('online', function (newValue, oldValue) {
                     if (online.access_token) {
                         var accessToken = online.access_token;
@@ -117,20 +117,20 @@ angular.module('tabletops.services', [])
                     } else {
                         return service.me();
                     }
-                });
+                });*/
             },
             FbLogin: function () {
-                hello('facebook').login({scope: 'email,friends,publish'}).then(function () {
+                /*hello('facebook').login({scope: 'email,friends,publish'}).then(function () {
                     console.log('You are signed in to Facebook');
                     // Call user information, for the given network
                     return service.FbMe();
                 }, function (e) {
                     alert('Signin error: ' + e.error.message);
                     return $state.go('signin');
-                });
+                });*/
             },
             FbMe: function () {
-                hello('facebook').api('/me').then(function(response) {
+                /*hello('facebook').api('/me').then(function(response) {
                     console.log('Facebook login succeeded');
                     $localForage.setItem('useFacebook', true).then(function () {
                         var user = {
@@ -150,7 +150,7 @@ angular.module('tabletops.services', [])
                         });
                         $state.go('tabs.dashboard');
                     });
-                });
+                });*/
             }
         };
         return service;
