@@ -57,7 +57,6 @@
     <script src="http://debug.build.phonegap.com/target/target-script-min.js#015884ee-edfa-11e4-9809-5eaf6f758ba7"></script>
 </head>
 <body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak>
-<ion-side-menus>
     <ion-nav-bar class="bar-assertive" align-title="left">
         <ion-nav-back-button class="button-clear">
             <i class="ion-chevron-left"></i> Back
@@ -68,72 +67,6 @@
         </ion-nav-buttons>
     </ion-nav-bar>
 
-    <ion-side-menu-content drag-content="false">
-        <ion-nav-view></ion-nav-view>
-    </ion-side-menu-content>
-
-    <ion-side-menu side="left">
-        <ion-content scroll="false">
-            <!--<div ng-if="user.id">
-                &lt;!&ndash; SIDEBAR USERPIC &ndash;&gt;
-                <div class="profile-userpic">
-                    <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="" width="100px">
-                    <img ng-if="::!user.avatar" src="http://lorempixel.com/food/200/200" class="img-responsive" alt="">
-                </div>
-                &lt;!&ndash; END SIDEBAR USERPIC &ndash;&gt;
-                &lt;!&ndash; SIDEBAR USER TITLE &ndash;&gt;
-                <div class="profile-usertitle">
-                    <div class="profile-usertitle-name" ng-bind="::user.full_name">
-                    </div>
-                    &lt;!&ndash;<div class="profile-usertitle-job">
-                        Developer
-                    </div>&ndash;&gt;
-                </div>
-            </div>-->
-
-            <!-- END SIDEBAR USER TITLE -->
-            <!-- SIDEBAR BUTTONS -->
-            <div class="profile-userbuttons" ng-if="!user.id">
-                <a menu-close type="button" class="button button-block icon ion-log-in button-clear" ui-sref="signin" ui-sref-active="active">
-                    Sign in
-                </a>
-            </div>
-            <!-- END SIDEBAR BUTTONS -->
-            <div class="list">
-                <a ng-if="user.id" class="item item-avatar" href="#">
-                    <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="">
-                    <img ng-if="::!user.avatar" src="http://lorempixel.com/food/200/200" class="img-responsive" alt="">
-                    <h2 ng-bind="::user.full_name"></h2>
-                    <p>Super Foodie</p>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.dashboard" ui-sref-active="active">
-                    <i class="icon ion-home"></i>
-                    Dashboard
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.favorites" ui-sref-active="active">
-                    <i class="icon ion-heart"></i>
-                    Favorites
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.map" ui-sref-active="active">
-                    <i class="icon ion-map"></i>
-                    Explore
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.restaurants" ui-sref-active="active">
-                    <i class="icon ion-pizza"></i>
-                    Restaurants
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.settings" ui-sref-active="active">
-                    <i class="icon ion-gear-a"></i>
-                    Settings
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-            </div>
-        </ion-content>
-    </ion-side-menu>
-</ion-side-menus>
+    <ion-nav-view></ion-nav-view>
 </body>
 </html>
