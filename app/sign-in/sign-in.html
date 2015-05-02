@@ -14,15 +14,20 @@
                 </fieldset>
 
                 <div class="row responsive-sm">
-                    <button class="col col-75 button button-block button-light" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
-                        <span ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
-                        <span ng-show="showAccountForm">GO BACK</span>
-                    </button>
+                    <div class="col col-75 padding">
+                        <button class="button button-block button-light" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
+                            <span ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
+                            <span ng-show="showAccountForm">GO BACK</span>
+                        </button>
+                    </div>
 
-                    <button class="col col-25 button button-block button-dark" ng-click="showForm = !showForm" ng-hide="showAccountForm">
-                        <span ng-hide="showForm">LOGIN</span>
-                        <span ng-show="showForm">GO BACK</span>
-                    </button>
+                    <div class="col col-25 padding">
+                        <button class="button button-block button-dark" ng-click="showForm = !showForm" ng-hide="showAccountForm">
+                            <span ng-hide="showForm">LOGIN</span>
+                            <span ng-show="showForm">GO BACK</span>
+                        </button>
+                    </div>
+
                 </div>
 
                 <div class="animated fast" ng-show="showForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showForm]">
