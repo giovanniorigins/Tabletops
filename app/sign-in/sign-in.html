@@ -6,9 +6,10 @@
             </div>
 
             <div class="padding" ng-init="showForm = false;showAccountForm = false">
-                <button class="button icon-left ion-social-facebook button button-block button-positive" ng-click="signIn(user)" ng-hide="showAccountForm||showForm">
+                <button class="button icon-left ion-social-facebook button button-block button-positive" ng-click="signInFacebook()" ng-hide="showAccountForm||showForm">
                     Login with Facebook
                 </button>
+                <div class="horizontal-text"><span> your text </span></div>
 
                 <button class="button icon-left ion-email button button-block button-dark" ng-click="showForm = !showForm" ng-hide="showAccountForm">
                     <span ng-hide="showForm">Login with Email</span>
