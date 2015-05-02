@@ -23,7 +23,7 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state/*, hello*/, $cordovaInAppBrowser, $cordovaFacebookProvider) {
+    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state/*, hello*/, $cordovaInAppBrowser, $cordovaFacebook) {
         var service = {
             login: function (user) {
                 $localForage.setItem('userCreds', user);
