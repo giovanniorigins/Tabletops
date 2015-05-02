@@ -1,5 +1,7 @@
 var valById = function (arr, id) {
-    return _.find(arr, function (a) {return parseFloat(a.id) == parseFloat(id)});
+    return _.find(arr, function (a) {
+        return parseFloat(a.id) == parseFloat(id)
+    });
 };
 
 var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
@@ -21,46 +23,121 @@ var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
     return arr;
 };
 
+// ES5 15.4.4.21 Array.prototype.reduce ( callbackfn [ , initialValue ] )
+// From https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/Reduce
+if (!Array.prototype.reduce) {
+    Array.prototype.reduce = function (fun /*, initialValue */) {
+        "use strict";
+
+        if (this === void 0 || this === null) {
+            throw new TypeError();
+        }
+
+        var t = Object(this);
+        var len = t.length >>> 0;
+        if (typeof fun !== "function") {
+            throw new TypeError();
+        }
+
+        // no value to return if no initial value and an empty array
+        if (len === 0 && arguments.length === 1) {
+            throw new TypeError();
+        }
+
+        var k = 0;
+        var accumulator;
+        if (arguments.length >= 2) {
+            accumulator = arguments[1];
+        } else {
+            do {
+                if (k in t) {
+                    accumulator = t[k++];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (++k >= len) {
+                    throw new TypeError();
+                }
+            }
+            while (true);
+        }
+
+        while (k < len) {
+            if (k in t) {
+                accumulator = fun.call(undefined, accumulator, t[k], k, t);
+            }
+            k++;
+        }
+
+        return accumulator;
+    };
+}
+
+var closestLocation = function (targetLocation, locationData) {
+    function vectorDistance(dx, dy) {
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function locationDistance(location1, location2) {
+        var dx = (location1.latitude || location1.lat) - (location2.latitude || location2.lat),
+            dy = (location1.longitude || location1.lng) - (location2.longitude || location2.lng);
+
+        return vectorDistance(dx, dy);
+    }
+
+    return locationData.reduce(function (prev, curr) {
+        var prevDistance = locationDistance(targetLocation, prev),
+            currDistance = locationDistance(targetLocation, curr);
+        return (prevDistance < currDistance) ? prev : curr;
+    });
+};
+
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state, $localForage, Province, ListingRepository) {
-        $scope.navTitle = '<img class="title-image" src="img/logo2.png" style="margin-top: 8px" />';
-
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state, $localForage, Province, ListingRepository, $ionicPopover) {
         $scope.settings = {
             geolocation: false,
-            province: {}
+            province: {
+                id: "15",
+                name: "New Providence / Paradise Island",
+                slug: "np-pi",
+                country_id: "1",
+                lat: 25.033965,
+                lng: -77.35176
+            }
         };
 
         // Handle Settings
-        $localForage.getItem('province').then(function(data) {
+        $localForage.getItem('province').then(function (data) {
             $scope.settings.province = data;
         });
 
         // Handle Network Status
-        $ionicPlatform.ready(function() {
+        $ionicPlatform.ready(function () {
 
             var type = $cordovaNetwork.getNetwork();
 
-            var isOnline = $cordovaNetwork.isOnline();
+             var isOnline = $cordovaNetwork.isOnline();
 
-            var isOffline = $cordovaNetwork.isOffline();
+             var isOffline = $cordovaNetwork.isOffline();
 
 
             // listen for Online event
-            $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+            $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
                 console.log('App Online');
                 $rootScope.onlineState = networkState;
             });
 
             // listen for Offline event
-            $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+            $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
                 console.log('App Offline');
                 $rootScope.offlineState = networkState;
             });
         });
 
         // Handle Geolocation
-        $scope.geoOptions = {
+        var geoOptions = {
             enableHighAccuracy: true,
             timeout: 600000,
             maximumAge: 599000
@@ -68,8 +145,7 @@ angular.module('tabletops.controllers', [])
 
         /*$scope.myLocation = $cordovaGeolocation.watchPosition($scope.geoOptions);*/
 
-        var watch = $cordovaGeolocation.watchPosition($scope.geoOptions);
-
+        var watch = $cordovaGeolocation.watchPosition(geoOptions);
         watch.then(
             null,
             function (err) {
@@ -77,6 +153,7 @@ angular.module('tabletops.controllers', [])
                 console.log(err);
             },
             function (position) {
+                console.log(position);
                 $scope.myLocation = position;
             });
 
@@ -84,36 +161,43 @@ angular.module('tabletops.controllers', [])
             $ionicSideMenuDelegate.toggleLeft();
         };
 
-        $scope.toggleRight = function () {
-            $ionicSideMenuDelegate.toggleRight();
-        };
+        /*$scope.toggleRight = function () {
+         $ionicSideMenuDelegate.toggleRight();
+         };*/
 
         $scope.selectProvinces = function () {
-            if($rootScope.provincesMenu == true) {
-                $scope.toggleRight();
-                return $rootScope.provincesMenu = !1;
-            }
-            $localForage.getItem('provinces').then(function(data) {
+            $localForage.getItem('provinces').then(function (data) {
                 $scope.provinces = angular.isDefined(data) ? data : Province.query({}, function (res) {
                     $scope.provinces = res;
-                    $localForage.getItem('provinces', res);
+                    $localForage.setItem('provinces', res);
                     return $scope.toggleRight();
                 });
-                $rootScope.provincesMenu = true;
-                $scope.toggleRight();
             });
         };
 
-        $localForage.getItem('provinces').then(function(data) {
+        $localForage.getItem('provinces').then(function (data) {
             $scope.provinces = angular.isDefined(data) ? data : Province.query({}, function (res) {
                 $scope.provinces = res;
-                $localForage.getItem('provinces', res);
+                $localForage.setItem('provinces', res);
             });
         });
 
         $scope.setProvince = function (p) {
             $scope.settings.province = p;
             $localForage.setItem('province', p);
+            $scope.closeProvincePopover();
+            $cordovaToast.showShortBottom(p.name + ' is now your default province.')
+        };
+
+        $scope.findClosest = function (targetLocation, locations) {
+            var closest = closestLocation(targetLocation, locations);
+            console.log(closest);
+            return closest;
+        };
+
+        $scope.selectClosestProvince = function () {
+            var closest = $scope.findClosest($scope.myLocation.coords, $scope.provinces);
+            $scope.setProvince(closest);
         };
 
         $scope.setNavTitle = function (title) {
@@ -152,41 +236,60 @@ angular.module('tabletops.controllers', [])
             ListingRepository.initCaller(obj);
         };
 
-        $scope.$on('event:auth-loginConfirmed', function() {
+        $scope.$on('event:auth-loginConfirmed', function () {
             $rootScope.isLoggedin = true;
             $state.go('tabs.dashboard');
         });
 
+        // .fromTemplateUrl() method
+        $ionicPopover.fromTemplateUrl('app/common/ProvincePopover.html', {
+            scope: $scope
+        }).then(function (popover) {
+            $scope.provPopover = popover;
+        });
+
+
+        $scope.openProvincePopover = function ($event) {
+            $scope.provPopover.show($event);
+        };
+        $scope.closeProvincePopover = function () {
+            $scope.provPopover.hide();
+        };
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.provPopover.remove();
+        });
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform, $cordovaFacebook) {
-        $ionicPlatform.ready(function() {
+        $ionicPlatform.ready(function () {
             AuthenticationService.FbCheckLogin();
         });
 
     })
-    .controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
+    .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
 
         // Called to navigate to the main app
-        $scope.startApp = function() {
+        $scope.startApp = function () {
             $state.go('tabs.dashboard');
         };
-        $scope.next = function() {
+        $scope.next = function () {
             $ionicSlideBoxDelegate.next();
         };
-        $scope.previous = function() {
+        $scope.previous = function () {
             $ionicSlideBoxDelegate.previous();
         };
 
         // Called each time the slide changes
-        $scope.slideChanged = function(index) {
+        $scope.slideChanged = function (index) {
             $scope.slideIndex = index;
         };
     })
     .controller('SignInCtrl', function ($rootScope, $scope, $state, AuthenticationService, $localForage) {
         $localForage.getItem('userCreds').then(function (data) {
             console.log(data);
-            if(!angular.isUndefined(data) || data)
-                AuthenticationService.login(data);
+            if (!angular.isUndefined(data) || data) {
+            }
+            //AuthenticationService.login(data);
         });
 
         $scope.message = "";
@@ -196,7 +299,7 @@ angular.module('tabletops.controllers', [])
             password: null
         };
 
-        $scope.login = function() {
+        $scope.login = function () {
             AuthenticationService.login($scope.user);
         };
 
@@ -204,12 +307,12 @@ angular.module('tabletops.controllers', [])
             AuthenticationService.FbLogin();
         };
 
-        $scope.$on('event:auth-loginRequired', function(e, rejection) {
+        $scope.$on('event:auth-loginRequired', function (e, rejection) {
             console.log('handling login required');
             $state.go('signin');
         });
 
-        $scope.$on('event:auth-login-failed', function(e, status) {
+        $scope.$on('event:auth-login-failed', function (e, status) {
             var error = "Login failed.";
             if (status == 401) {
                 error = "Invalid Username or Password.";
@@ -217,7 +320,7 @@ angular.module('tabletops.controllers', [])
             $scope.message = error;
         });
 
-        $scope.$on('event:auth-logout-complete', function() {
+        $scope.$on('event:auth-logout-complete', function () {
             console.log("logout complete");
             $state.go('signin', {}, {reload: true, inherit: false});
         });
@@ -227,7 +330,7 @@ angular.module('tabletops.controllers', [])
             AuthenticationService.logout();
         });
     })
-    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval) {
+    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicPopover) {
         $scope.getNearby = function () {
             $scope.qData = {app_search: true, range: 5, limit: 5};
             if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
@@ -280,7 +383,7 @@ angular.module('tabletops.controllers', [])
         ];
 
         $scope.startSearch = function () {
-            $state.go('tabs.results', { search: this.search });
+            $state.go('tabs.results', {search: this.search});
         };
 
         $scope.getWidth = function () {
@@ -305,25 +408,25 @@ angular.module('tabletops.controllers', [])
         $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
             scope: $scope,
             animation: 'slide-in-up'
-        }).then(function(modal) {
+        }).then(function (modal) {
             $scope.modal = modal;
         });
-        $scope.openFiltersModal = function() {
+        $scope.openFiltersModal = function () {
             $scope.modal.show();
         };
-        $scope.closeFiltersModal = function() {
+        $scope.closeFiltersModal = function () {
             $scope.modal.hide();
         };
         //Cleanup the modal when we're done with it!
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
             $scope.modal.remove();
         });
         // Execute action on hide modal
-        $scope.$on('modal.hidden', function() {
+        $scope.$on('modal.hidden', function () {
             // Execute action
         });
         // Execute action on remove modal
-        $scope.$on('modal.removed', function() {
+        $scope.$on('modal.removed', function () {
             // Execute action
         });
 
@@ -333,7 +436,7 @@ angular.module('tabletops.controllers', [])
             $scope.directionsSet = false;
             $scope.showDirections = false;
 
-                Listing.query({}, function (res) {
+            Listing.query({}, function (res) {
                 if ($scope.myLocation.coords) {
                     $scope.center = {
                         lat: $scope.myLocation.coords.latitude,
@@ -354,7 +457,7 @@ angular.module('tabletops.controllers', [])
                 }
 
                 $scope.listings = res;
-                for(var a = 0, len_a = res.length; a < len_a; a++) {
+                for (var a = 0, len_a = res.length; a < len_a; a++) {
                     var v = res[a];
                     for (var i = 0, len = v.locations.length; i < len; i++) {
                         var loc = v.locations[i];
@@ -362,9 +465,11 @@ angular.module('tabletops.controllers', [])
                             //layer: "listings",
                             lat: loc.lat,
                             lng: loc.lng,
-                            getMessageScope: function () { return $scope; },
+                            getMessageScope: function () {
+                                return $scope;
+                            },
                             compileMessage: true,
-                            message: '<div><h6 class="text-center">' + v.name + '</h6><div class="row"><button class="button button-small button-clear col col-33">' + v.like_count + ' <span class="icon ion-heart calm"></span></button><button class="button button-small button-clear col col-33">' + v.rating_count + ' <span class="icon ion-chatbubbles energized"></span></button><button class="button button-small button-clear balanced col col-33">' + $scope.showDollars(v.restaurant.price_range, true) + '</button></div><div class="row"><div class="col col-50"><a ui-sref="tabs.restaurant({id:\'' + v.slug + '\'})" class="button button-small button-icon icon ion-eye"></a></div><div class="col col-50"><tt-directions get-directions="startDirections(lat, lng)" lat="'+loc.lat+'" lng="'+loc.lng+'" ></tt-directions></div></div></div>',
+                            message: '<div><h6 class="text-center">' + v.name + '</h6><div class="row"><button class="button button-small button-clear col col-33">' + v.like_count + ' <span class="icon ion-heart calm"></span></button><button class="button button-small button-clear col col-33">' + v.rating_count + ' <span class="icon ion-chatbubbles energized"></span></button><button class="button button-small button-clear balanced col col-33">' + $scope.showDollars(v.restaurant.price_range, true) + '</button></div><div class="row"><div class="col col-50"><a ui-sref="tabs.restaurant({id:\'' + v.slug + '\'})" class="button button-small button-icon icon ion-eye"></a></div><div class="col col-50"><tt-directions get-directions="startDirections(lat, lng)" lat="' + loc.lat + '" lng="' + loc.lng + '" ></tt-directions></div></div></div>',
                             icon: {
                                 prefix: 'ion',
                                 type: 'extraMarker',
@@ -462,9 +567,9 @@ angular.module('tabletops.controllers', [])
 
                 L.mapbox.accessToken = 'pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ';
                 $scope.directions = L.mapbox.directions();
-                $scope.directions.setOrigin(L.latLng($scope.myLocation.coords.latitude,$scope.myLocation.coords.longitude));
+                $scope.directions.setOrigin(L.latLng($scope.myLocation.coords.latitude, $scope.myLocation.coords.longitude));
 
-                var directionsLayer = L.mapbox.directions.layer($scope.directions, {readonly:true})
+                var directionsLayer = L.mapbox.directions.layer($scope.directions, {readonly: true})
                     .addTo(map);
 
                 var directionsErrorsControl = L.mapbox.directions.errorsControl('errors', $scope.directions)
@@ -479,11 +584,11 @@ angular.module('tabletops.controllers', [])
 
 
             $scope.startDirections = function (lat, lng) {
-                $scope.directions.setDestination(L.latLng(lat,lng));
+                $scope.directions.setDestination(L.latLng(lat, lng));
                 $scope.directions.query();
                 $scope.directionsSet = true;
                 $scope.showDirections = false;
-                leafletData.getMap().then(function(map) {
+                leafletData.getMap().then(function (map) {
                     map.closePopup();
                     map.fitBounds([
                         [$scope.directions.origin.geometry.coordinates[1], $scope.directions.origin.geometry.coordinates[0]],
@@ -531,71 +636,88 @@ angular.module('tabletops.controllers', [])
         $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
             scope: $scope,
             animation: 'slide-in-up'
-        }).then(function(modal) {
+        }).then(function (modal) {
             $scope.modal = modal;
         });
-        $scope.openFiltersModal = function() {
+        $scope.openFiltersModal = function () {
             $scope.modal.show();
         };
-        $scope.closeFiltersModal = function() {
+        $scope.closeFiltersModal = function () {
             $scope.modal.hide();
         };
         //Cleanup the modal when we're done with it!
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
             $scope.modal.remove();
         });
         // Execute action on hide modal
-        $scope.$on('modal.hidden', function() {
+        $scope.$on('modal.hidden', function () {
             // Execute action
         });
         // Execute action on remove modal
-        $scope.$on('modal.removed', function() {
+        $scope.$on('modal.removed', function () {
             // Execute action
         });
     })
-    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal',
-        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal) {
-            console.log($stateParams);
-            $rootScope.cuisines = Cuisine.query();
+    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage',
+        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage) {
+            Cuisine.query({}, function (res) {
+                $scope.cuisines = res;
+                $scope.cuisineList = angular.copy(res);
+                $scope.cuisineList.push({ slug: null, name:'Any'});
+            });
 
-            $rootScope.filters = {
+            $scope.filters = {
+                app_search: true,
                 search: $stateParams.search || undefined,
-                province: '',
-                province_id: 0,
-                sort: '',
+                province: $scope.settings.province.slug,
+                province_id: $scope.settings.province.id,
+                sort: undefined,
                 cuisine: $stateParams.cuisine || undefined,
                 price_range: undefined,
                 type: undefined,
-                selected: [],
-                toggles: [
-                    {icon: 'icon ion-wifi', name: 'Wi-fi', slug: 'wifi', value: undefined},
-                    {icon: 'icon ion-music-note', name: 'Live Music', slug: 'live_music', value: undefined},
-                    {icon: 'icon ion-ios-telephone', name: 'Takeout', slug: 'takeout', value: undefined},
-                    {icon: 'icon ion-model-s', name: 'Delivery', slug: 'delivery', value: undefined},
-                    {icon: 'icon ion-help-buoy', name: 'Handicap Accessible', slug: 'disability', value: undefined},
-                    {icon: 'icon ion-ios-sunny', name: 'Outdoor Seating', slug: 'outdoor_seating', value: undefined},
-                    {icon: 'icon ion-checkmark ', name: 'Reservations Pref/Only', slug: 'reservations_preferred', value: undefined },
-                ]
+                wifi: undefined,
+                live_music: undefined,
+                takeout: undefined,
+                delivery: undefined,
+                disability: undefined,
+                outdoor_seating: undefined,
+                reservations_preferred: undefined
             };
 
-            $scope.qData = {app_search: true, search: $scope.filters.search, cuisine: $scope.filters.cuisine};
+            $scope.toggles = [
+                {icon: 'icon ion-wifi', name: 'Wi-fi', slug: 'wifi', value: undefined},
+                {icon: 'icon ion-music-note', name: 'Live Music', slug: 'live_music', value: undefined},
+                {icon: 'icon ion-ios-telephone', name: 'Takeout', slug: 'takeout', value: undefined},
+                {icon: 'icon ion-model-s', name: 'Delivery', slug: 'delivery', value: undefined},
+                {icon: 'icon ion-help-buoy', name: 'Handicap Accessible', slug: 'disability', value: undefined},
+                {icon: 'icon ion-ios-sunny', name: 'Outdoor Seating', slug: 'outdoor_seating', value: undefined},
+                {icon: 'icon ion-checkmark ', name: 'Reservations Pref/Only', slug: 'reservations_preferred', value: undefined}
+            ];
+
+            /*$scope.$watchCollection('filters', function (newValue, oldValue) {
+                console.log(newValue);
+            });*/
+
             $scope.refresh = function () {
                 if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
-                    angular.extend($scope.qData, {
+                    angular.extend($scope.filters, {
                         lat: $scope.myLocation.coords.latitude,
                         lng: $scope.myLocation.coords.longitude
                     });
                 }
-                $scope.restaurants = Listing.query($scope.qData);
+                $scope.restaurants = Listing.query($scope.filters);
                 $scope.restaurants.$promise.finally(function () {
                     $scope.$broadcast('scroll.refreshComplete');
+                    $scope.$watchCollection('filters', function (newValue, oldValue) {
+
+                    });
                 });
             };
 
             $scope.refresh();
 
-            $rootScope.sorts = [
-                {name: 'Default', value: ''},
+            $scope.sorts = [
+                {name: 'Default', value: undefined},
                 {name: 'Name', value: 'name'},
                 {name: 'Price', value: 'restaurant.price_range'},
                 {name: 'Highest Rating', value: '-rating_cache'},
@@ -608,39 +730,46 @@ angular.module('tabletops.controllers', [])
             };
 
             $scope.$on('$destroy', function () {
-                $rootScope.filtersMenu = false;
-                $rootScope.cuisines = $rootScope.sorts = [];
-                $rootScope.filters = {
-                    toggles: {}
-                };
+                $rootScope.sorts = [];
+                $rootScope.filters = {};
             });
 
             // FiltersModal
             $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
                 scope: $scope,
                 animation: 'slide-in-up'
-            }).then(function(modal) {
+            }).then(function (modal) {
                 $scope.modal = modal;
             });
-            $scope.openFiltersModal = function() {
+            $scope.openFiltersModal = function () {
                 $scope.modal.show();
             };
-            $scope.closeFiltersModal = function() {
+            $scope.closeFiltersModal = function () {
                 $scope.modal.hide();
             };
             //Cleanup the modal when we're done with it!
-            $scope.$on('$destroy', function() {
+            $scope.$on('$destroy', function () {
                 $scope.modal.remove();
             });
             // Execute action on hide modal
-            $scope.$on('modal.hidden', function() {
+            $scope.$on('modal.hidden', function () {
                 // Execute action
             });
             // Execute action on remove modal
-            $scope.$on('modal.removed', function() {
+            $scope.$on('modal.removed', function () {
                 // Execute action
             });
-    }])
+
+            //force refresh on province change
+            $scope.$on('$ionicView.enter', function() {
+                $localForage.getItem('province').then(function (data) {
+                    if (data.slug != $scope.filters.province) {
+                        $scope.filters.province = data.slug;
+                        $scope.refresh();
+                    }
+                });
+            })
+        }])
     .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', 'leafletData', 'leafletBoundsHelpers', 'HoursDays', 'StartHours', 'EndHours', 'ListingRepository',
         function ($scope, Listing, listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours, ListingRepository) {
             $scope.listing = listing.data;
@@ -668,9 +797,11 @@ angular.module('tabletops.controllers', [])
                     //layer: "listings",
                     lat: loc.lat,
                     lng: loc.lng,
-                    getMessageScope: function () { return $scope; },
+                    getMessageScope: function () {
+                        return $scope;
+                    },
                     compileMessage: true,
-                    message: '<div><h6 class="text-center">' + $scope.listing.name + '</h6><div class="row row-no-padding"><div class="col"><tt-directionsa get-directions="startDirections(lat, lng)" lat="'+loc.lat+'" lng="'+loc.lng+'" ></tt-directionsa></div></div></div>',
+                    message: '<div><h6 class="text-center">' + $scope.listing.name + '</h6><div class="row row-no-padding"><div class="col"><tt-directionsa get-directions="startDirections(lat, lng)" lat="' + loc.lat + '" lng="' + loc.lng + '" ></tt-directionsa></div></div></div>',
                     icon: {
                         prefix: 'ion',
                         type: 'extraMarker',
@@ -797,9 +928,9 @@ angular.module('tabletops.controllers', [])
             leafletData.getMap().then(function (map) {
                 L.mapbox.accessToken = 'pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ';
                 $scope.directions = L.mapbox.directions();
-                $scope.directions.setOrigin(L.latLng($scope.myLocation.coords.latitude,$scope.myLocation.coords.longitude));
+                $scope.directions.setOrigin(L.latLng($scope.myLocation.coords.latitude, $scope.myLocation.coords.longitude));
 
-                var directionsLayer = L.mapbox.directions.layer($scope.directions, {readonly:true})
+                var directionsLayer = L.mapbox.directions.layer($scope.directions, {readonly: true})
                     .addTo(map);
 
                 var directionsErrorsControl = L.mapbox.directions.errorsControl('errors', $scope.directions)
@@ -813,11 +944,11 @@ angular.module('tabletops.controllers', [])
             });
 
             $scope.startDirections = function (lat, lng) {
-                $scope.directions.setDestination(L.latLng(lat,lng));
+                $scope.directions.setDestination(L.latLng(lat, lng));
                 $scope.directions.query();
                 $scope.directionsSet = true;
                 $scope.showDirections = false;
-                leafletData.getMap().then(function(map) {
+                leafletData.getMap().then(function (map) {
                     map.closePopup();
                     map.fitBounds([
                         [$scope.directions.origin.geometry.coordinates[1], $scope.directions.origin.geometry.coordinates[0]],

@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
+angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ngHello', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
     .run(function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage) {
         $ionicPlatform.ready(function () {
@@ -18,6 +18,17 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 // org.apache.cordova.statusbar required
                 StatusBar.styleLightContent();
             }
+
+            /*var info = {
+                deviceInformation: ionic.Platform.device(),
+
+            isWebView: ionic.Platform.isWebView(),
+            isIPad: ionic.Platform.isIPad(),
+            isIOS: ionic.Platform.isIOS(),
+            isAndroid: ionic.Platform.isAndroid(),
+            isWindowsPhone: ionic.Platform.isWindowsPhone()
+            };
+            console.log(info);*/
         });
 
         $rootScope.$on('loading:show', function () {
@@ -79,7 +90,11 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         });
     })
 
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, helloProvider, CIDs) {
+        helloProvider.init({
+            facebook: CIDs.facebook
+        });
+
         $stateProvider
             // Tabs
             .state('tabs', {
@@ -289,7 +304,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             });
 
         // if none of the above states are matched, use this as the fallback
-        //$urlRouterProvider.otherwise('/dashboard');
-        $urlRouterProvider.otherwise('/splash');
+        $urlRouterProvider.otherwise('/tab/dashboard');
+        //$urlRouterProvider.otherwise('/sign-in');
 
     });

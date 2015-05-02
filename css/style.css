@@ -13,18 +13,63 @@
     line-height: 1.5;*/
 }
 
+.title-image {
+    padding-top: 4px;
+    height: 100%;
+    border-radius: 5px;
+    padding-bottom: 4px;
+}
+
 
 /* Dashboard */
-.nearby-scroller .collection-repeat-container,
+/*.nearby-scroller .collection-repeat-container,
 .gallery-prev-scroller .collection-repeat-container {
     height: 105px;
-}
+}*/
 .nearby-card {
-    /*width: 100% !important;*/
-    /*height: 105px !important;*/
-    margin-top: 0;
+    height: 125px;
     max-width: 360px;
+    display: inline-block;
+    margin: 0 5px;
+    border-radius: 2px;
+    overflow: hidden;
 }
+
+.nearby-card:nth-child(1) {
+    margin-left: 10px;
+}
+
+.nearby-card:last-child {
+    margin-right: 10px;
+}
+
+.more-card {
+    width: 125px;
+    height: 125px;
+    background-color: white;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+
+.more-card div {
+    position: absolute;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.3em;
+    display: block;
+    top: 33%;
+    left: 25%;
+}
+
+.wide-as-needed {
+    /*overflow: scroll;*/
+    white-space: nowrap;
+}
+.scroll {
+    min-width: 100%;
+}
+
 /* Profile container */
 .profile {
     margin: 20px 0;
@@ -182,9 +227,15 @@
 }
 
 /* Listings */
-.distance-badger {
-    border: 1px solid;
-    border-radius: 10px;
+.badge.distance-badge {
+    /*border: 1px solid;*/
+    /*border-radius: 10px;*/
+    display: inline;
+    position: relative;
+    top: auto;
+    right: auto;
+    /*float: right;*/
+    font-size: .8rem;
 }
 
 /* Accordion */
@@ -322,4 +373,24 @@
     text-align: left;
     list-style: decimal;
     margin: 10px 0px;
+}
+
+.featured-header{
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+}
+
+.featured-header legend{
+    -webkit-padding-start: 8px; /* It sets the whitespace between the line and the text */
+    -webkit-padding-end: 8px;
+    background: transparent; /** It's cool because you don't need to fill your bg-color as you would need to in some of the other examples that you can find (: */
+    font-weight: normal; /* I prefer the text to be regular instead of bold  */
+    /*color: #ffffff;*/
+    font-size: 1em;
+    width: auto;
+    border: none;
+    line-height: 1.2;
+
 }

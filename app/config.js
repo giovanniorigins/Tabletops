@@ -52,6 +52,9 @@ angular.module('tabletops.config', [])
             $cordovaAppRateProvider.setPreferences(prefs)
         });
     })*/
+    .constant('CIDs', {
+        facebook: '646933472119700'
+    })
     .constant('HoursDays', [{id: '0', name: 'Sun'}, {id: '1', name: 'Mon'}, {id: '2', name: 'Tue'}, {
         id: '3',
         name: 'Wed'

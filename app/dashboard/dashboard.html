@@ -1,66 +1,81 @@
-<ion-view hide-back-button="true">
-    <ion-nav-title>
-        <img class="title-image" src="img/logo2.png" style="margin-top: 8px" />
-    </ion-nav-title>
-    <ion-content class="" id="dashboard">
+<ion-view hide-back-button="true" hide-nav-bar="true">
+    <ion-header-bar class="bar bar-header bar-assertive item-input-inset">
+        <div class="" style="height: auto;width: 36px;">
+            <img class="title-image" src="../icon.png" style="width: 100%;display: block; height: auto"/>
+        </div>
+        <button class="button button-icon ion-location" ng-click="openProvincePopover($event)"></button>
+        <form ng-submit="startSearch()" class="col">
+            <label class="item-input-wrapper">
+                <!--<i class="icon ion-ios-search placeholder-icon"></i>-->
+                <input type="search" placeholder="Search restaurants" ng-model="search">
+            </label>
+            <button class="hide" type="submit"></button>
+        </form>
+        <button ng-hide="search.length" class="button button-icon icon ion-ios-search" ng-click="startSearch()"></button>
+    </ion-header-bar>
+    <ion-content class="has-header padding-top" id="dashboard">
         <div class="">
-            <div class="row padding bg-food">
-                <div class="col" style="margin: 30px auto;">
-                    <form class="list list-inset" ng-submit="startSearch()" style="background: none;">
-                        <label class="item item-input item-select">
-                            <div class="input-label">
-                                Province
-                            </div>
-                            <select ng-options="prov.slug as prov.name for prov in provinces" ng-model="province"></select>
-                        </label>
-                        <label class="item item-input">
-                            <i class="icon ion-search placeholder-icon"></i>
-                            <input type="text" placeholder="Search restaurants" ng-model="search" >
-                        </label>
-                        <button class="button button-block button-assertive" type="submit">
-                            Search
-                        </button>
+            <div class="">
+                <fieldset class="featured-header">
+                    <legend class="assertive">NEARBY</legend>
+                </fieldset>
 
-                    </form>
-                </div>
-            </div>
-
-            <h5 class="padding-horizontal">
-                NEARBY
-                <a class="badge badge-dark" ui-sref="tabs.nearby" style="float: right;">View All <i class="icon ion-arrow-right-b"></i></a>
-            </h5>
-            <ion-scroll direction="x" class="available-scroller nearby-scroller">
-                <div class="nearby-card" collection-repeat="res in restaurants" item-height="100%" item-width="100%">
-                    <div class=" item item-avatar" ui-sref="tabs.restaurant({id: res.slug})" style="margin-right: 10px;margin-left: 10px">
-                        <img ng-src="{{::res.logo.path}}">
-                        <h2>{{::res.name}}</h2>
-                        <p class="row row-no-padding">
+                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                    <div class="nearby-card card" ng-repeat="res in restaurants">
+                        <div class="item item-avatar" ui-sref="tabs.restaurant({id: res.slug})">
+                            <img ng-src="{{::res.logo.path}}">
+                            <h2>{{::res.name}}</h2>
+                            <p class="row row-no-padding">
                         <span class="col col-50">
                             <span ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></span>
                         </span>
                         <span class="col col-50 text-right">
                            <span ng-bind-html="::showDollars(res.restaurant.price_range)"></span>
                         </span>
-                        </p>
-                        <p>
-                            <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
-                        </p>
-                        <p style="font-size: 80%">
-                            <span class="distance-badge light-bg">{{::res.distance|number:2}} miles away</span>
-                        </p>
+                            </p>
+                            <p>
+                                <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
+                            </p>
+                            <p style="font-size: 80%">
+                                <span class="distance-badge badge badge-stable">{{::res.distance|number:2}} miles away</span>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </ion-scroll>
+                    <div class="nearby-card more-card hide" ui-sref="tabs.nearby">
+                        <div><i class="icon ion-plus-circled"></i> <br>View All</div>
+                    </div>
+                </ion-scroll>
+            </div>
 
-            <h5 class="padding-horizontal">
-                CUISINES
-                <a class="badge badge-dark" ui-sref="tabs.cuisines" style="float: right;">View All <i class="icon ion-arrow-right-b"></i></a>
-            </h5>
-            <ion-scroll direction="x" class="available-scroller nearby-scroller">
-                <div class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" collection-repeat="c in cuisines" item-height="100" item-width="270">
-                    <img ng-src="{{::c.img}}">
-                </div>
-            </ion-scroll>
+            <div class="padding-top">
+                <fieldset class="featured-header assertive">
+                    <legend class="assertive">CUISINES</legend>
+                </fieldset>
+
+                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                    <div class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines">
+                        <img ng-src="{{::c.img}}">
+                    </div>
+                    <div class="nearby-card more-card" ui-sref="tabs.cuisines">
+                        <div><i class="icon ion-plus-circled"></i> <br>View All</div>
+                    </div>
+                </ion-scroll>
+            </div>
+
+            <div class="padding-top hide">
+                <fieldset class="featured-header assertive">
+                    <legend class="assertive">EVENTS</legend>
+                </fieldset>
+
+                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                    <div class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines">
+                        <img ng-src="{{::c.img}}">
+                    </div>
+                    <div class="nearby-card more-card" ui-sref="tabs.cuisines">
+                        <div><i class="icon ion-plus-circled"></i> <br>View All</div>
+                    </div>
+                </ion-scroll>
+            </div>
 
         </div>
     </ion-content>
