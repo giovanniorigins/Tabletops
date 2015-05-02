@@ -13,18 +13,21 @@
     <link href="www/lib/leaflet.markercluster/dist/MarkerCluster.Default.css" rel="stylesheet">
     <link href="www/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css" rel="stylesheet">
     <link href="www/lib/Leaflet.extra-markers/src/leaflet.extra-markers.css" rel="stylesheet">
-    <link href="www/css/animate.css" rel="stylesheet">
-    <link href="www/css/style.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
     <script src="www/lib/underscore/underscore-min.js"></script>
+    <script src="www/lib/hello/dist/hello.all.js"></script>
+    <script src="www/lib/move.js/move.min.js"></script>
     <!-- ionic/angularjs js -->
     <script src="www/lib/ionic/js/ionic.bundle.min.js"></script>
     <script src="www/lib/ionic-service-core/ionic-core.js"></script>
     <script src="www/lib/ionic-service-deploy/ionic-deploy.js"></script>
     <script src="www/lib/ionic-service-analytics/ionic-analytics.js"></script>
+    <script src="www/lib/ng-hello/dist/ng-hello.min.js"></script>
     <script src="www/lib/localforage/dist/localforage.min.js"></script>
     <script src="www/lib/angular-localforage/dist/angular-localForage.min.js"></script>
     <script src="www/lib/angular-resource/angular-resource.min.js"></script>
@@ -45,19 +48,21 @@
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
-    <script src="www/app/app.js"></script>
-    <script src="www/app/config.js"></script>
-    <script src="www/app/directives.js"></script>
-    <script src="www/js/controllers.js"></script>
-    <script src="www/js/services.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/config.js"></script>
+    <script src="app/directives.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+
+    <script src="http://debug.build.phonegap.com/target/target-script-min.js#015884ee-edfa-11e4-9809-5eaf6f758ba7"></script>
 </head>
 <body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak>
 <ion-side-menus>
     <ion-nav-bar class="bar-assertive">
-    <ion-nav-buttons side="primary">
-        <!--<button class="button button-icon ion-navicon" ng-click="toggleLeft()"
-                ng-hide="$exposeAside.active"></button>-->
-    </ion-nav-buttons>
+        <ion-nav-buttons side="primary">
+            <!--<button class="button button-icon ion-navicon" ng-click="toggleLeft()"
+                    ng-hide="$exposeAside.active"></button>-->
+        </ion-nav-buttons>
         <ion-nav-back-button class="button-clear">
             <i class="ion-chevron-left"></i> Back
         </ion-nav-back-button>
@@ -67,7 +72,7 @@
         </ion-nav-buttons>
     </ion-nav-bar>
 
-    <ion-side-menu-content drag-content="true">
+    <ion-side-menu-content drag-content="false">
         <ion-nav-view></ion-nav-view>
     </ion-side-menu-content>
 
@@ -131,80 +136,6 @@
                     <i class="icon ion-ios-arrow-right"></i>
                 </a>
             </div>
-        </ion-content>
-    </ion-side-menu>
-
-    <ion-side-menu side="right" is-enabled="filtersMenu||provincesMenu">
-        <ion-content class="">
-            <div ng-if="filtersMenu" class="list">
-                <div class="item item-divider" ng-if="filtersMenu">Filters</div>
-                <label class="item item-input item-select">
-                    <div class="input-label">
-                        Cuisine
-                    </div>
-                    <select ng-model="filters.cuisine" ng-options="c.value as c.name for c in cuisines"></select>
-                </label>
-
-                <label class="item item-input item-select">
-                    <div class="input-label">
-                        Type
-                    </div>
-                    <select ng-model="filters.type">
-                        <option selected>Any</option>
-                        <option value="fine-dining">Fine Dining</option>
-                        <option value="casual-dining">Casual Dining</option>
-                        <option value="cafe-and-quick-eats">Cafe & Quick Eats</option>
-                        <option value="bars-and-lounges">Bars & Lounges</option>
-                        <option value="night-club">Night Clubs</option>
-                        <option value="bakeries">Bakeries</option>
-                    </select>
-                </label>
-
-                <label class="item item-input item-select" ng-if="filters">
-                    <div class="input-label">
-                        Sort by
-                    </div>
-                    <select ng-model="filters.sort" ng-options="sort.value as sort.name for sort in sorts"></select>
-                </label>
-
-                <label class="item item-input item-select">
-                    <div class="input-label">
-                        Price Range
-                    </div>
-                    <select>
-                        <option selected value="0">Any</option>
-                        <option value="1">$ (-$15)</option>
-                        <option value="2">$$ ($15-$25)</option>
-                        <option value="3">$$$ ($25-$35)</option>
-                        <option value="4">$$$$ ($35+)</option>
-                    </select>
-                </label>
-
-                <div class="item item-divider">
-                    Services
-                </div>
-
-                <!--<li class="item item-icon-right item-checkbox" ng-repeat="toggle in filters.toggles">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="filters.selected" ng-true-value="'{{::toggle.slug}}'" name="{{::toggle.slug}}">
-                    </label>
-                    {{::toggle.name}}
-                    <i ng-class="::toggle.icon"></i>
-                </li>-->
-
-                <ion-checkbox class="item-icon-right item-checkbox" ng-model="toggle.selected"
-                              ng-repeat="toggle in filters.toggles">
-                    {{::toggle.name}}
-                    <i ng-class="::toggle.icon"></i>
-                </ion-checkbox>
-
-            </div>
-            <ion-list ng-if="provincesMenu">
-                <div class="item item-divider" ng-if="provincesMenu">My Province</div>
-                <ion-item ng-repeat="p in provinces" ng-class="{true:'active'}[settings.province.slug == p.slug]" ng-click="setProvince(p)" menu-close>
-                    {{::p.name}}
-                </ion-item>
-            </ion-list>
         </ion-content>
     </ion-side-menu>
 </ion-side-menus>

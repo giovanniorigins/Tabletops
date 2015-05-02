@@ -23,13 +23,16 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', function($rootScope, $http, authService, $localForage ,ApiEndpoint, $state) {
+    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state, $cordovaFacebook, hello) {
         var service = {
             login: function (user) {
                 $localForage.setItem('userCreds', user);
-                $http.post(ApiEndpoint.api + '/auth/authenticate', {email: user.email, password: user.password}, {ignoreAuthModule: true})
+                $http.post(ApiEndpoint.api + '/auth/authenticate', {
+                    email: user.email,
+                    password: user.password
+                }, {ignoreAuthModule: true})
                     .success(function (data, status, headers, config) {
-                        if(angular.isDefined(data.error)) {
+                        if (angular.isDefined(data.error)) {
                             console.log(data.error);
                             $localForage.removeItem('userCreds', user);
                             return $rootScope.$broadcast('event:auth-login-failed', status);
@@ -66,51 +69,101 @@ angular.module('tabletops.services', [])
             },
             me: function () {
                 $localForage.getItem('authorizationToken').then(function (token) {
-                    if (token) {
-                        $http.post(ApiEndpoint.api + '/me', {}, {
-                            ignoreAuthModule: true,
-                            headers: {
-                                Authorization: 'Bearer ' + token
-                            }
-                        })
-                            .success(function (data) {
-                                if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
-                                    $rootScope.user = data.user;
-                                    $localForage.setItem('user', data.user).then(function () {
-                                        $localForage.getItem('pastInitialStart').then(function (res) {
-                                            if (!!res)
-                                                $state.go('dashboard', null, { location: "replace" });
-                                            else
-                                                $state.go('intro', null, { location: "replace" });
-                                        });
-                                        console.log(data);
-                                    });
-                                } else {
-                                    $state.go('signin');
+
+                    $localForage.getItem('useFacebook').then(function (facebook) {
+                        if (facebook) {
+                            return service.FbMe();
+                        } else if (token && !facebook) {
+                            $http.post(ApiEndpoint.api + '/me', {}, {
+                                ignoreAuthModule: true,
+                                headers: {
+                                    Authorization: 'Bearer ' + token
                                 }
                             })
-                            .finally(function (data) {
-
-                            });
-                    } else {
-                        $state.go('signin');
-                    }
+                                .success(function (data) {
+                                    if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
+                                        $rootScope.user = data.user;
+                                        $localForage.setItem('user', data.user).then(function () {
+                                            $localForage.getItem('pastInitialStart').then(function (res) {
+                                                if (!!res)
+                                                    return $state.go('dashboard', null, {location: "replace"});
+                                                else
+                                                    return $state.go('intro', null, {location: "replace"});
+                                            });
+                                            console.log(data);
+                                        });
+                                    } else {
+                                        return $state.go('signin');
+                                    }
+                                });
+                        } else {
+                            return $state.go('signin');
+                        }
+                    });
 
                 });
 
+            },
+            FbCheckLogin: function () {
+                var online = hello.getAuthResponse('facebook');
+                $rootScope.$watch('online', function (newValue, oldValue) {
+                    if (online.access_token) {
+                        var accessToken = online.access_token;
+                        $localForage.setItem('useFacebook', true).then(function () {
+                            $localForage.setItem('authorizationToken', accessToken).then(function (data) {
+                                return service.FbMe();
+                            });
+                        });
+                    } else {
+                        return service.me();
+                    }
+                });
+            },
+            FbLogin: function () {
+                hello('facebook').login({scope: 'email,friends,publish'}).then(function () {
+                    console.log('You are signed in to Facebook');
+                    // Call user information, for the given network
+                    return service.FbMe();
+                }, function (e) {
+                    alert('Signin error: ' + e.error.message);
+                    return $state.go('signin');
+                });
+            },
+            FbMe: function () {
+                hello('facebook').api('/me').then(function(response) {
+                    console.log('Facebook login succeeded');
+                    $localForage.setItem('useFacebook', true).then(function () {
+                        var user = {
+                            id: response.id,
+                            fname: response.first_name,
+                            lname: response.last_name,
+                            full_name: response.name,
+                            avatar: response.picture,
+                            email: response,
+                            profiles: response
+                        };
+                        //console.log(user);
+                        $rootScope.isLoggedin = true;
+
+                        $localForage.setItem('user', user).then(function () {
+                            $rootScope.$broadcast('event:auth-loginConfirmed');
+                        });
+                        $state.go('tabs.dashboard');
+                    });
+                });
             }
         };
         return service;
     })
     .factory('timeoutHttpIntercept', function ($rootScope, $q) {
         return {
-            'request': function(config) {
+            'request': function (config) {
                 config.timeout = 10000;
                 return config;
             }
         };
     })
-    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$sce', function($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $sce) {
+    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$sce', function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $sce) {
         var repo = {
             initCaller: function (obj) {
                 if (obj.locations.length > 1) {
@@ -122,52 +175,52 @@ angular.module('tabletops.services', [])
                     return false;
                 }
             },
-            callSelectLocation: function(locations) {
+            callSelectLocation: function (locations) {
                 var btns = [];
                 _.each(locations, function (loc) {
-                   btns.push({ text: loc.name });
+                    btns.push({text: loc.name});
                 });
 
                 // Show the action sheet
                 var hideSheet = $ionicActionSheet.show({
                     buttons: btns,
                     //destructiveText: 'Delete',
-                    titleText: 'Select a location to call',
+                    titleText: 'Tap a location to call',
                     cancelText: 'Cancel',
-                    cancel: function() {
+                    cancel: function () {
                         // add cancel code..
                     },
-                    buttonClicked: function(index) {
+                    buttonClicked: function (index) {
                         return repo.callLocation(locations, index);
                     }
                 });
             },
-            callLocation: function(locations, index) {
+            callLocation: function (locations, index) {
                 var location = locations[index || 0],
                     btns = [];
 
                 if (location.phone_1)
-                    btns.push({ text: location.phone_1});
+                    btns.push({text: location.phone_1});
                 if (location.phone_2)
-                    btns.push({ text: location.phone_2});
+                    btns.push({text: location.phone_2});
 
                 // Show the action sheet
                 var hideSheet = $ionicActionSheet.show({
                     buttons: btns,
                     //destructiveText: 'Delete',
-                    titleText: 'Call ' + location.name,
+                    titleText: 'Tap a number to call ' + location.name,
                     cancelText: 'Cancel',
-                    cancel: function() {
+                    cancel: function () {
                         // add cancel code..
                     },
-                    buttonClicked: function(index) {
+                    buttonClicked: function (index) {
                         var number = btns[index].text.replace(/[-() +,]/g, "");
                         window.open('tel:' + number, '_system');
                         return true;
                     }
                 });
             },
-            share: function(obj) {
+            share: function (obj) {
                 var message = 'Check it out!',
                     subject = 'Tabletops App: ' + obj.name,
                     file = angular.isObject(obj.logo) ? obj.logo.path : null,
@@ -182,7 +235,7 @@ angular.module('tabletops.services', [])
                         console.log(err);
                     });
             },
-            favorite: function(obj) {
+            favorite: function (obj) {
                 //$localForage.removeItem('favorites');
                 $localForage.getItem('favorites').then(function (data) {
                     if (!data || angular.isUndefined(data)) {
@@ -195,21 +248,23 @@ angular.module('tabletops.services', [])
                         // Data exists
                         var check = _.findWhere(data, {id: obj.id});
                         if (!!check) { // remove it
-                            var newData = _.reject(data, function(a) { return a.id == obj.id});
+                            var newData = _.reject(data, function (a) {
+                                return a.id == obj.id
+                            });
                             $localForage.setItem('favorites', newData);
                             $rootScope.favorites = newData;
-                            $cordovaToast.showShortBottom('<i class="icon ion-heart-broken calm"></i>');
+                            $cordovaToast.showShortBottom('\f31d Awww, unfav\'d...');
                         } else { // add it
                             data.push(obj.id);
                             $localForage.setItem('favorites', data);
                             $rootScope.favorites = data;
-                            $cordovaToast.showShortBottom('<i class="icon ion-heart calm"></i>');
+                            $cordovaToast.showShortBottom('\f141 Fav\'d!');
                         }
                     }
 
                 });
             },
-            been: function(obj) {
+            been: function (obj) {
                 //$localForage.removeItem('been');
                 $localForage.getItem('been').then(function (data) {
                     if (!data || angular.isUndefined(data)) {
@@ -222,15 +277,17 @@ angular.module('tabletops.services', [])
                         // Data exists
                         var check = _.findWhere(data, {id: obj.id});
                         if (!!check) { // remove it
-                            var newData = _.reject(data, function(a) { return a.id == obj.id});
+                            var newData = _.reject(data, function (a) {
+                                return a.id == obj.id
+                            });
                             $localForage.setItem('been', newData);
                             $rootScope.been = newData;
-                            $cordovaToast.showShortBottom('<i class="icon ion-heart-broken calm"></i>');
+                            $cordovaToast.showShortBottom('\f12a Guess you haven\'t been here...');
                         } else { // add it
                             data.push(obj.id);
                             $localForage.setItem('been', data);
                             $rootScope.been = data;
-                            $cordovaToast.showShortBottom('<i class="icon ion-heart calm"></i>');
+                            $cordovaToast.showShortBottom('\f122 Been Here!');
                         }
                     }
 
@@ -264,9 +321,37 @@ angular.module('tabletops.services', [])
             foo2: function () {
 
             },
-            foo: function() {
+            foo: function () {
                 alert("I'm foo!");
             }
         };
         return repo;
     }])
+/*.factory('', ['$scope', '$ionicModal', function ($scope, $ionicModal) {
+ $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
+ scope: $scope,
+ animation: 'slide-in-up'
+ }).then(function(modal) {
+ $scope.modal = modal;
+ });
+ //Cleanup the modal when we're done with it!
+ $scope.$on('$destroy', function() {
+ $scope.modal.remove();
+ });
+ // Execute action on hide modal
+ $scope.$on('modal.hidden', function() {
+ // Execute action
+ });
+ // Execute action on remove modal
+ $scope.$on('modal.removed', function() {
+ // Execute action
+ });
+ return {
+ openFiltersModal: function () {
+ $scope.modal.show();
+ },
+ closeFiltersModal: function () {
+ $scope.modal.hide();
+ }
+ }
+ }])*/
