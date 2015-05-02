@@ -31,6 +31,10 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             console.log(info);*/
         });
 
+        $rootScope.navbarColor = function (color) {
+            return color || 'bar-assertive';
+        };
+
         $rootScope.$on('loading:show', function () {
             $ionicLoading.show({template: '<ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>'});
         });
@@ -71,10 +75,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         $rootScope.filters = {
             toggles: {}
         };
-        $rootScope.filtersMenu = false;
-
         $rootScope.directionsSet = false;
-        $rootScope.provincesMenu = false;
 
         $rootScope.cuisines = $rootScope.sorts = $rootScope.favorites = $rootScope.been = [];
         $rootScope.myLocation = {};

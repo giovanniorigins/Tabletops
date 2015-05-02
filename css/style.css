@@ -20,6 +20,14 @@
     padding-bottom: 4px;
 }
 
+.lovely {
+    color: #E155BF;
+}
+
+.lovely-bg {
+    background-color: #E155BF;
+}
+
 
 /* Dashboard */
 /*.nearby-scroller .collection-repeat-container,
