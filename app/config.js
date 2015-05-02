@@ -12,13 +12,13 @@ angular.module('tabletops.config', [])
         });
     }])
 
-    /*.config(function ($ionicPlatform, helloProvider, CIDs) {
+    .config(function ($ionicPlatform, helloProvider, CIDs) {
         $ionicPlatform.ready(function() {
             helloProvider.init({
                 facebook: CIDs.facebook
             });
         });
-    })*/
+    })
 
     // HTTP Defaults
     .config(function ($httpProvider) {
