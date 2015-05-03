@@ -302,6 +302,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
 
         // if none of the above states are matched, use this as the fallback
         //$urlRouterProvider.otherwise('/tab/dashboard');
-        $urlRouterProvider.otherwise('/sign-in');
+        //$urlRouterProvider.otherwise('/sign-in');
+        $urlRouterProvider.otherwise('/splash');
 
     });
