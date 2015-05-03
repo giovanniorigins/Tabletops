@@ -109,11 +109,12 @@ angular.module('tabletops.services', [])
                     .then(function(success) {
                         console.log('GetLoginStatus');
                         console.log(success);
-                        if (success.authResponse.access_token) {
+                        if (success.status === 'connected') {
                             var accessToken = success.authResponse.access_token;
                             $localForage.setItem('useFacebook', true);
-                            $localForage.setItem('authorizationToken', accessToken);
-                            return service.FbMe();
+                            $localForage.setItem('authorizationToken', accessToken).then(function () {
+                                return service.FbMe();
+                            });
                         } else {
                             return service.me();
                         }
@@ -154,26 +155,28 @@ angular.module('tabletops.services', [])
                 });*/
             },
             FbMe: function () {
-                $cordovaFacebook.api("me", ["public_profile, email, user_friends"])
+                $cordovaFacebook.api("me", [/*"public_profile", "email", "user_friends"*/])
                     .then(function(response) {
                         // success
                         console.log('Facebook login succeeded');
                         console.log(response);
-                        $localForage.setItem('useFacebook', true);
-                        var user = {
-                            id: response.id,
-                            fname: response.first_name,
-                            lname: response.last_name,
-                            full_name: response.name,
-                            avatar: 'https://graph.facebook.com/' + response.id + '/picture?redirect=false',
-                            email: response.email,
-                            profiles: [response]
-                        };
-                        $rootScope.isLoggedin = true;
+                        $localForage.setItem('useFacebook', true).then(function () {
+                            var user = {
+                                id: response.id,
+                                fname: response.first_name,
+                                lname: response.last_name,
+                                full_name: response.name,
+                                avatar: 'https://graph.facebook.com/' + response.id + '/picture?redirect=false',
+                                email: response.email,
+                                profiles: [response]
+                            };
+                            $rootScope.isLoggedin = true;
 
-                        $localForage.setItem('user', user);
-                        $rootScope.$broadcast('event:auth-loginConfirmed');
-                        $state.go('tabs.dashboard');
+                            $localForage.setItem('user', user);
+                            $rootScope.$broadcast('event:auth-loginConfirmed');
+                            $state.go('tabs.dashboard');
+                        });
+
                     }, function (error) {
                         // error
                     });
