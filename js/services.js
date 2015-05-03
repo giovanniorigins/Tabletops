@@ -154,7 +154,7 @@ angular.module('tabletops.services', [])
                 });*/
             },
             FbMe: function () {
-                $cordovaFacebook.api("me", ["public_profile, email, friends, publish"])
+                $cordovaFacebook.api("me", ["public_profile, email, publish"])
                     .then(function(response) {
                         // success
                         console.log('Facebook login succeeded');
