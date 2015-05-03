@@ -154,20 +154,20 @@ angular.module('tabletops.services', [])
                 });*/
             },
             FbMe: function () {
-                $cordovaFacebook.api("me", ["public_profile, email"])
+                $cordovaFacebook.api("me", ["public_profile, email, user_friends"])
                     .then(function(response) {
                         // success
                         console.log('Facebook login succeeded');
                         console.log(response);
                         $localForage.setItem('useFacebook', true);
                         var user = {
-                            id: response.authResponse.id,
-                            fname: response.authResponse.first_name,
-                            lname: response.authResponse.last_name,
-                            full_name: response.authResponse.name,
-                            avatar: response.authResponse.picture,
-                            email: response.authResponse.email,
-                            profiles: response.authResponse
+                            id: response.id,
+                            fname: response.first_name,
+                            lname: response.last_name,
+                            full_name: response.name,
+                            avatar: 'https://graph.facebook.com/' + response.id + '/picture?redirect=false',
+                            email: response.email,
+                            profiles: [response]
                         };
                         $rootScope.isLoggedin = true;
 
