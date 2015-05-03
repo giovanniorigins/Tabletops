@@ -161,20 +161,23 @@ angular.module('tabletops.services', [])
                         console.log('Facebook login succeeded');
                         console.log(response);
                         $localForage.setItem('useFacebook', true).then(function () {
-                            var user = {
-                                id: response.id,
-                                fname: response.first_name,
-                                lname: response.last_name,
-                                full_name: response.name,
-                                avatar: 'https://graph.facebook.com/' + response.id + '/picture?redirect=false',
-                                email: response.email,
-                                profiles: [response]
-                            };
-                            $rootScope.isLoggedin = true;
+                            $cordovaFacebook.api(response.id + '/picture?redirect=false&width=200&height=200')
+                                .then(function (picture) {
+                                    var user = {
+                                        id: response.id,
+                                        fname: response.first_name,
+                                        lname: response.last_name,
+                                        full_name: response.name,
+                                        avatar: picture.data.url,
+                                        email: response.email,
+                                        profiles: [response]
+                                    };
+                                    $rootScope.isLoggedin = true;
 
-                            $localForage.setItem('user', user);
-                            $rootScope.$broadcast('event:auth-loginConfirmed');
-                            $state.go('tabs.dashboard');
+                                    $localForage.setItem('user', user);
+                                    $rootScope.$broadcast('event:auth-loginConfirmed');
+                                    $state.go('tabs.dashboard');
+                                })
                         });
 
                     }, function (error) {

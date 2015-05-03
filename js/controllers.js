@@ -995,13 +995,18 @@ angular.module('tabletops.controllers', [])
                 $scope.openModal();
             };
         }])
-    .controller('AccountCtrl', function ($scope, $localForage) {
+    .controller('AccountCtrl', function ($scope, $localForage, $cordovaFacebook) {
         $localForage.getItem('user').then(function (res) {
             $scope.user = res;
         });
         $localForage.getItem('useFacebook').then(function (res) {
             $scope.useFacebook = res;
         });
+
+        $cordovaFacebook.api('me/friends?fields=name,id,picture.width(200)')
+            .then(function (res) {
+                $scope.friends = res.data;
+            })
     })
     .controller('SettingsCtrl', function ($scope, $localForage, $cordovaAppRate) {
         $scope.settings = {
