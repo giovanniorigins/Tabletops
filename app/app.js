@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ngHello', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
-    .run(function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage) {
+    .run(function ($rootScope, $ionicPlatform, $log, hello, $ionicLoading, $ionicDeploy, $localForage) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -88,6 +88,10 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         //Load Been
         $localForage.getItem('been').then(function (data) {
             $rootScope.been = data;
+        });
+
+        hello.on("auth.login", function (r) {
+            $log.log(r.authResponse);
         });
     })
 

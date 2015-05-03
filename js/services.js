@@ -23,7 +23,7 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state/*, hello*/, $cordovaInAppBrowser, $cordovaFacebook) {
+    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state, hello, $cordovaInAppBrowser, $cordovaFacebook) {
         var service = {
             login: function (user) {
                 $localForage.setItem('userCreds', user);
@@ -146,13 +146,6 @@ angular.module('tabletops.services', [])
                         //   lastName: "bob"
                         //   ...
                         // }
-                        $cordovaInAppBrowser.open('http://flamingo.gorigins.com/api/v1/auth/Facebook', '_self', options)
-                            .then(function(event) {
-                                // success
-                            })
-                            .catch(function(event) {
-                                // error
-                            });
                         service.FbMe();
                     }, function (error) {
                         // error
