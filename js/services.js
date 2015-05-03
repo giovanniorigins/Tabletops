@@ -300,7 +300,7 @@ angular.module('tabletops.services', [])
                             $rootScope.favorites = data;
                         } else {
                             // Data exists
-                            var check = _.findWhere(data, {id: obj.id});
+                            var check = _.contains(data, obj.id);
                             if (!!check) { // remove it
                                 var newData = _.reject(data, function (a) {
                                     return a.id == obj.id
@@ -329,7 +329,7 @@ angular.module('tabletops.services', [])
                             $rootScope.been = data;
                         } else {
                             // Data exists
-                            var check = _.findWhere(data, {id: obj.id});
+                            var check = _.contains(data, obj.id);
                             if (!!check) { // remove it
                                 var newData = _.reject(data, function (a) {
                                     return a.id == obj.id
