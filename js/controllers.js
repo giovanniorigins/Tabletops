@@ -286,8 +286,8 @@ angular.module('tabletops.controllers', [])
         $localForage.getItem('userCreds').then(function (data) {
             console.log(data);
             if (!angular.isUndefined(data) || data) {
+                AuthenticationService.login(data);
             }
-            //AuthenticationService.login(data);
         });
 
         $scope.message = "";
@@ -995,7 +995,14 @@ angular.module('tabletops.controllers', [])
                 $scope.openModal();
             };
         }])
-
+    .controller('AccountCtrl', function ($scope, $localForage) {
+        $localForage.getItem('user').then(function (res) {
+            $scope.user = res;
+        });
+        $localForage.getItem('useFacebook').then(function (res) {
+            $scope.useFacebook = res;
+        });
+    })
     .controller('SettingsCtrl', function ($scope, $localForage, $cordovaAppRate) {
         $scope.settings = {
             enableFriends: true
@@ -1020,8 +1027,3 @@ angular.module('tabletops.controllers', [])
 
     })
 
-    .controller('AccountCtrl', function ($scope) {
-        $scope.settings = {
-            enableFriends: true
-        };
-    });

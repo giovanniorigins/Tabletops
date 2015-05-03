@@ -205,6 +205,17 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                     }
                 }
             })
+
+            // Account Tab
+            .state('tabs.account', {
+                url: '/account',
+                views: {
+                    'account-tab': {
+                        templateUrl: 'app/account/account.html',
+                        controller: 'AccountCtrl'
+                    }
+                }
+            })
             /*.state('tabs.restaurants', {
                 url: "/restaurants",
                 views: {

@@ -1,0 +1,35 @@
+<ion-view view-title="Me">
+    <ion-content class="has-header">
+        <div ng-if="user">
+            <!-- SIDEBAR USERPIC -->
+            <div class="profile-userpic">
+                <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="" width="100px">
+                <img ng-if="::!user.avatar" src="http://lorempixel.com/food/200/200" class="img-responsive" alt="">
+            </div>
+            <!-- END SIDEBAR USERPIC -->
+            <!-- SIDEBAR USER TITLE -->
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name" ng-bind="::user.full_name"></div>
+                <div class="profile-usertitle-job" ng-bind="'Super Foodie'"></div>
+            </div>
+        </div>
+
+        <!-- END SIDEBAR USER TITLE -->
+        <!-- SIDEBAR BUTTONS -->
+        <div class="profile-userbuttons" ng-if="!user">
+            <a menu-close type="button" class="button button-block icon ion-log-in button-clear" ui-sref="signin" ui-sref-active="active">
+                Sign in
+            </a>
+        </div>
+        <!-- END SIDEBAR BUTTONS -->
+        <div class="list">
+            <!--<a ng-if="user.id" class="item item-avatar" href="#">
+                <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="">
+                <img ng-if="::!user.avatar" src="http://lorempixel.com/food/200/200" class="img-responsive" alt="">
+                <h2 ng-bind="::user.full_name"></h2>
+                <p>Super Foodie</p>
+            </a>-->
+
+        </div>
+    </ion-content>
+</ion-view>
