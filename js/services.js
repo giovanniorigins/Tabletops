@@ -158,6 +158,7 @@ angular.module('tabletops.services', [])
                     .then(function(response) {
                         // success
                         console.log('Facebook login succeeded');
+                        console.log(response);
                         $localForage.setItem('useFacebook', true);
                         var user = {
                             id: response.authResponse.id,
@@ -168,7 +169,6 @@ angular.module('tabletops.services', [])
                             email: response.authResponse.email,
                             profiles: response.authResponse
                         };
-                        console.log(response);
                         $rootScope.isLoggedin = true;
 
                         $localForage.setItem('user', user);
