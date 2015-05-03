@@ -146,7 +146,7 @@ angular.module('tabletops.services', [])
                         //   lastName: "bob"
                         //   ...
                         // }
-                        $cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_blank', options)
+                        $cordovaInAppBrowser.open('http://flamingo.gorigins.com/api/v1/auth/Facebook', '_self', options)
                             .then(function(event) {
                                 // success
                             })
