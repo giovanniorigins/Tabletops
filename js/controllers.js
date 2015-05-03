@@ -263,7 +263,6 @@ angular.module('tabletops.controllers', [])
         $ionicPlatform.ready(function () {
             AuthenticationService.FbCheckLogin();
         });
-
     })
     .controller('IntroCtrl', function ($scope, $state, $ionicSlideBoxDelegate) {
 

@@ -107,6 +107,8 @@ angular.module('tabletops.services', [])
             FbCheckLogin: function () {
                 $cordovaFacebook.getLoginStatus()
                     .then(function(success) {
+                        console.log('GetLoginStatus');
+                        console.log(success);
                         if (success.authResponse.access_token) {
                             var accessToken = success.authResponse.access_token;
                             $localForage.setItem('useFacebook', true);
@@ -135,6 +137,7 @@ angular.module('tabletops.services', [])
             FbLogin: function () {
                 $cordovaFacebook.login(["public_profile", "email", "user_friends"])
                     .then(function(success) {
+                        console.log('Login');
                         console.log(success);
                         service.FbMe();
                     }, function (error) {
