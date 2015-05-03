@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy'/*, 'ngHello'*/, 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
+angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ngHello', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
     .run(function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage) {
         $ionicPlatform.ready(function () {
