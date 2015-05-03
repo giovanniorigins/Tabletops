@@ -13,7 +13,7 @@
                 on-refresh="refresh()">
         </ion-refresher>
         <ion-list>
-            <ion-item ng-show="faves" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item-avatar" ui-sref="tabs.favorite({id: res.slug})">
+            <ion-item ng-show="faves.length" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item-avatar" ui-sref="tabs.favorite({id: res.slug})">
                 <img ng-src="{{::res.logo.path}}">
                 <h2>{{::res.name}}</h2>
                 <p class="row row-no-padding">
@@ -32,7 +32,7 @@
                 <ion-option-button class="button-positive" ng-click="shareThis(res)">&nbsp;<i class="icon ion-ios-upload"></i></ion-option-button>
                 <ion-option-button class="button-dark" ng-click="beenHere(res)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[been(res.id)]"></i></ion-option-button>
             </ion-item>
-            <ion-item ng-hide="faves||faves.length" class="card text-center">
+            <ion-item ng-hide="faves.length" class="card text-center">
                 <i class="icon ion-ios-heart-outline lovely" style="font-size: 2em"></i>
                 <p>You don't have any favorites yet.</p>
             </ion-item>

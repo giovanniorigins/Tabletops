@@ -28,7 +28,7 @@
                     <i class="icon ion-ios-telephone"></i>
                     Call
                 </a>
-                <a class="tab-item" ng-click="favoriteThis(listing)">
+                <a class="tab-item" ng-click="favoriteThis(listing)" id="{{::'share_button_'+listing.id}}">
                     <i class="icon ion-heart" ng-class="{true:'calm'}[faved(listing.id)]"></i>
                     Favorite
                 </a>

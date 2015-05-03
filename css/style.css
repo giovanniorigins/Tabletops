@@ -28,7 +28,9 @@
     background-color: #E155BF;
 }
 
-
+ion-nav-view {
+    background-color: transparent;
+}
 /* Dashboard */
 /*.nearby-scroller .collection-repeat-container,
 .gallery-prev-scroller .collection-repeat-container {

@@ -389,6 +389,7 @@ angular.module('tabletops.controllers', [])
         };
     })
     .controller('FavoritesCtrl', function ($scope, $localForage, Listing, $ionicModal) {
+        $scope.faves = [];
         $scope.refresh = function () {
             $localForage.getItem('favorites').then(function (data) {
                 if (data && data.length > 0) {

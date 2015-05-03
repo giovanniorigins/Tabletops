@@ -216,9 +216,10 @@ angular.module('tabletops.services', [])
             }
         };
     })
-    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$sce',
-        function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $sce) {
+    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$cordovaFacebook', '$sce',
+        function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $cordovaFacebook, $sce) {
             var repo = {
+                // Call Handling
                 initCaller: function (obj) {
                     if (obj.locations.length > 1) {
                         repo.callSelectLocation(obj.locations);
@@ -274,8 +275,38 @@ angular.module('tabletops.services', [])
                         }
                     });
                 },
+                // Social Sharing
                 share: function (obj) {
-                    var message = 'Check it out!',
+                    window.plugins.socialsharing.iPadPopupCoordinates = function() {
+                        var rect = document.getElementById('share_button_'+obj.id).getBoundingClientRect();
+                        return rect.left + "," + rect.top + "," + rect.width + "," + rect.height;
+                    };
+
+                    /*var btns = [
+                        { text: 'Copy Link' },
+                        { text: 'Email' },
+                        { text: 'Message' },
+                        { text: 'Facebook' },
+                        { text: 'Facebook Messenger' },
+                        { text: 'Twitter' },
+                        { text: 'WhatsApp' },
+                    ];
+
+                    // Show the action sheet
+                    var hideSheet = $ionicActionSheet.show({
+                        buttons: btns,
+                        //destructiveText: 'Delete',
+                        titleText: 'Tap a location to call',
+                        cancelText: 'Cancel',
+                        cancel: function () {
+                            // add cancel code..
+                        },
+                        buttonClicked: function (index) {
+                            return repo.callLocation(locations, index);
+                        }
+                    });*/
+
+                    var message = '',
                         subject = 'Tabletops App: ' + obj.name,
                         file = angular.isObject(obj.logo) ? obj.logo.path : null,
                         link = 'http://flamingo.gorigins.com/np-pi/' + obj.slug;
@@ -307,12 +338,13 @@ angular.module('tabletops.services', [])
                                 });
                                 $localForage.setItem('favorites', newData);
                                 $rootScope.favorites = newData;
-                                $cordovaToast.showShortBottom('\f31d Awww, unfav\'d...');
+                                //$cordovaToast.showShortBottom(' Awww, unfav\'d...');
                             } else { // add it
                                 data.push(obj.id);
                                 $localForage.setItem('favorites', data);
                                 $rootScope.favorites = data;
-                                $cordovaToast.showShortBottom('\f141 Fav\'d!');
+                                //$cordovaToast.showShortBottom('Added to Favorites!');
+
                             }
                         }
 
@@ -336,12 +368,25 @@ angular.module('tabletops.services', [])
                                 });
                                 $localForage.setItem('been', newData);
                                 $rootScope.been = newData;
-                                $cordovaToast.showShortBottom('\f12a Guess you haven\'t been here...');
+                                //$cordovaToast.showShortBottom('\f12a Guess you haven\'t been here...');
                             } else { // add it
                                 data.push(obj.id);
                                 $localForage.setItem('been', data);
                                 $rootScope.been = data;
-                                $cordovaToast.showShortBottom('\f122 Been Here!');
+                               //$cordovaToast.showShortBottom('\f122 Been Here!');
+                                var options = {
+                                    method: "share_open_graph",
+                                    action_type: 'bahamastabletops:check_in',
+                                    action_properties: JSON.stringify({
+                                        object:'https://developers.facebook.com/docs/',
+                                    })
+                                };
+                                $cordovaFacebook.showDialog(options)
+                                    .then(function(success) {
+                                        // success
+                                    }, function (error) {
+                                        // error
+                                    });
                             }
                         }
 
