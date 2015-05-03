@@ -136,17 +136,28 @@ angular.module('tabletops.services', [])
             },
             FbLogin: function () {
                 var options = {
-                    location: 'yes',
+                    location: 'no',
                     clearcache: 'no',
-                    toolbar: 'no'
+                    toolbar: 'yes'
                 };
-                $cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_blank', options)
-                    .then(function(event) {
-                        // success
-                    })
-                    .catch(function(event) {
+                $cordovaFacebook.login(["public_profile", "email", "user_friends"])
+                    .then(function(success) {
+                        // { id: "634565435",
+                        //   lastName: "bob"
+                        //   ...
+                        // }
+                        $cordovaInAppBrowser.open('http://flamingo.gorigins.com/login/Facebook', '_blank', options)
+                            .then(function(event) {
+                                // success
+                            })
+                            .catch(function(event) {
+                                // error
+                            });
+                        service.FbMe();
+                    }, function (error) {
                         // error
                     });
+
                 /*hello('facebook').login({scope: 'email,friends,publish'}).then(function () {
                     console.log('You are signed in to Facebook');
                     // Call user information, for the given network
