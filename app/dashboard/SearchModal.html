@@ -2,31 +2,29 @@
     <ion-header-bar class="bar-assertive-900">
         <div class="buttons buttons-left">
             <span class="left-buttons">
-                <button class="button button-icon icon ion-ios-arrow-left" ng-click="closeSearchModal()"></button>
+                <button class="button button-clear button-icon icon ion-ios-arrow-left" ng-click="closeSearchModal()"></button>
             </span>
         </div>
 
-        <h1 class="title title-center">Search</h1>
+        <h1 class="title title-cente light">Search</h1>
 
-        <div class="buttons buttons-right">
-            <span class="right-buttons">
-                <button class="button button-icon icon ion-ios-search" type="submit" form="searchForm" ng-click="closeSearchModal()"></button>
-            </span>
-        </div>
     </ion-header-bar>
-    <div class="bar bar-subheader bar-assertive-900 item-input-inset">
+    <form class="bar bar-subheader bar-assertive-900 item-input-inset" ng-submit="">
         <div class="buttons buttons-left">
             <span class="left-buttons">
-                <button class="button button-icon ion-location" ng-click="openProvinceModal($event)"></button>
+                <button class="button button-clear button-icon ion-location" ng-click="openProvinceModal($event)"></button>
             </span>
         </div>
-        <!--<form id="searchForm" name="searchForm">-->
             <label class="item-input-wrapper" style="margin-top: 0;padding-top: 0">
                 <input type="search" autofocus placeholder="Search restaurants" ng-model="search">
             </label>
             <button class="hide" type="submit"></button>
-        <!--</form>-->
-    </div>
+        <div class="buttons buttons-right">
+            <span class="right-buttons">
+                <button class="button button-clear button-icon icon ion-ios-search" type="submit" ng-click="closeSearchModal()"></button>
+            </span>
+        </div>
+    </form>
     <ion-content class="has-subheader">
         <ion-list>
             <div class="item item-divider">Quick Searches</div>
