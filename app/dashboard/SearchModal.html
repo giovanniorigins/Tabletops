@@ -2,7 +2,7 @@
     <ion-header-bar>
         <div class="buttons buttons-left">
             <span class="left-buttons">
-                <button class="button button-icon icon ion-ios-arrow-left" ng-click="openProvinceModal()"></button>
+                <button class="button button-icon icon ion-ios-arrow-left" ng-click="closeSearchModal()"></button>
             </span>
         </div>
 
@@ -10,7 +10,7 @@
 
         <div class="buttons buttons-right">
             <span class="right-buttons">
-                <button class="button button-icon icon ion-ios-navigate" ng-click="selectClosestProvince()"></button>
+                <button class="button button-icon icon ion-ios-navigate" ng-click="startSearch()"></button>
             </span>
         </div>
     </ion-header-bar>
@@ -20,14 +20,14 @@
                 <button class="button button-icon ion-location" ng-click="openProvinceModal($event)"></button>
             </span>
         </div>
-        <form ng-submit="startSearch()" class="title title-center" style="margin-top: 0;padding-top: 0">
+        <form ng-submit="startSearch()" class="col title title-center" style="margin-top: 0;padding-top: 0">
             <label class="item-input-wrapper" style="margin-top: 0;padding-top: 0">
                 <input type="search" autofocus placeholder="Search restaurants" ng-model="search">
             </label>
             <button class="hide" type="submit"></button>
         </form>
-        <div class="buttons buttons-left">
-            <span class="left-buttons">
+        <div class="buttons buttons-right">
+            <span class="right-buttons">
                 <button class="button button-icon icon ion-ios-search" ng-click="startSearch()"></button>
             </span>
         </div>
