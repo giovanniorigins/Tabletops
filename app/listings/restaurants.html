@@ -1,10 +1,10 @@
 <ion-view view-title="Restaurants">
-    <div class="bar bar-subheader item-input-inset">
+    <div class="bar bar-subheader item-input-inset bar-assertive-900">
         <label class="item-input-wrapper">
             <i class="icon ion-ios7-search placeholder-icon"></i>
             <input type="search" placeholder="Search" ng-model="filters.search">
         </label>
-        <button class="button button-flat button-icon icon ion-ios-settings" ng-click="openFiltersModal()"
+        <button class="button button-icon icon ion-ios-settings" ng-click="openFiltersModal()"
                 ng-hide="$exposeAside.active"></button>
     </div>
     <ion-content class="has-subheader">
@@ -22,15 +22,13 @@
                     </span>
                 </p>
                 <p>
-                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
+                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{::c.name}}</a>
                 </p>
                 <p style="font-size: 80%">
                     <span class="distance-badge badge badge-stable">{{::res.distance|number:2}} miles away</span>
                 </p>
-                <ion-option-button class="button-balanced ink" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
                 <ion-option-button class="button-stable ink" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'lovely'}[faved(res.id)]"></i></ion-option-button>
-                <ion-option-button id="{{::'share_button_'+res.id}}" class="button-positive ink" ng-click="shareThis(res)">&nbsp;<i class="icon ion-ios-upload"></i></ion-option-button>
-                <ion-option-button class="button-dark ink" ng-click="beenHere(res)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(res.id)]"></i></ion-option-button>
+                <ion-option-button class="button-balanced ink" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
             </ion-item>
         </ion-list>
         <button id="fab" class="button button-positive button-fab button-fab-bottom-right" ng-click="openFiltersModal()">

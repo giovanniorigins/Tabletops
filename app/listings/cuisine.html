@@ -25,12 +25,10 @@
                     </span>
                 </p>
                 <p>
-                    <a href="#" class="subdued" ng-repeat="c in res.cuisines">{{c.name}}</a>
+                    <a href="#" class="subdued" ng-repeat="c in res.cuisines">{{::c.name}}</a>
                 </p>
-                <ion-option-button class="button-balanced" ng-click="initCaller(res.listing)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
                 <ion-option-button class="button-stable" ng-click="favoriteThis(res.listing)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.listing.id)]"></i></ion-option-button>
-                <ion-option-button id="{{::'share_button_'+res.listing.id}}" class="button-positive" ng-click="shareThis(res.listing)">&nbsp;<i class="icon ion-ios-upload"></i></ion-option-button>
-                <ion-option-button class="button-dark" ng-click="beenHere(res.listing)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(res.listing.id)]"></i></ion-option-button>
+                <ion-option-button class="button-balanced" ng-click="initCaller(res.listing)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
             </ion-item>
         </ion-list>
         <button id="fab" class="button button-positive button-fab button-fab-bottom-right" ng-click="openFiltersModal()">

@@ -1,5 +1,5 @@
 <ion-modal-view>
-    <ion-header-bar>
+    <ion-header-bar class="bar-assertive-900">
         <div class="buttons buttons-left">
             <span class="left-buttons">
                 <button class="button button-icon icon ion-ios-arrow-left" ng-click="closeSearchModal()"></button>
@@ -10,33 +10,25 @@
 
         <div class="buttons buttons-right">
             <span class="right-buttons">
-                <button class="button button-icon icon ion-ios-navigate" ng-click="startSearch();closeSearchModal()"></button>
+                <button class="button button-icon icon ion-ios-search" type="submit" form="searchForm" ng-click="closeSearchModal()"></button>
             </span>
         </div>
     </ion-header-bar>
-    <div class="bar bar-subheader bar-assertive item-input-inset">
+    <div class="bar bar-subheader bar-assertive-900 item-input-inset">
         <div class="buttons buttons-left">
             <span class="left-buttons">
                 <button class="button button-icon ion-location" ng-click="openProvinceModal($event)"></button>
             </span>
         </div>
-        <form ng-submit="startSearch()" class="col title title-center" style="margin-top: 0;padding-top: 0">
+        <!--<form id="searchForm" name="searchForm">-->
             <label class="item-input-wrapper" style="margin-top: 0;padding-top: 0">
                 <input type="search" autofocus placeholder="Search restaurants" ng-model="search">
             </label>
             <button class="hide" type="submit"></button>
-        </form>
-        <div class="buttons buttons-right">
-            <span class="right-buttons">
-                <button class="button button-icon icon ion-ios-search" ng-click="startSearch();closeSearchModal()"></button>
-            </span>
-        </div>
+        <!--</form>-->
     </div>
     <ion-content class="has-subheader">
         <ion-list>
-            <!--<ion-item ng-repeat="p in provinces" ng-class="{true:'active'}[settings.province.slug == p.slug]" ng-click="setProvince(p)" menu-close>
-                {{::p.name}}
-            </ion-item>-->
             <div class="item item-divider">Quick Searches</div>
             <div class="item" ui-sref="tabs.results({search: 'breakfast'})" ng-click="closeSearchModal()">Breakfast</div>
             <div class="item" ui-sref="tabs.results({search: 'lunch'})" ng-click="closeSearchModal()">Lunch</div>

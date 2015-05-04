@@ -25,12 +25,10 @@
                     </span>
                 </p>
                 <p>
-                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
+                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{::c.name}}</a>
                 </p>
-                <ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
                 <ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>
-                <ion-option-button class="button-positive" ng-click="shareThis(res)">&nbsp;<i class="icon ion-ios-upload"></i></ion-option-button>
-                <ion-option-button class="button-dark" ng-click="beenHere(res)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(res.id)]"></i></ion-option-button>
+                <ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
             </ion-item>
             <ion-item ng-hide="faves.length" class="card text-center">
                 <i class="icon ion-ios-heart-outline lovely" style="font-size: 2em"></i>
