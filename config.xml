@@ -13,7 +13,7 @@
     <preference name="fullscreen" value="false"/>
     <preference name="DisallowOverscroll" value="true"/>
     <preference name="HideKeyboardFormAccessoryBar" value="true"/>
-    <preference name="BackgroundColor" value="0x000000"/>
+    <preference name="BackgroundColor" value="0xFFFFFF"/>
     <!--iOS Preferences-->
     <preference name="target-device" value="universal"/>
     <preference name="prerendered-icon" value="true"/>
