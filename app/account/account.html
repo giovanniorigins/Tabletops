@@ -1,18 +1,14 @@
 <ion-view view-title="My Account">
     <ion-content class="has-header">
-        <div ng-if="user">
-            <!-- SIDEBAR USERPIC -->
-            <div class="profile-userpic">
-                <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="" width="100px">
-                <img ng-if="::!user.avatar" src="icon.png" class="img-responsive" alt="">
-            </div>
-            <!-- END SIDEBAR USERPIC -->
-            <!-- SIDEBAR USER TITLE -->
-            <div class="profile-usertitle">
-                <div class="profile-usertitle-name" ng-bind="::user.full_name"></div>
-                <div class="profile-usertitle-job" ng-bind="'Foodie'"></div>
+        <div ng-if="user" class="hero " style="background-image: url('img/bgs/profile-bg.gif');">
+            <div class="content">
+                <div ng-if="::user.avatar" class="avatar" style="background-image: url('{{::user.avatar}}');"></div>
+                <div ng-if="::!user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
+                <h3><a class="light" ng-bind="::user.full_name"></a></h3>
+                <h4 ng-bind="'Foodie'"></h4>
             </div>
         </div>
+
 
         <!-- END SIDEBAR USER TITLE -->
         <!-- SIDEBAR BUTTONS -->

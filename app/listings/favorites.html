@@ -4,7 +4,7 @@
             <i class="icon ion-ios7-search placeholder-icon"></i>
             <input type="search" placeholder="Search" ng-model="filters.search">
         </label>
-        <button class="button button-clear light button-flat button-icon icon ion-ios-settings" ng-click="openFiltersModal()"
+        <button class="button button-clear light button-icon icon ion-ios-settings" ng-click="toggleRight()"
                 ng-hide="$exposeAside.active"></button>
     </div>
     <ion-content class="has-subheader">
@@ -12,8 +12,8 @@
                 pulling-text="Pull to refresh..."
                 on-refresh="refresh()">
         </ion-refresher>
-        <ion-list class="">
-            <ion-item ng-repeat="res in faves|filter:filters.search" class="item-avatar ink" ui-sref="tabs.favorite({id: res.slug})">
+        <ion-list>
+            <ion-item ng-show="faves.length" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item-avatar" ui-sref="tabs.favorite({id: res.slug})">
                 <img ng-src="{{::res.logo.path}}">
                 <h2>{{::res.name}}</h2>
                 <p class="row row-no-padding">
@@ -30,7 +30,13 @@
                 <ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>
                 <ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
             </ion-item>
+            <ion-item ng-hide="faves.length" class="card text-center">
+                <i class="icon ion-ios-heart-outline lovely" style="font-size: 2em"></i>
+                <p>You don't have any favorites yet. <a ui-sref="tabs.results">Browse</a> around for places that you love!</p>
+            </ion-item>
         </ion-list>
+
+
     </ion-content>
 
 </ion-view>
