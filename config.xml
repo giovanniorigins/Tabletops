@@ -64,7 +64,7 @@
     <gap:plugin name="org.apache.cordova.splashscreen"/>
     <!--<gap:plugin name="org.apache.cordova.vibration"/>-->
     <gap:plugin name="com.phonegap.plugins.pushplugin"/>
-    <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0">
+    <gap:plugin name="com.phonegap.plugins.facebookconnect">
         <param name="APP_ID" value="646933472119700"/>
         <param name="APP_NAME" value="Tabletops"/>
     </gap:plugin>
