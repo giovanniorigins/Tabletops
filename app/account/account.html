@@ -1,30 +1,27 @@
 <ion-view view-title="My Account">
     <ion-content class="has-header">
-        <div ng-if="user" class="hero " style="background-image: url('img/bgs/profile-bg.gif');">
-            <div class="content">
+        <div class="hero" style="background-image: url('img/bgs/profile-bg.gif');">
+            <div ng-if="user" class="content">
                 <div ng-if="::user.avatar" class="avatar" style="background-image: url('{{::user.avatar}}');"></div>
                 <div ng-if="::!user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
-                <h3><a class="light" ng-bind="::user.full_name"></a></h3>
-                <h4 ng-bind="'Foodie'"></h4>
+                <h3><a class="dark" ng-bind="::user.full_name"></a></h3>
+                <h4 class="dark" ng-bind="'Foodie'"></h4>
+            </div>
+
+            <div ng-if="!user" class="content">
+                <a class="button button-calm button-block icon ion-log-in button-large ink-button" ui-sref="signin">
+                    Sign in
+                </a>
             </div>
         </div>
 
-
-        <!-- END SIDEBAR USER TITLE -->
-        <!-- SIDEBAR BUTTONS -->
-        <div class="profile-userbuttons" ng-if="!user">
-            <a menu-close type="button" class="button button-block icon ion-log-in button-clear button-large" ui-sref="signin">
-                Sign in
-            </a>
-        </div>
-        <!-- END SIDEBAR BUTTONS -->
         <div class="list" ng-if="friends">
-            <div class="item item-divider">Friends</div>
-            <ion-item class="item item-avatar" collection-repeat="f in friends">
+            <div class="item item-divider">Friends using Tabletops</div>
+            <a class="item item-avatar" collection-repeat="f in friends">
                 <img ng-if="::f.picture" ng-src="{{::f.picture.data.url}}" class="img-responsive" alt="">
                 <h2 ng-bind="::f.name"></h2>
                 <p>Foodie</p>
-            </ion-item>
+            </a>
 
         </div>
     </ion-content>

@@ -18,17 +18,6 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 // org.apache.cordova.statusbar required
                 StatusBar.styleLightContent();
             }
-
-            /*var info = {
-                deviceInformation: ionic.Platform.device(),
-
-            isWebView: ionic.Platform.isWebView(),
-            isIPad: ionic.Platform.isIPad(),
-            isIOS: ionic.Platform.isIOS(),
-            isAndroid: ionic.Platform.isAndroid(),
-            isWindowsPhone: ionic.Platform.isWindowsPhone()
-            };
-            console.log(info);*/
         });
 
         $rootScope.navbarColor = function (color) {

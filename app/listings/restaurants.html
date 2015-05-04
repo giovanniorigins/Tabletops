@@ -4,13 +4,15 @@
             <i class="icon ion-ios7-search placeholder-icon"></i>
             <input type="search" placeholder="Search" ng-model="filters.search">
         </label>
-        <button class="button button-clear button-icon icon ion-ios-settings" ng-click="openFiltersModal()"
+        <button class="button button-clear button-icon icon ion-ios-close-outline" ng-click="filters.search=''"
+                ng-show="filters.search.length"></button>
+        <button class="button button-clear button-icon icon ion-ios-settings-strong" ng-click="openFiltersModal()"
                 ng-hide="$exposeAside.active"></button>
     </div>
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..."  on-refresh="refresh()"></ion-refresher>
         <ion-list class="">
-            <ion-item ng-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" class="item-avatar ink" ui-sref="tabs.restaurant({id: res.slug})">
+            <a ng-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" class="item item-avatar" ui-sref="tabs.restaurant({id: res.slug})">
                 <img ng-src="{{::res.logo.path}}">
                 <h2>{{::res.name}}</h2>
                 <p class="row row-no-padding">
@@ -25,11 +27,11 @@
                     <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{::c.name}}</a>
                 </p>
                 <p style="font-size: 80%">
-                    <span class="distance-badge badge badge-stable">{{::res.distance|number:2}} miles away</span>
+                    <span class="distance-badge badge badge-assertive">{{::res.distance|number:2}} miles away</span>
                 </p>
                 <ion-option-button class="button-stable ink" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'lovely'}[faved(res.id)]"></i></ion-option-button>
                 <ion-option-button class="button-balanced ink" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
-            </ion-item>
+            </a>
         </ion-list>
     </ion-content>
 

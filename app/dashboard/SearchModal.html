@@ -10,15 +10,18 @@
 
     </ion-header-bar>
     <form class="bar bar-subheader bar-assertive-900 item-input-inset no-border" ng-submit="startSearch()">
+
         <div class="buttons buttons-left">
             <span class="left-buttons">
                 <a class="button button-clear light button-icon ion-location" ng-click="openProvinceModal($event)"></a>
             </span>
         </div>
-            <label class="item-input-wrapper" >
-                <input type="search" autofocus placeholder="Search restaurants" ng-model="search">
-            </label>
-            <button class="hide" type="submit"></button>
+
+        <label class="item-input-wrapper" >
+            <input type="search" autofocus placeholder="Search restaurants" ng-model="search">
+        </label>
+        <button class="hide" type="submit"></button>
+
         <div class="buttons buttons-right">
             <span class="right-buttons">
                 <button class="button button-clear light button-icon icon ion-ios-search" type="submit" ng-click="closeSearchModal()"></button>
@@ -28,11 +31,11 @@
     <ion-content class="has-subheader">
         <ion-list>
             <div class="item item-divider">Quick Searches</div>
-            <div class="item" ui-sref="tabs.results({search: 'breakfast'})" ng-click="closeSearchModal()">Breakfast</div>
-            <div class="item" ui-sref="tabs.results({search: 'lunch'})" ng-click="closeSearchModal()">Lunch</div>
-            <div class="item" ui-sref="tabs.results({search: 'dinner'})" ng-click="closeSearchModal()">Dinner</div>
-            <div class="item" ui-sref="tabs.results({search: 'takeout'})" ng-click="closeSearchModal()">Takeout</div>
-            <div class="item" ui-sref="tabs.results({search: 'delivery'})" ng-click="closeSearchModal()">Delivery</div>
+            <a class="item" ui-sref="tabs.results({search: 'breakfast'})" ng-click="closeSearchModal()">Breakfast</a>
+            <a class="item" ui-sref="tabs.results({search: 'lunch'})" ng-click="closeSearchModal()">Lunch</a>
+            <a class="item" ui-sref="tabs.results({search: 'dinner'})" ng-click="closeSearchModal()">Dinner</a>
+            <a class="item" ui-sref="tabs.results({search: 'takeout'})" ng-click="closeSearchModal()">Takeout</a>
+            <a class="item" ui-sref="tabs.results({search: 'delivery'})" ng-click="closeSearchModal()">Delivery</a>
         </ion-list>
     </ion-content>
 </ion-modal-view>

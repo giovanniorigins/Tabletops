@@ -95,14 +95,14 @@ var closestLocation = function (targetLocation, locationData) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $ionicSideMenuDelegate, $ionicNavBarDelegate, $state, $localForage, Province, ListingRepository, $ionicModal) {
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal) {
         $scope.settings = {
             geolocation: false,
             province: {
-                id: "15",
-                name: "New Providence / Paradise Island",
+                id: 15,
+                name: "New Providence \/ Paradise Island",
                 slug: "np-pi",
-                country_id: "1",
+                country_id: 1,
                 lat: 25.033965,
                 lng: -77.35176
             }
@@ -110,7 +110,8 @@ angular.module('tabletops.controllers', [])
 
         // Handle Settings
         $localForage.getItem('province').then(function (data) {
-            $scope.settings.province = data;
+            if ( angular.isObject(data) )
+                $scope.settings.province = data;
         });
 
         // Handle Network Status
@@ -121,7 +122,6 @@ angular.module('tabletops.controllers', [])
              var isOnline = $cordovaNetwork.isOnline();
 
              var isOffline = $cordovaNetwork.isOffline();
-
 
             // listen for Online event
             $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
@@ -157,14 +157,6 @@ angular.module('tabletops.controllers', [])
                 $scope.myLocation = position;
             });
 
-        $scope.toggleLeft = function () {
-            $ionicSideMenuDelegate.toggleLeft();
-        };
-
-        /*$scope.toggleRight = function () {
-         $ionicSideMenuDelegate.toggleRight();
-         };*/
-
         $scope.selectProvinces = function () {
             $localForage.getItem('provinces').then(function (data) {
                 $scope.provinces = angular.isDefined(data) ? data : Province.query({}, function (res) {
@@ -198,10 +190,6 @@ angular.module('tabletops.controllers', [])
         $scope.selectClosestProvince = function () {
             var closest = $scope.findClosest($scope.myLocation.coords, $scope.provinces);
             $scope.setProvince(closest);
-        };
-
-        $scope.setNavTitle = function (title) {
-            $ionicNavBarDelegate.title(title);
         };
 
         $scope.shareThis = function (obj) {
@@ -241,7 +229,7 @@ angular.module('tabletops.controllers', [])
             $state.go('tabs.dashboard');
         });
 
-        // .fromTemplateUrl() method
+        // Province Modal
         $ionicModal.fromTemplateUrl('app/common/ProvinceModal.html', {
             scope: $scope
         }).then(function (modal) {
