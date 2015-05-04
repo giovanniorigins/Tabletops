@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.gorigins.tabletops"
-        versionCode="" version="1.0.0">
+<widget xmlns="http://www.w3.org/ns/widgets"
+        xmlns:gap="http://phonegap.com/ns/1.0" xmlns:cdv="http://cordova.apache.org/ns/1.0"
+        id="com.gorigins.tabletops" versionCode="" version="1.0.0">
     <name>Tabletops</name>
     <description>An Ionic Framework and Cordova project.</description>
     <author href="http://gorigins.com" email="jerezb31@gmail.com">Jerez Bain</author>
     <access origin="*" />
     <!--<content src="index.html"/>-->
     <!--<access origin="*.gorigins.com" />-->
+    <icon src="icon.png" gap:role="default" />
+    <gap:splash src="splash.png" gap:role="default" />
+
     <!-- Core/Common Preferences -->
     <preference name="phonegap-version" value="3.7.0"/>
     <preference name="orientation" value="default"/>
@@ -43,12 +47,7 @@
     <preference name="UIWebViewBounce" value="false"/>
     <preference name="disable-cursor" value="false"/>
 
-    <!--Features-->
-    <feature name="StatusBar">
-        <param name="ios-package" value="CDVStatusBar" onload="true"/>
-    </feature>
-    <feature name="http://api.phonegap.com/1.0/geolocation" />
-    <feature name="http://api.phonegap.com/1.0/device" />
+    <!--Plugins-->
     <!--<gap:plugin name="org.apache.cordova.battery-status"/>-->
     <gap:plugin name="org.apache.cordova.camera"/>
     <gap:plugin name="org.apache.cordova.console"/>
@@ -67,6 +66,7 @@
     <gap:plugin name="org.apache.cordova.splashscreen"/>
     <!--<gap:plugin name="org.apache.cordova.vibration"/>-->
     <gap:plugin name="com.phonegap.plugins.pushplugin"/>
+
     <gap:plugin name="jfaris.com.phonegap.plugins.facebookconnect" version="0.11.0-jfaris.0" source="plugins.cordova.io">
         <param name="APP_ID" value="646933472119700"/>
         <param name="APP_NAME" value="Tabletops"/>
@@ -77,11 +77,21 @@
     <gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1"/>
     <gap:plugin name="nl.x-services.plugins.toast"/>
     <!--<gap:plugin name="com.google.cordova.admob" source="plugins.cordova.io"/>-->
+
+    <!--Features-->
+    <feature name="StatusBar">
+        <param name="ios-package" value="CDVStatusBar" onload="true"/>
+    </feature>
+    <feature name="PushPlugin">
+        <param name="ios-package" value="PushPlugin"/>
+    </feature>
+    <feature name="http://api.phonegap.com/1.0/geolocation" />
+    <feature name="http://api.phonegap.com/1.0/device" />
+
+    <!--Platforms, Icons, & Splashscreens-->
     <gap:platform name="ios"/>
     <gap:platform name="android"/>
     <!--<gap:platform name="winphone"/>-->
-    <icon src="icon.png" gap:role="default" />
-    <gap:splash src="splash.png" gap:role="default" />
     <icon src="resources\android\icon\drawable-ldpi-icon.png" gap:platform="android" density="ldpi"/>
     <icon src="resources\android\icon\drawable-mdpi-icon.png" gap:platform="android" density="mdpi"/>
     <icon src="resources\android\icon\drawable-hdpi-icon.png" gap:platform="android" density="hdpi"/>
