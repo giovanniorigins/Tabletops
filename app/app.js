@@ -80,7 +80,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         $rootScope.cuisines = $rootScope.sorts = $rootScope.favorites = $rootScope.been = [];
         $rootScope.myLocation = {};
 
-        /*//Load Favorites
+        //Load Favorites
         $localForage.getItem('favorites').then(function (data) {
             $rootScope.favorites = data;
         });
@@ -88,7 +88,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         //Load Been
         $localForage.getItem('been').then(function (data) {
             $rootScope.beens = data;
-        });*/
+        });
     })
 
     .config(function ($stateProvider, $urlRouterProvider) {
