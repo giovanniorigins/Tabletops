@@ -3,7 +3,7 @@
         xmlns:gap="http://phonegap.com/ns/1.0" xmlns:cdv="http://cordova.apache.org/ns/1.0"
         id="com.gorigins.tabletops" versionCode="" version="1.0.0">
     <name>Tabletops</name>
-    <description>An Ionic Framework and Cordova project.</description>
+    <description>Tabletops helps you to find and explore great foods and share your experiences with others.</description>
     <author href="http://gorigins.com" email="jerezb31@gmail.com">Jerez Bain</author>
     <access origin="*" />
     <!--<content src="index.html"/>-->
