@@ -213,12 +213,10 @@ angular.module('tabletops.controllers', [])
         };
 
         $scope.faved = function (id) {
-            console.log('Favorites: ', $rootScope.favorites);
             return _.contains($rootScope.favorites, id);
         };
 
         $scope.visited = function (id) {
-            console.log('Visited: ', $rootScope.beens);
             return _.contains($rootScope.beens, id);
         };
 

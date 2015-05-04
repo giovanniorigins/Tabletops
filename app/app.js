@@ -51,20 +51,9 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             });
 
         $rootScope.$on('$stateChangeSuccess', function (e, toState/*, toParams, fromState, fromParams, a*/) {
-            console.log('To: ', toState);
+            //console.log('To: ', toState);
             //console.log('Params: ', fromParams);
             $rootScope.filtersMenu = toState.name === "restaurants";
-            /*if (toState.data.checkAuth && !User.isAuthorized) {
-             e.preventDefault();
-             AuthService.doAsyncThing().then(function (res) {
-             $state.go(toState, toParams, {notify: false}).then(function () {
-             $rootScope.$broadcast('$stateChangeSuccess', toState, toParams, fromState);
-             }).catch(function (err) {
-             // do something here, redirect, or let your $stateChangeError handler catch
-             console.log('Error: ', err);
-             })
-             });
-             }*/
         });
 
         $rootScope.valById = function (arr, id) {
