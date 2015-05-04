@@ -57,10 +57,12 @@
     <script src="http://debug.build.phonegap.com/target/target-script-min.js#015884ee-edfa-11e4-9809-5eaf6f758ba7"></script>
 </head>
 <body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak>
-    <ion-nav-bar class="bar-assertive-900" align-title="left">
-        <ion-nav-back-button class="button-clear">
-            <i class="ion-chevron-left"></i>
+    <ion-nav-bar class="bar-assertive-900" ng-class="{'has-header-fab-left': hasHeaderFabLeft}" align-title="left">
+        <ion-nav-back-button class="no-text">
         </ion-nav-back-button>
+        <!--<ion-nav-back-button class="button-clear">
+            <i class="ion-chevron-left"></i>
+        </ion-nav-back-button>-->
     </ion-nav-bar>
 
     <ion-nav-view></ion-nav-view>

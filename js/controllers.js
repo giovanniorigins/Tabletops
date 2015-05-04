@@ -329,6 +329,7 @@ angular.module('tabletops.controllers', [])
         });
     })
     .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal) {
+        $scope.hasHeaderFabLeft = true;
         $scope.getNearby = function () {
             $scope.qData = {app_search: true, range: 5, limit: 5};
             if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
@@ -404,6 +405,7 @@ angular.module('tabletops.controllers', [])
         //Cleanup the popover when we're done with it!
         $scope.$on('$destroy', function () {
             $scope.SearchModal.remove();
+            $scope.hasHeaderFabLeft = false;
         });
 
         //init animations
