@@ -77,8 +77,8 @@
     <gap:platform name="ios"/>
     <gap:platform name="android"/>
     <!--<gap:platform name="winphone"/>-->
-    <icon src="icon.png"/>
-    <gap:splash src="splash.png" />
+    <icon src="icon.png" gap:role="default" />
+    <gap:splash src="splash.png" gap:role="default" />
     <icon src="resources\android\icon\drawable-ldpi-icon.png" gap:platform="android" density="ldpi"/>
     <icon src="resources\android\icon\drawable-mdpi-icon.png" gap:platform="android" density="mdpi"/>
     <icon src="resources\android\icon\drawable-hdpi-icon.png" gap:platform="android" density="hdpi"/>
