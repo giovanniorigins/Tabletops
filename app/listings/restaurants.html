@@ -1,6 +1,5 @@
 <ion-view view-title="Restaurants">
     <div class="bar bar-subheader item-input-inset">
-        <button class="button button-icon ion-location" ng-click="openProvincePopover($event)"></button>
         <label class="item-input-wrapper">
             <i class="icon ion-ios7-search placeholder-icon"></i>
             <input type="search" placeholder="Search" ng-model="filters.search">
@@ -34,6 +33,9 @@
                 <ion-option-button class="button-dark ink" ng-click="beenHere(res)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(res.id)]"></i></ion-option-button>
             </ion-item>
         </ion-list>
+        <button id="fab" class="button button-positive button-fab button-fab-bottom-right" ng-click="openFiltersModal()">
+            <i class="icon ion-ios-settings"></i>
+        </button>
     </ion-content>
 
 </ion-view>
