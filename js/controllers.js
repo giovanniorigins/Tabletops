@@ -98,14 +98,7 @@ angular.module('tabletops.controllers', [])
     function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal) {
         $scope.settings = {
             geolocation: false,
-            province: {
-                id: 15,
-                name: "New Providence \/ Paradise Island",
-                slug: "np-pi",
-                country_id: 1,
-                lat: 25.033965,
-                lng: -77.35176
-            }
+            province: {}
         };
 
         // Handle Settings
@@ -172,6 +165,8 @@ angular.module('tabletops.controllers', [])
                 $scope.provinces = res;
                 $localForage.setItem('provinces', res);
             });
+
+            $scope.settings.province = _.findWhere($scope.provinces, {slug: "np-pi"});
         });
 
         $scope.setProvince = function (p) {

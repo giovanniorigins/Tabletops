@@ -12,7 +12,7 @@
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list>
-            <a ng-show="faves.length" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item item-avatar" ui-sref="tabs.favorite({id: res.slug})">
+            <ion-item ng-show="faves.length" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item item-avatar" ui-sref="tabs.favorite({id: res.slug})" href="#/favorites/{{::res.slug}}">
                 <img ng-src="{{::res.logo.path}}">
                 <h2>{{::res.name}}</h2>
                 <p class="row row-no-padding">
@@ -28,7 +28,7 @@
                 </p>
                 <ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>
                 <ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
-            </a>
+            </ion-item>
             <a ng-hide="faves.length" class="card text-center">
                 <i class="icon ion-ios-heart-outline lovely" style="font-size: 2em"></i>
                 <p>You don't have any favorites yet. <a ui-sref="tabs.results">Browse</a> around for places that you love!</p>
