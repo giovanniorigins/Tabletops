@@ -18,7 +18,7 @@
                 </fieldset>
 
                 <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
-                    <a class="nearby-card card ink" ng-repeat="res in restaurants">
+                    <ion-item class="nearby-card card ink" ng-repeat="res in restaurants">
                         <div class="item item-avatar" ui-sref="tabs.restaurant({id: res.slug})">
                             <img ng-src="{{::res.logo.path}}">
                             <h2>{{::res.name}}</h2>
@@ -37,7 +37,7 @@
                                 <span class="distance-badge badge badge-stable">{{::res.distance|number:2}} miles away</span>
                             </p>
                         </div>
-                    </a>
+                    </ion-item>
                     <a class="nearby-card more-card hide" ui-sref="tabs.nearby">
                         <div><i class="icon ion-plus-circled"></i> <br>View All</div>
                     </a>

@@ -1,12 +1,12 @@
 <ion-view view-title="Sign-In" hide-nav-bar="true" style="background-image: url('img/bgs/cs21.jpg'); background-position: center center; background-size: cover">
     <ion-content class="padding">
-        <div class="col col-80 col-offset-10">
             <div style="padding-top: 60px; padding-bottom: 30px">
                 <img src="img/logo-white_red.png" alt="Tabletops" width="100%"/>
             </div>
 
             <div class="padding" ng-init="showForm = false;showAccountForm = false">
-                <button class="button icon-left ion-social-facebook button button-block button-positive" ng-click="signInFacebook()" ng-hide="showAccountForm||showForm">
+                <button class="button button-block button-positive button-flat" ng-click="signInFacebook()" ng-hide="showAccountForm||showForm">
+                    <i class="icon ion-social-facebook"></i>
                     LOGIN WITH FACEBOOK
                 </button>
                 <fieldset class="featured-header">
@@ -15,14 +15,14 @@
 
                 <div class="row responsive-sm">
                     <div class="col col-75 padding-right">
-                        <button class="button button-block button-light" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
+                        <button class="button button-block button-light button-flat" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
                             <span ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
                             <span ng-show="showAccountForm">GO BACK</span>
                         </button>
                     </div>
 
                     <div class="col col-25 padding-left">
-                        <button class="button button-block button-dark" ng-click="showForm = !showForm" ng-hide="showAccountForm">
+                        <button class="button button-block button-dark button-flat" ng-click="showForm = !showForm" ng-hide="showAccountForm">
                             <span ng-hide="showForm">LOGIN</span>
                             <span ng-show="showForm">GO BACK</span>
                         </button>
@@ -41,10 +41,10 @@
                             <input type="password" placeholder="Password" ng-model="user.password" required>
                         </label>
                     </form>
-                    <button class="button icon-left ion-log-in button button-block button-balanced" ng-disabled="!loginForm.$valid" ng-click="login()">
+                    <button class="button icon-left ion-log-in button button-block button-balanced button-flat" ng-disabled="!loginForm.$valid" ng-click="login()">
                         LOGIN
                     </button>
-                    <button class="button button-block button-outline button-light" ui-sref="forgotpassword">FORGOT PASSWORD?</button>
+                    <button class="button button-block button-outline button-light button-flat" ui-sref="forgotpassword">FORGOT PASSWORD?</button>
 
                 </div>
 
@@ -67,15 +67,15 @@
                             <input type="password" placeholder="Password" ng-model="user.password" required>
                         </label>
                     </form>
-                    <button class="button icon-left ion-log-in button button-block button-balanced" ng-disabled="!accountForm.$valid" ng-click="submitAccount(user)">
+                    <button class="button button-block button-balanced button-flat" ng-disabled="!accountForm.$valid" ng-click="submitAccount(user)">
+                        <i class="icon ion-log-in"></i>
                         JOIN US
                     </button>
                 </div>
             </div>
-        </div>
     </ion-content>
     <div class="bar bar-footer bar-dark item-input-inset">
-        <button class="button button-clear button-block" ui-sref="tabs.dashboard">
+        <button class="button button-clear button-block button-flat" ui-sref="tabs.dashboard">
             CONTINUE WITHOUT LOGIN
             <i class="icon ion-ios-arrow-right"></i>
         </button>
