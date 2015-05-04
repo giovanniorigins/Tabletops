@@ -328,7 +328,7 @@ angular.module('tabletops.controllers', [])
             AuthenticationService.logout();
         });
     })
-    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval) {
+    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal) {
         $scope.getNearby = function () {
             $scope.qData = {app_search: true, range: 5, limit: 5};
             if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
@@ -387,6 +387,27 @@ angular.module('tabletops.controllers', [])
         $scope.getWidth = function () {
             return document.getElementById('dashboard').offsetWidth - 21;
         };
+
+        // .fromTemplateUrl() method
+        $ionicModal.fromTemplateUrl('app/dashboard/SearchModal.html', {
+            scope: $scope
+        }).then(function (modal) {
+            $scope.SearchModal = modal;
+        });
+
+        $scope.openSearchModal = function ($event) {
+            $scope.SearchModal.show($event);
+        };
+        $scope.closeSearchModal = function () {
+            $scope.SearchModal.hide();
+        };
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.SearchModal.remove();
+        });
+
+        //init animations
+        document.getElementById('initSearchFab').classList.toggleClass('drop');
     })
     .controller('FavoritesCtrl', function ($scope, $localForage, Listing, $ionicModal) {
         $scope.faves = [];

@@ -1,14 +1,14 @@
-<ion-view hide-back-button="true">
+<ion-view hide-back-button="true" hide-nav-bar="true">
     <ion-nav-buttons side="right">
-        <button class="button button-energized-900 button-fab" ui-sref="tab.results">
+        <button class="button button-energized-900 button-fab motion" id="initSearchFab" ng-click="openSearchModal()" ui-sref="tab.results">
             <i class="icon ion-ios-search"></i>
         </button>
         <!--<button class="button button-dark button-fab" ng-click="openProvinceModal($event)">
             <i class="icon ion-location"></i>
         </button>-->
     </ion-nav-buttons>
-    <ion-header-bar class="bar bar-header bar-assertive item-input-inset">
-        <div class="" style="height: auto;width: 36px;">
+    <ion-header-bar class="bar bar-header bar-assertive-900 item-input-inset">
+        <div class="title title-left" style="height: auto;width: 36px;">
             <img class="title-image" src="icon.png" style="width: 100%;display: block; height: auto"/>
         </div>
         <!--<button class="button button-icon ion-location" ng-click="openProvinceModal($event)"></button>
@@ -20,11 +20,6 @@
             <button class="hide" type="submit"></button>
         </form>
         <button ng-hide="search.length" class="button button-icon icon ion-ios-search" ng-click="startSearch()"></button>-->
-        <span class="right-buttons">
-            <button class="button button-balanced button-fab">
-                <i class="icon ion-star"></i>
-            </button>
-        </span>
     </ion-header-bar>
     <ion-content class="has-header padding-top" id="dashboard">
         <div class="">

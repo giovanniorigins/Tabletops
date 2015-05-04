@@ -29,7 +29,7 @@
     <!--Android Preferences-->
     <preference name="KeepRunning" value="true"/>
     <preference name="LoadUrlTimeoutValue" value="20000"/>
-    <preference name="SplashScreen" value="screen"/>
+    <preference name="SplashScreen" value="splash" />
     <preference name="SplashScreenDelay" value="5000"/>
     <preference name="LoadingDialog" value=","/>
     <preference name="ErrorUrl" value=""/>
@@ -43,9 +43,12 @@
     <preference name="UIWebViewBounce" value="false"/>
     <preference name="disable-cursor" value="false"/>
 
+    <!--Features-->
     <feature name="StatusBar">
         <param name="ios-package" value="CDVStatusBar" onload="true"/>
     </feature>
+    <feature name="http://api.phonegap.com/1.0/geolocation" />
+    <feature name="http://api.phonegap.com/1.0/device" />
     <!--<gap:plugin name="org.apache.cordova.battery-status"/>-->
     <gap:plugin name="org.apache.cordova.camera"/>
     <gap:plugin name="org.apache.cordova.console"/>

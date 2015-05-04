@@ -1,0 +1,43 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <div class="buttons buttons-left">
+            <span class="left-buttons">
+                <button class="button button-icon icon ion-ios-arrow-left" ng-click="openProvinceModal()"></button>
+            </span>
+        </div>
+
+        <h1 class="title title-center">Select your province</h1>
+
+        <div class="buttons buttons-right">
+            <span class="right-buttons">
+                <button class="button button-icon icon ion-ios-navigate" ng-click="selectClosestProvince()"></button>
+            </span>
+        </div>
+    </ion-header-bar>
+    <div class="bar bar-subheader bar-assertive item-input-inset">
+        <div class="buttons buttons-left">
+            <span class="left-buttons">
+                <button class="button button-icon ion-location" ng-click="openProvinceModal($event)"></button>
+            </span>
+        </div>
+        <form ng-submit="startSearch()" class="title title-center" style="margin-top: 0;padding-top: 0">
+            <label class="item-input-wrapper" style="margin-top: 0;padding-top: 0">
+                <input type="search" placeholder="Search restaurants" ng-model="search">
+            </label>
+            <button class="hide" type="submit"></button>
+        </form>
+        <div class="buttons buttons-left">
+            <span class="left-buttons">
+                <button class="button button-icon icon ion-ios-search" ng-click="startSearch()"></button>
+            </span>
+        </div>
+    </div>
+    <ion-content class="">
+        <ion-list>
+            <!--<ion-item ng-repeat="p in provinces" ng-class="{true:'active'}[settings.province.slug == p.slug]" ng-click="setProvince(p)" menu-close>
+                {{::p.name}}
+            </ion-item>-->
+            <div class="item item-divider">Quick Searches</div>
+        </ion-list>
+    </ion-content>
+</ion-modal-view>
