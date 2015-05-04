@@ -378,8 +378,7 @@ angular.module('tabletops.services', [])
                                     method: "share_open_graph",
                                     action_type: 'restaurant.visited',
                                     action_properties: JSON.stringify({
-                                        object: {
-                                            "fb:app_id": "646933472119700",
+                                        restaurant: {
                                             "og:type": "restaurant.restaurant",
                                             "og:url": "http:\/\/flamingo.gorigins.com/np-pi/" + obj.slug,
                                             "og:title": obj.name,
