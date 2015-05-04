@@ -216,8 +216,8 @@ angular.module('tabletops.services', [])
             }
         };
     })
-    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$cordovaFacebook', '$sce',
-        function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $cordovaFacebook, $sce) {
+    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$cordovaFacebook', '$sce', 'CIDs',
+        function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $cordovaFacebook, $sce, CIDs) {
             var repo = {
                 // Call Handling
                 initCaller: function (obj) {
@@ -376,20 +376,34 @@ angular.module('tabletops.services', [])
                                //$cordovaToast.showShortBottom('\f122 Been Here!');
                                 var options = {
                                     method: "share_open_graph",
-                                    action_type: 'bahamastabletops:check_in',
+                                    action_type: 'restaurant.visited',
                                     action_properties: JSON.stringify({
-                                        object:'https://developers.facebook.com/docs/',
+                                        object: {
+                                            "fb:app_id": CIDs.facebook,
+                                            "og:type": "restaurant.restaurant",
+                                            "og:url": "http:\/\/flamingo.gorigins.com/np-pi/" + obj.slug,
+                                            "og:title": obj.name,
+                                            "og:image": obj.photos.length ? obj.photos[0].path: 'http://flamingo.gorigins.com/public_assets/img/logo_red.png',
+                                            "og:description": "Find great food. Share experiences with your friends",
+                                            "restaurant:contact_info:street_address": obj.locations.length ? obj.locations[0].address_1: '',
+                                            "restaurant:contact_info:locality": obj.locations.length ? obj.locations[0].locality: '',
+                                            "restaurant:contact_info:region": obj.locations.length ? obj.locations[0].province: '',
+                                            "restaurant:contact_info:country_name": "The Bahamas",
+                                            "restaurant:contact_info:phone_number": obj.locations.length ? obj.locations[0].phone_1: '',
+                                            "place:location:latitude": obj.locations.length ? obj.locations[0].lat: '',
+                                            "place:location:longitude": obj.locations.length ? obj.locations[0].lng: ''
+                                        },
                                     })
                                 };
                                 $cordovaFacebook.showDialog(options)
                                     .then(function(success) {
                                         // success
+                                        console.log(success);
                                     }, function (error) {
                                         // error
                                     });
                             }
                         }
-
                     });
                 },
                 showDollars: function (range, noIcon) {
