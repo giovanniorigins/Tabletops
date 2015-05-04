@@ -20,6 +20,10 @@
     padding-bottom: 4px;
 }
 
+.no-border {
+    border: none !important;
+}
+
 .lovely {
     color: #E155BF;
 }
