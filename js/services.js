@@ -334,7 +334,7 @@ angular.module('tabletops.services', [])
                             var check = _.contains(data, obj.id);
                             if (!!check) { // remove it
                                 var newData = _.reject(data, function (id) {
-                                    return id == obj.id
+                                    return id == obj.id;
                                 });
                                 $localForage.setItem('favorites', newData);
                                 $rootScope.favorites = newData;
@@ -344,10 +344,8 @@ angular.module('tabletops.services', [])
                                 $localForage.setItem('favorites', data);
                                 $rootScope.favorites = data;
                                 //$cordovaToast.showShortBottom('Added to Favorites!');
-
                             }
                         }
-
                     });
                 },
                 been: function (obj) {
@@ -362,9 +360,9 @@ angular.module('tabletops.services', [])
                         } else {
                             // Data exists
                             var check = _.contains(data, obj.id);
-                            if (check) { // remove it
+                            if (!!check) { // remove it
                                 var newData = _.reject(data, function (id) {
-                                    return id == obj.id
+                                    return id == obj.id;
                                 });
                                 $localForage.setItem('been', newData).then(function (res) {
                                     $rootScope.beens = newData;
