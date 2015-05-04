@@ -8,8 +8,8 @@
     <access origin="*" />
     <!--<content src="index.html"/>-->
     <!--<access origin="*.gorigins.com" />-->
-    <icon src="icon.png" gap:role="default" />
-    <gap:splash src="splash.png" gap:role="default" />
+    <icon src="resources\icon.png" />
+    <gap:splash src="resources\splash.png"/>
 
     <!-- Core/Common Preferences -->
     <preference name="phonegap-version" value="3.7.0"/>
