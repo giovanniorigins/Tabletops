@@ -374,34 +374,38 @@ angular.module('tabletops.services', [])
                                 $localForage.setItem('been', data);
                                 $rootScope.been = data;
                                //$cordovaToast.showShortBottom('\f122 Been Here!');
-                                var options = {
+                                /*var options = {
                                     method: "share_open_graph",
                                     action_type: 'restaurant.visited',
                                     action_properties: JSON.stringify({
                                         object: {
-                                            "fb:app_id": CIDs.facebook,
+                                            "fb:app_id": "646933472119700",
                                             "og:type": "restaurant.restaurant",
                                             "og:url": "http:\/\/flamingo.gorigins.com/np-pi/" + obj.slug,
                                             "og:title": obj.name,
                                             "og:image": obj.photos.length ? obj.photos[0].path: 'http://flamingo.gorigins.com/public_assets/img/logo_red.png',
-                                            "og:description": "Find great food. Share experiences with your friends",
-                                            "restaurant:contact_info:street_address": obj.locations.length ? obj.locations[0].address_1: '',
-                                            "restaurant:contact_info:locality": obj.locations.length ? obj.locations[0].locality: '',
-                                            "restaurant:contact_info:region": obj.locations.length ? obj.locations[0].province: '',
-                                            "restaurant:contact_info:country_name": "The Bahamas",
-                                            "restaurant:contact_info:phone_number": obj.locations.length ? obj.locations[0].phone_1: '',
                                             "place:location:latitude": obj.locations.length ? obj.locations[0].lat: '',
                                             "place:location:longitude": obj.locations.length ? obj.locations[0].lng: ''
                                         },
                                     })
-                                };
-                                $cordovaFacebook.showDialog(options)
+                                };*/
+                                $cordovaFacebook.api('/me/restaurant.visited', ['publish_actions'])
                                     .then(function(success) {
                                         // success
                                         console.log(success);
                                     }, function (error) {
                                         // error
+                                        console.log(error);
                                     });
+
+                                /*$cordovaFacebook.showDialog(options)
+                                    .then(function(success) {
+                                        // success
+                                        console.log(success);
+                                    }, function (error) {
+                                        // error
+                                        console.log(error);
+                                    });*/
                             }
                         }
                     });
