@@ -30,7 +30,7 @@
                 <ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
                 <ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>
                 <ion-option-button id="{{::'share_button_'+res.id}}" class="button-positive" ng-click="shareThis(res)">&nbsp;<i class="icon ion-ios-upload"></i></ion-option-button>
-                <ion-option-button class="button-dark" ng-click="beenHere(res)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[been(res.id)]"></i></ion-option-button>
+                <ion-option-button class="button-dark" ng-click="beenHere(res)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(res.id)]"></i></ion-option-button>
             </ion-item>
         </ion-list>
     </ion-content>

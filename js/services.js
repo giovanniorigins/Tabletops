@@ -358,7 +358,7 @@ angular.module('tabletops.services', [])
                             data = [];
                             data.push(obj.id);
                             $localForage.setItem('been', data);
-                            $rootScope.been = data;
+                            //$rootScope.been = data;
                         } else {
                             // Data exists
                             var check = _.contains(data, obj.id);
@@ -372,7 +372,7 @@ angular.module('tabletops.services', [])
                             } else { // add it
                                 data.push(obj.id);
                                 $localForage.setItem('been', data);
-                                $rootScope.been = data;
+                                //$rootScope.been = data;
                                //$cordovaToast.showShortBottom('\f122 Been Here!');
                                 var options = {
                                     method: "share_open_graph",

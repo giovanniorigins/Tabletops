@@ -213,11 +213,15 @@ angular.module('tabletops.controllers', [])
         };
 
         $scope.faved = function (id) {
-            return _.contains($rootScope.favorites, id);
+            $localForage.getItem('favorites').then(function (favorites) {
+                return _.contains(favorites, id);
+            });
         };
 
-        $scope.been = function (id) {
-            return _.contains($rootScope.been, id);
+        $scope.visited = function (id) {
+            $localForage.getItem('been').then(function (beens) {
+                return _.contains(beens, id);
+            });
         };
 
         $scope.beenHere = function (obj) {
