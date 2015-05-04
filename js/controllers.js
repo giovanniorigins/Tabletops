@@ -771,8 +771,8 @@ angular.module('tabletops.controllers', [])
                 });
             })
         }])
-    .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', 'leafletData', 'leafletBoundsHelpers', 'HoursDays', 'StartHours', 'EndHours', 'ListingRepository',
-        function ($scope, Listing, listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours, ListingRepository) {
+    .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', 'leafletData', 'leafletBoundsHelpers', 'HoursDays', 'StartHours', 'EndHours',
+        function ($scope, Listing, listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
             $scope.listing = listing.data;
 
             $scope.hoursDays = HoursDays;

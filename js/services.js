@@ -333,8 +333,8 @@ angular.module('tabletops.services', [])
                             // Data exists
                             var check = _.contains(data, obj.id);
                             if (!!check) { // remove it
-                                var newData = _.reject(data, function (a) {
-                                    return a.id == obj.id
+                                var newData = _.reject(data, function (id) {
+                                    return id == obj.id
                                 });
                                 $localForage.setItem('favorites', newData);
                                 $rootScope.favorites = newData;
@@ -353,7 +353,7 @@ angular.module('tabletops.services', [])
                 been: function (obj) {
                     //$localForage.removeItem('been');
                     $localForage.getItem('been').then(function (data) {
-                        if (!data || angular.isUndefined(data)) {
+                        if (angular.isUndefined(data)) {
                             // Data doesnt exist
                             data = [];
                             data.push(obj.id);
@@ -362,21 +362,19 @@ angular.module('tabletops.services', [])
                         } else {
                             // Data exists
                             var check = _.contains(data, obj.id);
-                            if (!!check) { // remove it
-                                var newData = _.reject(data, function (a) {
-                                    return a.id == obj.id
+                            if (check) { // remove it
+                                var newData = _.reject(data, function (id) {
+                                    return id == obj.id
                                 });
                                 $localForage.setItem('been', newData).then(function (res) {
                                     $rootScope.beens = newData;
                                 });
-
-                                //$cordovaToast.showShortBottom('\f12a Guess you haven\'t been here...');
                             } else { // add it
                                 data.push(obj.id);
                                 $localForage.setItem('been', data);
                                 $rootScope.been = data;
                                //$cordovaToast.showShortBottom('\f122 Been Here!');
-                                var options = {
+                                /*var options = {
                                     method: "share_open_graph",
                                     action_type: 'restaurant.visited',
                                     action_properties: JSON.stringify({
@@ -390,15 +388,6 @@ angular.module('tabletops.services', [])
                                         }
                                     })
                                 };
-                                /*$cordovaFacebook.api('/me/restaurant.visited', ['publish_actions'])
-                                    .then(function(success) {
-                                        // success
-                                        console.log(success);
-                                    }, function (error) {
-                                        // error
-                                        console.log(error);
-                                    });*/
-
                                 $cordovaFacebook.showDialog(options)
                                     .then(function(success) {
                                         // success
@@ -408,7 +397,7 @@ angular.module('tabletops.services', [])
                                         // error
                                         console.log('error');
                                         console.log(error);
-                                    });
+                                    });*/
                             }
                         }
                     });
