@@ -407,7 +407,7 @@ angular.module('tabletops.controllers', [])
         });
 
         //init animations
-        document.getElementById('initSearchFab').classList.toggleClass('drop');
+        //document.getElementById('initSearchFab').classList.toggleClass('drop');
     })
     .controller('FavoritesCtrl', function ($scope, $localForage, Listing, $ionicModal) {
         $scope.faves = [];
