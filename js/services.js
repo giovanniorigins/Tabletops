@@ -366,8 +366,10 @@ angular.module('tabletops.services', [])
                                 var newData = _.reject(data, function (a) {
                                     return a.id == obj.id
                                 });
-                                $localForage.setItem('been', newData);
-                                $rootScope.beens = newData;
+                                $localForage.setItem('been', newData).then(function (res) {
+                                    $rootScope.beens = newData;
+                                });
+
                                 //$cordovaToast.showShortBottom('\f12a Guess you haven\'t been here...');
                             } else { // add it
                                 data.push(obj.id);
