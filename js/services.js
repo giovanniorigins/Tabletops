@@ -156,40 +156,47 @@ angular.module('tabletops.services', [])
                 });*/
             },
             FbMe: function () {
+                $localForage.getItem('authorizationToken').then(function (token) {
+                    $http.post(ApiEndpoint.auth + '/Facebook', { token: token })
+                        .success(function (res) {
+                            console.log('Auth Success');
+                            console.log(res);
+                        })
+                        .error(function (res) {
+                            console.log('Auth Error');
+                            console.log(res);
+                        })
+
+                });
+
                 $cordovaFacebook.api("me", [/*"public_profile", "email", "user_friends"*/])
                     .then(function(response) {
                         // success
                         console.log('Facebook login succeeded');
                         console.log(response);
-                        $localForage.setItem('useFacebook', true).then(function () {
-                            $cordovaFacebook.api(response.id + '/picture?redirect=false&width=200&height=200')
-                                .then(function (picture) {
-                                    $http.post(ApiEndpoint.auth + '/Facebook')
-                                        .success(function (res) {
-                                            console.log('Auth Success');
-                                            console.log(res);
-                                        })
-                                        .error(function (res) {
-                                            console.log('Auth Error');
-                                            console.log(res);
-                                        })
+                        $localForage.setItem('useFacebook', true);
 
-                                    var user = {
-                                        id: response.id,
-                                        fname: response.first_name,
-                                        lname: response.last_name,
-                                        full_name: response.name,
-                                        avatar: picture.data.url,
-                                        email: response.email,
-                                        profiles: [response]
-                                    };
-                                    $rootScope.isLoggedin = true;
 
-                                    $localForage.setItem('user', user);
-                                    $rootScope.$broadcast('event:auth-loginConfirmed');
-                                    $state.go('tabs.dashboard');
-                                })
-                        });
+                        $cordovaFacebook.api(response.id + '/picture?redirect=false&width=200&height=200')
+                            .then(function (picture) {
+
+
+
+                                var user = {
+                                    id: response.id,
+                                    fname: response.first_name,
+                                    lname: response.last_name,
+                                    full_name: response.name,
+                                    avatar: picture.data.url,
+                                    email: response.email,
+                                    profiles: [response]
+                                };
+                                $rootScope.isLoggedin = true;
+
+                                $localForage.setItem('user', user);
+                                $rootScope.$broadcast('event:auth-loginConfirmed');
+                                $state.go('tabs.dashboard');
+                            })
 
                     }, function (error) {
                         // error
