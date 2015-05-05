@@ -9,26 +9,15 @@
                     <i class="icon ion-social-facebook"></i>
                     LOGIN WITH FACEBOOK
                 </button>
+
                 <fieldset class="featured-header">
                     <legend class="light">Or login with email</legend>
                 </fieldset>
 
-                <div class="row responsive-sm">
-                    <div class="col col-75 padding-right">
-                        <button class="button button-block button-light button-flat" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
-                            <span ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
-                            <span ng-show="showAccountForm">GO BACK</span>
-                        </button>
-                    </div>
-
-                    <div class="col col-25 padding-left">
-                        <button class="button button-block button-dark button-flat" ng-click="showForm = !showForm" ng-hide="showAccountForm">
-                            <span ng-hide="showForm">LOGIN</span>
-                            <span ng-show="showForm">GO BACK</span>
-                        </button>
-                    </div>
-
-                </div>
+                <button class="button button-block button-dark button-flat" ng-click="showForm = !showForm" ng-hide="showAccountForm">
+                    <span ng-hide="showForm">LOGIN</span>
+                    <span ng-show="showForm">GO BACK</span>
+                </button>
 
                 <div class="animated fast" ng-show="showForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showForm]">
                     <form class="list list-inset" name="loginForm">
@@ -47,6 +36,11 @@
                     <button class="button button-block button-outline button-light button-flat" ui-sref="forgotpassword">FORGOT PASSWORD?</button>
 
                 </div>
+
+                <button class="button button-block button-light button-flat" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
+                    <span ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
+                    <span ng-show="showAccountForm">GO BACK</span>
+                </button>
 
                 <div class="animated fast" ng-show="showAccountForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showAccountForm]">
                     <form class="list list-inset" name="accountForm">
@@ -74,8 +68,8 @@
                 </div>
             </div>
     </ion-content>
-    <div class="bar bar-footer bar-dark item-input-inset">
-        <button class="button button-clear button-block button-flat" ui-sref="tabs.dashboard">
+    <div class="button-bar" style="position: fixed;bottom: 0;">
+        <button class="button button-small button-border button-dark" ui-sref="tabs.dashboard">
             CONTINUE WITHOUT LOGIN
             <i class="icon ion-ios-arrow-right"></i>
         </button>
