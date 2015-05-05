@@ -24,7 +24,7 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state/*, hello*/, $cordovaInAppBrowser, $cordovaFacebook) {
+    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook) {
         var service = {
             login: function (user) {
                 $localForage.setItem('userCreds', user);
@@ -68,13 +68,14 @@ angular.module('tabletops.services', [])
             loginCancelled: function () {
                 authService.loginCancelled();
             },
-            me: function () {
+            authHandler: function (provider) {
                 $localForage.getItem('authorizationToken').then(function (token) {
 
-                    $localForage.getItem('useFacebook').then(function (facebook) {
-                        if (facebook) {
+                    switch (provider) {
+                        case 'facebook':
                             return service.FbMe();
-                        } else if (token && !facebook) {
+                            break;
+                        case 'email':
                             $http.post(ApiEndpoint.api + '/me', {}, {
                                 ignoreAuthModule: true,
                                 headers: {
@@ -97,11 +98,11 @@ angular.module('tabletops.services', [])
                                         return $state.go('signin');
                                     }
                                 });
-                        } else {
+                            break;
+                        default:
                             return $state.go('signin');
-                        }
-                    });
-
+                            break;
+                    }
                 });
 
             },
@@ -112,65 +113,54 @@ angular.module('tabletops.services', [])
                         console.log(success);
                         if (success.status === 'connected') {
                             var accessToken = success.authResponse.accessToken;
-                            $localForage.setItem('useFacebook', true);
-                            $localForage.setItem('authorizationToken', accessToken).then(function () {
-                                $http.post(ApiEndpoint.auth + '/Facebook?token=' + accessToken)
-                                    .success(function (res) {
-                                        console.log('Auth Success');
-                                        console.log(res);
-                                    })
-                                    .error(function (res) {
-                                        console.log('Auth Error');
-                                        console.log(res);
-                                    })
-                                return service.FbMe();
+                            $localForage.setItem('useFacebook', true).then(function () {
+                                $localForage.setItem('authorizationToken', accessToken).then(function () {
+                                    return service.authHandler('facebook');
+                                });
                             });
                         } else {
-                            return service.me();
+                            return service.authHandler();
                         }
                     }, function (error) {
                         // error
                     });
-                /*var online = hello.getAuthResponse('facebook');
-                $rootScope.$watch('online', function (newValue, oldValue) {
-                    if (online.access_token) {
-                        var accessToken = online.access_token;
-                        $localForage.setItem('useFacebook', true).then(function () {
-                            $localForage.setItem('authorizationToken', accessToken).then(function (data) {
-                                return service.FbMe();
-                            });
-                        });
-                    } else {
-                        return service.me();
-                    }
-                });*/
             },
             FbLogin: function () {
                 $cordovaFacebook.login(["public_profile", "email", "user_friends"])
                     .then(function(success) {
                         console.log('Login');
                         console.log(success);
-                        service.FbMe();
+                        service.authHandler('facebook');
                     }, function (error) {
                         // error
                     });
 
-                /*hello('facebook').login({scope: 'email,friends,publish'}).then(function () {
-                    console.log('You are signed in to Facebook');
-                    // Call user information, for the given network
-                    return service.FbMe();
-                }, function (e) {
-                    alert('Signin error: ' + e.error.message);
-                    return $state.go('signin');
-                });*/
             },
             FbMe: function () {
                 $localForage.getItem('authorizationToken').then(function (token) {
+                    $http.post(ApiEndpoint.auth + '/Facebook?token=' + token)
+                        .success(function (res) {
+                            if (res.error) {
+                                console.log('Auth Error');
+                                console.log(res.error);
+                                return res.error;
+                            }
+                            console.log('Auth Success');
+                            console.log(res);
 
+                            $rootScope.isLoggedin = true;
 
+                            $localForage.setItem('user', res);
+                            $rootScope.$broadcast('event:auth-loginConfirmed');
+                            $state.go('tabs.dashboard');
+                        })
+                        .error(function (res) {
+                            console.log('Auth Error');
+                            console.log(res);
+                        })
                 });
 
-                $cordovaFacebook.api("me", [/*"public_profile", "email", "user_friends"*/])
+                /*$cordovaFacebook.api("me", [*//*"public_profile", "email", "user_friends"*//*])
                     .then(function(response) {
                         // success
                         console.log('Facebook login succeeded');
@@ -192,37 +182,12 @@ angular.module('tabletops.services', [])
                                     email: response.email,
                                     profiles: [response]
                                 };
-                                $rootScope.isLoggedin = true;
 
-                                $localForage.setItem('user', user);
-                                $rootScope.$broadcast('event:auth-loginConfirmed');
-                                $state.go('tabs.dashboard');
                             })
 
                     }, function (error) {
                         // error
-                    });
-                /*hello('facebook').api('/me').then(function(response) {
-                    console.log('Facebook login succeeded');
-                    $localForage.setItem('useFacebook', true).then(function () {
-                        var user = {
-                            id: response.id,
-                            fname: response.first_name,
-                            lname: response.last_name,
-                            full_name: response.name,
-                            avatar: response.picture,
-                            email: response.email,
-                            profiles: response
-                        };
-                        //console.log(user);
-                        $rootScope.isLoggedin = true;
-
-                        $localForage.setItem('user', user).then(function () {
-                            $rootScope.$broadcast('event:auth-loginConfirmed');
-                        });
-                        $state.go('tabs.dashboard');
-                    });
-                });*/
+                    });*/
             }
         };
         return service;
