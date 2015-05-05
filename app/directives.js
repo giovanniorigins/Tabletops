@@ -7,7 +7,7 @@ angular.module('tabletops.directives', [])
                 lat: '=',
                 lng: '='
             },
-            template: '<a ng-click="getDirections({lat:lat, lng:lng})" class="button button-small button-icon icon ion-ios-navigate-outline"></a>',
+            template: '<a ng-click="getDirections({lat:lat, lng:lng})" class="button button-clear button-small button-icon icon ion-ios-navigate-outline"></a>',
             controller: function ($scope) {
                 console.log($scope);
                 //this.shared = 'ok'; // add data to the controller instance
@@ -22,7 +22,7 @@ angular.module('tabletops.directives', [])
                 lat: '=',
                 lng: '='
             },
-            template: '<a ng-click="getDirections({lat:lat, lng:lng})" class="button button-small button-block button-outline">Get Directions</a>',
+            template: '<a ng-click="getDirections({lat:lat, lng:lng})" class="button button-clear button-small button-block button-outline">Get Directions</a>',
             controller: function ($scope) {
                 console.log($scope);
                 //this.shared = 'ok'; // add data to the controller instance
