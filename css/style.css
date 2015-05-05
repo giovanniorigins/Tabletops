@@ -14,7 +14,7 @@
 }
 
 [nav-view-transition="ios"][nav-view-direction="forward"], [nav-view-transition="ios"][nav-view-direction="back"] {
-    background-color: transparent;
+    background-color: white;
 }
 
 .title-image {
