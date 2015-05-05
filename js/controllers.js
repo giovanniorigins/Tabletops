@@ -241,6 +241,10 @@ angular.module('tabletops.controllers', [])
         $scope.$on('$destroy', function () {
             $scope.provModal.remove();
         });
+
+        // Set Ink
+        ionic.material.ink.displayEffect();
+
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -311,7 +315,7 @@ angular.module('tabletops.controllers', [])
             AuthenticationService.logout();
         });
     })
-    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal) {
+    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout) {
         $scope.hasHeaderFabLeft = true;
         $scope.getNearby = function () {
             $scope.qData = {app_search: true, range: 5, limit: 5};
@@ -372,7 +376,11 @@ angular.module('tabletops.controllers', [])
             return document.getElementById('dashboard').offsetWidth - 21;
         };
 
-        // .fromTemplateUrl() method
+        $timeout(function () {
+            document.getElementById('fab-search').classList.toggle('on');
+        }, 600);
+
+        // Search Modal
         $ionicModal.fromTemplateUrl('app/dashboard/SearchModal.html', {
             scope: $scope
         }).then(function (modal) {
@@ -391,8 +399,8 @@ angular.module('tabletops.controllers', [])
             $scope.hasHeaderFabLeft = false;
         });
 
-        //init animations
-        //document.getElementById('initSearchFab').classList.toggleClass('drop');
+        // Set Ink
+        ionic.material.ink.displayEffect();
     })
     .controller('FavoritesCtrl', function ($scope, $localForage, Listing, $ionicModal) {
         $scope.faves = [];
@@ -767,6 +775,10 @@ angular.module('tabletops.controllers', [])
                     }
                 });
             })
+
+            // Set Ink
+            ionic.material.ink.displayEffect();
+
         }])
     .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', 'leafletData', 'leafletBoundsHelpers', 'HoursDays', 'StartHours', 'EndHours',
         function ($scope, Listing, listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
