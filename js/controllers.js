@@ -101,6 +101,8 @@ angular.module('tabletops.controllers', [])
             province: {}
         };
 
+        $scope.hasHeaderFabRight = false;
+
         // Handle Settings
         $localForage.getItem('province').then(function (data) {
             if ( angular.isObject(data) )
@@ -325,7 +327,6 @@ angular.module('tabletops.controllers', [])
         });
     })
     .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout) {
-        $scope.hasHeaderFabLeft = true;
         $scope.getNearby = function () {
             $scope.qData = {app_search: true, range: 5, limit: 5};
             if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
@@ -410,7 +411,11 @@ angular.module('tabletops.controllers', [])
         //Cleanup the popover when we're done with it!
         $scope.$on('$destroy', function () {
             $scope.SearchModal.remove();
-            $scope.hasHeaderFabLeft = false;
+            $scope.$parent.hasHeaderFabRight = false;
+        });
+
+        $scope.$on('$ionicView.enter', function() {
+            $scope.$parent.hasHeaderFabRight = true;
         });
 
         // Set Ink
@@ -1039,6 +1044,14 @@ angular.module('tabletops.controllers', [])
             .then(function (res) {
                 $scope.friends = res.data;
             })
+
+        // Set Motion
+        $timeout(function() {
+            ionic.material.motion.slideUp({
+                selector: '.slide-up'
+            });
+        }, 300);
+
     })
     .controller('SettingsCtrl', function ($scope, $localForage, $cordovaAppRate) {
         $scope.settings = {
