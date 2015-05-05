@@ -1,7 +1,8 @@
 angular.module('tabletops.services', [])
     .constant('ApiEndpoint', {
         api: 'http://flamingo.gorigins.com/api/v1',
-        url: 'http://flamingo.gorigins.com/api/v1'
+        url: 'http://flamingo.gorigins.com/api/v1',
+        auth: 'http://flamingo.gorigins.com/api/v1/auth',
     })
     .factory('Listing', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
         return $resource(ApiEndpoint.api + "/listings/:id", {}, {
@@ -163,6 +164,16 @@ angular.module('tabletops.services', [])
                         $localForage.setItem('useFacebook', true).then(function () {
                             $cordovaFacebook.api(response.id + '/picture?redirect=false&width=200&height=200')
                                 .then(function (picture) {
+                                    $http.post(ApiEndpoint.auth + '/Facebook')
+                                        .success(function (res) {
+                                            console.log('Auth Success');
+                                            console.log(res);
+                                        })
+                                        .error(function (res) {
+                                            console.log('Auth Error');
+                                            console.log(res);
+                                        })
+
                                     var user = {
                                         id: response.id,
                                         fname: response.first_name,
@@ -422,7 +433,7 @@ angular.module('tabletops.services', [])
                             var ending = i <= rating ? '' : (i > rating && rating > (i - 1)) ? '-half' : '-outline';
                             str += '<i class="icon ion-ios-star' + ending + ' energized"></i>';
                         }
-                    } else str = '<span class="icon ion-ios-minus-empty "></span> No ratings';
+                    } else str = '<span class="icon ion-minus-round"></span>';
                     return $sce.trustAsHtml(str);
                 },
                 foo2: function () {
