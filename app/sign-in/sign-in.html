@@ -39,8 +39,8 @@
                 </div>
 
                 <button class="button button-block button-stable button-flat" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
-                    <span ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
-                    <span ng-show="showAccountForm">GO BACK</span>
+                    <span class="dark" ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
+                    <span class="dark" ng-show="showAccountForm">GO BACK</span>
                 </button>
 
                 <div class="animated fast" ng-show="showAccountForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showAccountForm]">

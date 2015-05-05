@@ -1,6 +1,6 @@
 <ion-view>
     <ion-nav-title>
-        {{::listing.name}}
+        <img class="title-image" ng-src="{{::listing.logo.path}}"> {{::listing.name}}
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button button-icon" ng-if="currentTab() == 2 && directionsSet" ng-click="toggleDirections()"
@@ -9,10 +9,6 @@
     <ion-content>
         <ion-list>
             <div class="item item-thumbnail-left">
-                <img ng-src="{{::listing.logo.path}}">
-
-                <h2 ng-bind="::listing.name"></h2>
-
                 <p class="row row-no-padding">
                     <span class="col col-50">
                         <span ng-bind-html="::showStars(listing.rating_count, listing.rating_cache)"></span>
@@ -132,6 +128,7 @@
 
             <!-- Photos -->
             <h5 class="padding-horizontal assertive" ng-if="::listing.gallery.length">Photos</h5>
+            <div class=""></div>
             <ion-scroll ng-if="::!!listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller">
                 <div class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" collection-repeat="photo in listing.gallery|limitTo:25" item-height="100" item-width="110">
                     <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{::photo.path}});"></div>

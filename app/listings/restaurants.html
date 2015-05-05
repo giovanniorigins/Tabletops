@@ -11,7 +11,7 @@
     </div>
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..."  on-refresh="refresh()"></ion-refresher>
-        <ion-list class="">
+        <ion-list class="animate-blinds" id="results-list">
             <ion-item ng-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" class="item item-avatar" ui-sref="tabs.restaurant({id: res.slug})">
                 <img ng-src="{{::res.logo.path}}">
                 <h2>{{::res.name}}</h2>
