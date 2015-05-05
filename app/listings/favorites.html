@@ -12,7 +12,7 @@
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list>
-            <ion-item ng-show="faves.length" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item item-avatar" ui-sref="tabs.favorite({id: res.slug})" href="#/favorites/{{::res.slug}}">
+            <ion-item ng-show="faves.length" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item item-avatar ink" ui-sref="tabs.favorite({id: res.slug})" href="#/favorites/{{::res.slug}}">
                 <img ng-src="{{::res.logo.path}}">
                 <h2>{{::res.name}}</h2>
                 <p class="row row-no-padding">

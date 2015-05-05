@@ -95,7 +95,7 @@ var closestLocation = function (targetLocation, locationData) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal) {
+    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal, $timeout) {
         $scope.settings = {
             geolocation: false,
             province: {}
@@ -127,10 +127,6 @@ angular.module('tabletops.controllers', [])
                 console.log('App Offline');
                 $rootScope.offlineState = networkState;
             });
-
-            // Set Ink
-            ionic.material.ink.displayEffect();
-
         });
 
         // Handle Geolocation
@@ -245,6 +241,13 @@ angular.module('tabletops.controllers', [])
         $scope.$on('$destroy', function () {
             $scope.provModal.remove();
         });
+
+        $scope.$on('$ionicView.enter', function() {
+            $timeout(function () {
+                ionic.material.ink.displayEffect();
+            }, 600);
+
+        })
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -378,7 +381,7 @@ angular.module('tabletops.controllers', [])
 
         $timeout(function () {
             document.getElementById('fab-search').classList.toggle('on');
-        }, 600);
+        }, 1100);
 
         // Search Modal
         $ionicModal.fromTemplateUrl('app/dashboard/SearchModal.html', {
