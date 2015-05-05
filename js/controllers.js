@@ -129,7 +129,7 @@ angular.module('tabletops.controllers', [])
             });
 
             // Set Ink
-            //ionic.material.ink.displayEffect();
+            ionic.material.ink.displayEffect();
 
         });
 
@@ -400,7 +400,7 @@ angular.module('tabletops.controllers', [])
         });
 
         // Set Ink
-        //ionic.material.ink.displayEffect();
+        ionic.material.ink.displayEffect();
     })
     .controller('FavoritesCtrl', function ($scope, $localForage, Listing, $ionicModal) {
         $scope.faves = [];
@@ -777,7 +777,7 @@ angular.module('tabletops.controllers', [])
             })
 
             // Set Ink
-            //ionic.material.ink.displayEffect();
+            ionic.material.ink.displayEffect();
 
         }])
     .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', 'leafletData', 'leafletBoundsHelpers', 'HoursDays', 'StartHours', 'EndHours',
