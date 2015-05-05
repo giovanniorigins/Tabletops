@@ -127,6 +127,10 @@ angular.module('tabletops.controllers', [])
                 console.log('App Offline');
                 $rootScope.offlineState = networkState;
             });
+
+            // Set Ink
+            ionic.material.ink.displayEffect();
+
         });
 
         // Handle Geolocation
@@ -241,10 +245,6 @@ angular.module('tabletops.controllers', [])
         $scope.$on('$destroy', function () {
             $scope.provModal.remove();
         });
-
-        // Set Ink
-        ionic.material.ink.displayEffect();
-
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
         $ionicPlatform.ready(function () {
