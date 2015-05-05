@@ -11,7 +11,7 @@
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list class="">
-            <ion-item ng-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" class="item ink" data-ink-color="#FFFF00" ui-sref="tabs.restaurant({id: res.slug})">
+            <ion-item ng-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" class="item ink" data-ink-color="#B71C1C" ui-sref="tabs.restaurant({id: res.slug})">
                 <!--<span class="avatar" style="background-image: url('{{::res.logo.path}}');"></span>-->
                 <h2>{{::res.name}}</h2>
                 <p class="row row-no-padding">
