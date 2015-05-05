@@ -114,6 +114,15 @@ angular.module('tabletops.services', [])
                             var accessToken = success.authResponse.access_token;
                             $localForage.setItem('useFacebook', true);
                             $localForage.setItem('authorizationToken', accessToken).then(function () {
+                                $http.post(ApiEndpoint.auth + '/Facebook?token=' + accessToken)
+                                    .success(function (res) {
+                                        console.log('Auth Success');
+                                        console.log(res);
+                                    })
+                                    .error(function (res) {
+                                        console.log('Auth Error');
+                                        console.log(res);
+                                    })
                                 return service.FbMe();
                             });
                         } else {
@@ -157,15 +166,7 @@ angular.module('tabletops.services', [])
             },
             FbMe: function () {
                 $localForage.getItem('authorizationToken').then(function (token) {
-                    $http.post(ApiEndpoint.auth + '/Facebook?token=' + token)
-                        .success(function (res) {
-                            console.log('Auth Success');
-                            console.log(res);
-                        })
-                        .error(function (res) {
-                            console.log('Auth Error');
-                            console.log(res);
-                        })
+
 
                 });
 
