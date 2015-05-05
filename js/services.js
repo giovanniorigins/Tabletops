@@ -157,7 +157,7 @@ angular.module('tabletops.services', [])
             },
             FbMe: function () {
                 $localForage.getItem('authorizationToken').then(function (token) {
-                    $http.post(ApiEndpoint.auth + '/Facebook', { token: token })
+                    $http.post(ApiEndpoint.auth + '/Facebook?token=' + token)
                         .success(function (res) {
                             console.log('Auth Success');
                             console.log(res);
