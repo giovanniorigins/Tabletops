@@ -111,7 +111,7 @@ angular.module('tabletops.services', [])
                         console.log('GetLoginStatus');
                         console.log(success);
                         if (success.status === 'connected') {
-                            var accessToken = success.authResponse.access_token;
+                            var accessToken = success.authResponse.accessToken;
                             $localForage.setItem('useFacebook', true);
                             $localForage.setItem('authorizationToken', accessToken).then(function () {
                                 $http.post(ApiEndpoint.auth + '/Facebook?token=' + accessToken)
