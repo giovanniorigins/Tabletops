@@ -665,13 +665,6 @@ angular.module('tabletops.controllers', [])
     })
     .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage',
         function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage) {
-            var resultsConfig = {
-                finishDelayThrottle: 2,
-                finishSpeedPercent: 0.5,
-                leftOffsetPercentage: 0.8,
-                selector: '#results-list',
-                startVelocity: 1100
-            };
             Cuisine.query({}, function (res) {
                 $scope.cuisines = res;
                 $scope.cuisineList = angular.copy(res);
@@ -719,7 +712,7 @@ angular.module('tabletops.controllers', [])
                 }
                 $scope.restaurants = Listing.query($scope.filters);
                 $scope.restaurants.$promise.finally(function () {
-                    ionic.material.motion.blinds(resultsConfig);
+                    ionic.material.motion.blinds();
                     $scope.$broadcast('scroll.refreshComplete');
                     $scope.$watchCollection('filters', function (newValue, oldValue) {
 

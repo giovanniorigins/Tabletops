@@ -43,6 +43,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             //console.log('To: ', toState);
             //console.log('Params: ', fromParams);
             $rootScope.filtersMenu = toState.name === "restaurants";
+            ionic.material.ink.displayEffect();
         });
 
         $rootScope.valById = function (arr, id) {
