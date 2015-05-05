@@ -26,7 +26,7 @@
                     <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{::c.name}}</a>
                 </p>
                 <p style="font-size: 80%">
-                    <span class="distance-badge badge badge-assertive">{{::res.distance|number:2}} miles away</span>
+                    <span class="distance-badge badge badge-energized">{{::res.distance|number:2}} miles away</span>
                 </p>
                 <ion-option-button class="button-stable ink" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'lovely'}[faved(res.id)]"></i></ion-option-button>
                 <ion-option-button class="button-balanced ink" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>

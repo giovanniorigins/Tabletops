@@ -412,11 +412,15 @@ angular.module('tabletops.controllers', [])
         $scope.$on('$destroy', function () {
             $scope.SearchModal.remove();
             $scope.$parent.hasHeaderFabRight = false;
-            document.getElementById('fab-search').classList.toggle('hide');
         });
 
         $scope.$on('$ionicView.enter', function() {
             $scope.$parent.hasHeaderFabRight = true;
+            document.getElementById('fab-search').classList.toggle('hide');
+        });
+
+        $scope.$on('$ionicView.leave', function() {
+            $scope.$parent.hasHeaderFabRight = false;
             document.getElementById('fab-search').classList.toggle('hide');
         });
 
@@ -1034,7 +1038,7 @@ angular.module('tabletops.controllers', [])
                 $scope.openModal();
             };
         }])
-    .controller('AccountCtrl', function ($scope, $localForage, $cordovaFacebook) {
+    .controller('AccountCtrl', function ($scope, $localForage, $cordovaFacebook, $timeout) {
         $localForage.getItem('user').then(function (res) {
             $scope.user = res;
         });
