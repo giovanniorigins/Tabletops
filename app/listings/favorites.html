@@ -29,10 +29,10 @@
                 <ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>
                 <ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
             </ion-item>
-            <a ng-hide="faves.length" class="card text-center">
+            <ion-item ng-hide="faves.length" class="card card-item text-center">
                 <i class="icon ion-ios-heart-outline lovely" style="font-size: 2em"></i>
                 <p>You don't have any favorites yet. <a ui-sref="tabs.results">Browse</a> around for places that you love!</p>
-            </a>
+            </ion-item>
         </ion-list>
 
 
