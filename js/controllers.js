@@ -232,7 +232,11 @@ angular.module('tabletops.controllers', [])
         });
 
         $scope.openProvinceModal = function ($event) {
-            $scope.provModal.show($event);
+            $scope.provModal.show($event)
+                .then(function () {
+                    // Set Ink
+                    ionic.material.ink.displayEffect();
+                });
         };
         $scope.closeProvinceModal = function () {
             $scope.provModal.hide();
@@ -244,6 +248,8 @@ angular.module('tabletops.controllers', [])
 
         $scope.$on('$ionicView.enter', function() {
             $timeout(function () {
+                console.log('Set Ink');
+                // Set Ink
                 ionic.material.ink.displayEffect();
             }, 600);
 
@@ -385,13 +391,18 @@ angular.module('tabletops.controllers', [])
 
         // Search Modal
         $ionicModal.fromTemplateUrl('app/dashboard/SearchModal.html', {
-            scope: $scope
+            scope: $scope,
+            focusFirstInput: true
         }).then(function (modal) {
             $scope.SearchModal = modal;
         });
 
         $scope.openSearchModal = function ($event) {
-            $scope.SearchModal.show($event);
+            $scope.SearchModal.show($event)
+                .then(function () {
+                    // Set Ink
+                    ionic.material.ink.displayEffect();
+                });
         };
         $scope.closeSearchModal = function () {
             $scope.SearchModal.hide();
@@ -674,8 +685,8 @@ angular.module('tabletops.controllers', [])
             // Execute action
         });
     })
-    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage',
-        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage) {
+    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout',
+        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout) {
             Cuisine.query({}, function (res) {
                 $scope.cuisines = res;
                 $scope.cuisineList = angular.copy(res);
@@ -724,6 +735,10 @@ angular.module('tabletops.controllers', [])
                 $scope.restaurants = Listing.query($scope.filters);
                 $scope.restaurants.$promise.finally(function () {
                     ionic.material.motion.blinds();
+                    $timeout(function () {
+                        // Set Ink
+                        ionic.material.ink.displayEffect();
+                    }, 600);
                     $scope.$broadcast('scroll.refreshComplete');
                     $scope.$watchCollection('filters', function (newValue, oldValue) {
 

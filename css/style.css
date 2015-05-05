@@ -13,6 +13,10 @@
     line-height: 1.5;*/
 }
 
+[nav-view-transition="ios"][nav-view-direction="forward"], [nav-view-transition="ios"][nav-view-direction="back"] {
+    background-color: transparent;
+}
+
 .title-image {
     padding-top: 4px;
     height: 100%;
