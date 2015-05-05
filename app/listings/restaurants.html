@@ -6,11 +6,10 @@
         </label>
         <!--<button class="button button-clear button-icon icon ion-ios-close-outline" ng-click="filters.search=''"
                 ng-show="filters.search.length"></button>-->
-        <button class="button button-clear button-icon icon ion-ios-settings-strong" ng-click="openFiltersModal()"
-                ng-hide="$exposeAside.active"></button>
+        <button class="button button-clear light button-icon icon ion-ios-settings-strong" ng-click="openFiltersModal()"></button>
     </div>
     <ion-content class="has-subheader">
-        <ion-refresher pulling-text="Pull to refresh..."  on-refresh="refresh()"></ion-refresher>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list class="">
             <ion-item ng-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" class="item item-avatar ink" data-ink-color="#FFFF00" ui-sref="tabs.restaurant({id: res.slug})">
                 <span class="avatar" style="background-image: url('{{::res.logo.path}}');"></span>

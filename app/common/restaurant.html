@@ -1,6 +1,6 @@
 <ion-view>
     <ion-nav-title>
-        <img class="title-image" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}}</span>
+        <img class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}}</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button button-icon" ng-if="currentTab() == 2 && directionsSet" ng-click="toggleDirections()"
