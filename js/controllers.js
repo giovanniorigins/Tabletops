@@ -756,14 +756,6 @@ angular.module('tabletops.controllers', [])
             $scope.$on('$destroy', function () {
                 $scope.modal.remove();
             });
-            // Execute action on hide modal
-            $scope.$on('modal.hidden', function () {
-                // Execute action
-            });
-            // Execute action on remove modal
-            $scope.$on('modal.removed', function () {
-                // Execute action
-            });
 
             //force refresh on province change
             $scope.$on('$ionicView.enter', function() {
@@ -778,6 +770,7 @@ angular.module('tabletops.controllers', [])
     .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', 'leafletData', 'leafletBoundsHelpers', 'HoursDays', 'StartHours', 'EndHours',
         function ($scope, Listing, listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
             $scope.listing = listing.data;
+            $scope.isExpanded = true;
 
             $scope.hoursDays = HoursDays;
             $scope.startHours = StartHours;
@@ -986,6 +979,7 @@ angular.module('tabletops.controllers', [])
             //Cleanup the modal when we're done with it!
             $scope.$on('$destroy', function () {
                 $scope.modal.remove();
+                $scope.isExpanded = false;
             });
             // Execute action on hide modal
             $scope.$on('modal.hidden', function () {

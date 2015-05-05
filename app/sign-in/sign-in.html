@@ -1,6 +1,6 @@
 <ion-view view-title="Sign-In" hide-nav-bar="true" style="background-image: url('img/bgs/cs21.jpg'); background-position: center center; background-size: cover">
     <ion-content class="padding">
-            <div style="padding-top: 60px; padding-bottom: 30px">
+            <div ng-hide="showAccountForm||showForm" style="padding-top: 60px; padding-bottom: 30px">
                 <img src="img/logo-white_red.png" alt="Tabletops" width="100%"/>
             </div>
 
@@ -10,7 +10,7 @@
                     LOGIN WITH FACEBOOK
                 </button>
 
-                <fieldset class="featured-header">
+                <fieldset class="featured-header" ng-hide="showAccountForm||showForm">
                     <legend class="light">Or login with email</legend>
                 </fieldset>
 
@@ -21,11 +21,12 @@
 
                 <div class="animated fast" ng-show="showForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showForm]">
                     <form class="list list-inset" name="loginForm">
-                        <label class="item item-input">
+                        <label class="item item-input item-floating-label">
                             <span class="input-label">Email</span>
                             <input type="text" placeholder="Email" ng-model="user.email" required>
                         </label>
-                        <label class="item item-input">
+
+                        <label class="item item-input item-floating-label">
                             <span class="input-label">Password</span>
                             <input type="password" placeholder="Password" ng-model="user.password" required>
                         </label>
@@ -37,7 +38,7 @@
 
                 </div>
 
-                <button class="button button-block button-light button-flat" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
+                <button class="button button-block button-stable button-flat" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
                     <span ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
                     <span ng-show="showAccountForm">GO BACK</span>
                 </button>
@@ -53,8 +54,8 @@
                             <input type="text" placeholder="Last Name" ng-model="user.last" required>
                         </label>
                         <label class="item item-input item-floating-label">
-                            <span class="input-label">Username</span>
-                            <input type="text" placeholder="Username" ng-model="user.username" required>
+                            <span class="input-label">Email</span>
+                            <input type="text" placeholder="Email" ng-model="user.email" required>
                         </label>
                         <label class="item item-input item-floating-label">
                             <span class="input-label">Password</span>
