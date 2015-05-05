@@ -19,8 +19,8 @@
 
                 <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
                     <ion-item class="nearby-card card ink" ng-repeat="res in restaurants">
-                        <div class="item item-avatar" ui-sref="tabs.restaurant({id: res.slug})">
-                            <img ng-src="{{::res.logo.path}}">
+                        <div class="item" ui-sref="tabs.restaurant({id: res.slug})">
+                            <!--<img ng-src="{{::res.logo.path}}">-->
                             <h2>{{::res.name}}</h2>
                             <p class="row row-no-padding">
                         <span class="col col-50">
