@@ -1,63 +1,11 @@
-<!--<div class="bar bar-subheader bar-dark">
-    <div class="tabs tabs-dark tabs-icon-top">
-        <a class="tab-item" ng-click="initCaller(listing)">
-            <i class="icon ion-ios-telephone balanced"></i>
-            Call
-        </a>
-        <a class="tab-item" ng-click="shareThis(listing)">
-            <i class="icon ion-ios-upload positive"></i>
-            Share
-        </a>
-        <a class="tab-item" ng-click="favoriteThis(listing)" id="{{::'share_button_'+listing.id}}">
-            <i class="icon ion-heart" ng-class="{true:'lovely'}[faved(listing.id)]"></i>
-            Favorite
-        </a>
-        <a class="tab-item" ng-click="beenHere(listing)">
-            <i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(listing.id)]"></i>
-            Visited
-        </a>
-    </div>
-</div>-->
-<ion-view>
+<ion-view >
     <ion-nav-title>
         <img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}}</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button button-icon button-clear icon ion-map" ng-if="::listing.locations.length" ng-click="toMap()"></button>
     </ion-nav-buttons>
-
-<!--
-    <div class="bar bar-subheader bar-dark dark-bg">
-        <div class="button-bar bar-clear">
-            <a class="button button-raised" ng-click="initCaller(listing)">
-                <i class="icon ion-ios-telephone balanced"></i>
-            </a>
-            <a class="button button-raised" ng-click="shareThis(listing)">
-                <i class="icon ion-ios-upload positive"></i>
-            </a>
-            <a class="button button-raised" ng-click="favoriteThis(listing)" id="{{::'share_button_'+listing.id}}">
-                <i class="icon ion-heart" ng-class="{true:'lovely'}[faved(listing.id)]"></i>
-            </a>
-            <a class="button button-raised" ng-click="beenHere(listing)">
-                <i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(listing.id)]"></i>
-            </a>
-        </div>
-    </div>
--->
-    <div class="bar bar-subheader bar-dark dark-bg">
-        <div class="tabs tabs-dark" style="position: static; margin-bottom: 15px;">
-            <a class="tab-item">
-                Home
-            </a>
-            <a class="tab-item">
-                Favorites
-            </a>
-            <a class="tab-item">
-                Settings
-            </a>
-        </div>
-    </div>
-    <!--<div class="bar bar-subheader bar-dark">
+    <ion-content class="has-header has-subheader">
         <div class="tabs tabs-dark tabs-icon-top">
             <a class="tab-item" ng-click="initCaller(listing)">
                 <i class="icon ion-ios-telephone balanced"></i>
@@ -76,8 +24,7 @@
                 Visited
             </a>
         </div>
-    </div>-->
-    <ion-content class="has-header has-subheader">
+
         <h5 class="padding-horizontal assertive">Rating</h5>
         <p class="padding-horizontal">
             <span ng-bind-html="::showStars(listing.rating_count, listing.rating_cache)"></span>
