@@ -764,7 +764,7 @@ angular.module('tabletops.controllers', [])
             });
 
             $scope.toRestaurant = function (id) {
-                $localForage.setItem('currentListing', _.findWhere($scope.restaurants, {id: id})).then(function () {
+                $localForage.setItem('currentListing', _.findWhere($scope.restaurants, {slug: id})).then(function () {
                     $state.go('tabs.restaurant', {id: id});
                 })
             };
