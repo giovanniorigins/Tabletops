@@ -3,7 +3,7 @@
         <img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}} Map</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
-        <button class="button button-icon" ng-class="{ true:'ion-ios-navigate', false:'ion-ios-navigate-outline' }[showDirections]"
+        <button class="button button-clear button-icon" ng-class="{ true:'ion-ios-navigate', false:'ion-ios-navigate-outline' }[showDirections]"
                 ng-if="directionsSet" ng-click="toggleDirections()"></button>
     </ion-nav-buttons>
     <ion-content class="has-header" ng-class="{'a':'has-footer'}[directionsSet && !showDirections]" scroll="false" data-tap-disabled="true">
