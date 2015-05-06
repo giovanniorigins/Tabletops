@@ -2,7 +2,9 @@
   "name": "ionic-service-deploy",
   "homepage": "http://ionic.io",
   "authors": [
-    "Joel Weirauch <joel@drifty.com>"
+    "Joel Weirauch <joel@drifty.com>",
+    "William Pelrine <rudy@drifty.com>",
+    "Eric Bobbitt <eric@drifty.com>"
   ],
   "description": "Ionic Mobile Platform Deploy client",
   "main": "ionic-deploy.js",
@@ -17,14 +19,13 @@
     "test",
     "tests"
   ],
-  "_release": "db15cd9a79",
+  "_release": "bc9a1779e5",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "db15cd9a795bc423fac37343db9303e9b4d31f04"
+    "commit": "bc9a1779e54730cd22b03cc7b8c6ff120e5931a6"
   },
   "_source": "git://github.com/driftyco/ionic-service-deploy.git",
   "_target": "*",
-  "_originalSource": "ionic-service-deploy",
-  "_direct": true
+  "_originalSource": "ionic-service-deploy"
 }
