@@ -3,13 +3,13 @@
         <div class="hero slide-up" style="background-image: url('{{::!user.coverInfoURL ? user.coverInfoURL : 'img/bgs/cs21.jpg'}}');">
             <div ng-if="user" class="content">
                 <div ng-if="::user.user.avatar" class="avatar" style="background-image: url('{{::user.user.avatar}}');"></div>
-                <div ng-if="::!user.user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
+                <div ng-if="::!user.user.avatar" class="avatar" style="background-image: url('/resources/icon.png');"></div>
                 <h3>
-                    <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>
+                    <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive-100'}[user.provider]"></i>
                     &nbsp;
-                    <a class="dark" ng-bind="::user.user.full_name"></a>
+                    <a class="light" ng-bind="::user.user.full_name"></a>
                 </h3>
-                <h4 class="dark" ng-bind="'Foodie'"></h4>
+                <h4 class="light" ng-bind="'Foodie'"></h4>
             </div>
 
             <div ng-if="!user" class="content">
