@@ -1,11 +1,11 @@
-<ion-view>
+<ion-view >
     <ion-nav-title>
         <img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}}</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button button-icon button-clear icon ion-map" ng-if="::listing.locations.length" ng-click="toMap()"></button>
     </ion-nav-buttons>
-    <div class="bar bar-subheader">
+    <div class="bar bar-subheader bar-assertive-900">
         <div class="tabs tabs-light tabs-icon-top" style="position:relative;">
             <a class="tab-item" ng-click="initCaller(listing)">
                 <i class="icon ion-ios-telephone balanced"></i>
@@ -51,15 +51,17 @@
                         {{::loc.locality}}<br/>
                         {{::loc.province}}<br/>
                         <button class="button button-positive ink" ng-click="toMap(loc.id)">
-                            <i class="icon ion-map"></i> &nbsp;Directions
+                            <i class="icon ion-map"></i>
                         </button>
                     </div>
                     <div class="item" ng-show="loc.phone_1 || loc.phone_2">
                         <div class="button-bar bar-balanced">
-                            <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}"
-                               class="button icon ion-ios-telephone"> {{::loc.phone_1}}</a>
-                            <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}"
-                               class="button icon ion-ios-telephone"> {{::loc.phone_2}}</a>
+                            <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}" class="button button-raised">
+                                <i class="icon ion-ios telephone"></i> {{::loc.phone_1}}
+                            </a>
+                            <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}" class="button button-raised">
+                                <i class="icon ion-ios telephone"></i> {{::loc.phone_2}}
+                            </a>
                         </div>
                     </div>
                     <ion-item ng-repeat="openHour in loc.opening_hours" style="padding: 4px 16px;">
@@ -81,17 +83,18 @@
                 </ion-item>
 
                 <div class="list item-accordion" ng-show="isGroupShown(loc)">
-                    <div class="item">
+                    <div class="item item-button-right">
                         {{::loc.address_1}} {{::loc.address_2}}<br/>
                         {{::loc.locality}}<br/>
-                        {{::loc.province}}
+                        {{::loc.province}}<br/>
+                        <button class="button button-positive ink" ng-click="toMap(loc.id)">
+                            <i class="icon ion-map"></i>
+                        </button>
                     </div>
                     <div class="item" ng-show="loc.phone_1 || loc.phone_2">
                         <div class="button-bar bar-balanced">
-                            <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}"
-                               class="button icon ion-ios-telephone"> {{::loc.phone_1}}</a>
-                            <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}"
-                               class="button icon ion-ios-telephone"> {{::loc.phone_2}}</a>
+                            <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}" class="button button-raised"><i class="icon ion-ios telephone"></i> {{::loc.phone_1}}</a>
+                            <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}" class="button button-raised"><i class="icon ion-ios telephone"></i> {{::loc.phone_2}}</a>
                         </div>
                     </div>
                     <ion-item ng-repeat="openHour in loc.opening_hours" style="padding: 4px 16px;">

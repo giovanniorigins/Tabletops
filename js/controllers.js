@@ -874,6 +874,9 @@ angular.module('tabletops.controllers', [])
             })
         }])
     .controller('RestaurantMapCtrl', function ($scope, $localForage, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
+        $scope.directionsSet = false;
+        $scope.showDirections = false;
+
         $localForage.getItem('currentListing').then(function (listing) {
             $scope.listing = listing;
 
