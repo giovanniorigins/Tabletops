@@ -254,8 +254,8 @@ angular.module('tabletops.controllers', [])
                 // Set Ink
                 ionic.material.ink.displayEffect();
             }, 600);
+        });
 
-        })
     })
     .controller('SplashCtrl', function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -326,7 +326,7 @@ angular.module('tabletops.controllers', [])
             AuthenticationService.logout();
         });
     })
-    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout) {
+    .controller('DashboardCtrl', function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout, $localForage) {
         $scope.getNearby = function () {
             $scope.qData = {app_search: true, range: 5, limit: 5};
             if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
@@ -356,27 +356,20 @@ angular.module('tabletops.controllers', [])
         $scope.getNearby();
 
         $scope.cuisines = [
-            {
-                img: 'img/cuisines/bahamian.jpg',
-                slug: 'bahamian'
-            },
-            {
-                img: 'img/cuisines/italian.jpg',
-                slug: 'italian'
-            },
-            {
-                img: 'img/cuisines/steakhouse.jpg',
-                slug: 'steakhouse'
-            },
-            {
-                img: 'img/cuisines/chinese.jpg',
-                slug: 'chinese'
-            },
-            {
-                img: 'img/cuisines/burgers.jpg',
-                slug: 'burgers'
-            },
+            { img: 'img/cuisines/bahamian.jpg', slug: 'bahamian' },
+            { img: 'img/cuisines/italian.jpg', slug: 'italian' },
+            { img: 'img/cuisines/steakhouse.jpg', slug: 'steakhouse' },
+            { img: 'img/cuisines/chinese.jpg', slug: 'chinese' },
+            { img: 'img/cuisines/burgers.jpg', slug: 'burgers' }
         ];
+
+        $scope.toRestaurant = function (id, array) {
+            var obj = _.findWhere(array, {slug: id});
+            $localForage.setItem('currentListing', obj).then(function () {
+                $scope.$broadcast('loading:show');
+                $state.go('tabs.restaurant', {id: id});
+            })
+        };
 
         $scope.startSearch = function () {
             $state.go('tabs.results', {search: this.search});
@@ -427,7 +420,7 @@ angular.module('tabletops.controllers', [])
         // Set Ink
         ionic.material.ink.displayEffect();
     })
-    .controller('FavoritesCtrl', function ($scope, $localForage, Listing, $ionicModal) {
+    .controller('FavoritesCtrl', function ($scope, $localForage, Listing, $ionicModal, $state) {
         $scope.faves = [];
         $scope.refresh = function () {
             $localForage.getItem('favorites').then(function (data) {
@@ -438,6 +431,14 @@ angular.module('tabletops.controllers', [])
                     });
                 }
             });
+        };
+
+        $scope.toFavorite = function (id) {
+            var obj = _.findWhere($scope.faves, {slug: id});
+            $localForage.setItem('currentListing', obj).then(function () {
+                $scope.$broadcast('loading:show');
+                $state.go('tabs.favorite', {id: id});
+            })
         };
 
         $scope.refresh();
@@ -629,7 +630,7 @@ angular.module('tabletops.controllers', [])
         };
         $scope.refresh();
     })
-    .controller('CuisineCtrl', function ($rootScope, $scope, $localForage, Cuisine, $stateParams, ListingRepository, $ionicModal) {
+    .controller('CuisineCtrl', function ($rootScope, $scope, $localForage, Cuisine, $stateParams, ListingRepository, $ionicModal, $state) {
         $scope.refresh = function () {
             Cuisine.get({id: $stateParams.id, restaurants: true}, function (res) {
                 $scope.cuisine = res;
@@ -663,6 +664,15 @@ angular.module('tabletops.controllers', [])
         $scope.$on('modal.removed', function () {
             // Execute action
         });
+
+        $scope.toRestaurant = function (id, cid) {
+            var obj = _.findWhere($scope.faves, {slug: id});
+            $localForage.setItem('currentListing', obj).then(function () {
+                $scope.$broadcast('loading:show');
+                $state.go('tabs.cuisine-restaurant', { id: id, cuisine_id: cid});
+            })
+        };
+
     })
     .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state',
         function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state) {
@@ -765,9 +775,8 @@ angular.module('tabletops.controllers', [])
 
             $scope.toRestaurant = function (id) {
                 var obj = _.findWhere($scope.restaurants, {slug: id});
-                console.log('Chosen restourant: ', obj.name);
                 $localForage.setItem('currentListing', obj).then(function () {
-                    console.log('Switching to restaurant');
+                    $scope.$broadcast('loading:show');
                     $state.go('tabs.restaurant', {id: id});
                 })
             };
@@ -791,8 +800,9 @@ angular.module('tabletops.controllers', [])
 
             $localForage.getItem('currentListing').then(function (data) {
                 $scope.listing = data;
-                $scope.isExpanded = true;
+                $scope.$broadcast('loading:hide');
 
+                $scope.isExpanded = true;
                 $scope.hoursDays = HoursDays;
                 $scope.startHours = StartHours;
                 $scope.endHours = EndHours;
