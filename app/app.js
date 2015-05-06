@@ -147,6 +147,8 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                         resolve: {
                             listing: function (Listing, $stateParams, $http, $localForage) {
                                 $localForage.getItem('currentListing').then(function (data) {
+                                    console.log('Getting "currentListing"');
+                                    console.log(data);
                                     return data;
                                 });
                                 //return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
