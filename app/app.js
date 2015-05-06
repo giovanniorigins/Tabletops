@@ -146,7 +146,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                         controller: 'RestaurantCtrl',
                         resolve: {
                             listing: function (Listing, $stateParams, $http, $localForage) {
-                                $localForage.getItem('currentListing').then(function (data) {
+                                return $localForage.getItem('currentListing').then(function (data) {
                                     console.log('Getting "currentListing"');
                                     console.log(data);
                                     return data;
