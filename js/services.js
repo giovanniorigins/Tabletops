@@ -105,10 +105,58 @@ angular.module('tabletops.services', [])
                     }
                 });
 
+                /*var a = {
+                    "id": "1",
+                    "user_id": "2",
+                    "provider": "Facebook",
+                    "identifier": "10152855269202655",
+                    "webSiteURL": "www.gorigins.com\nhttp:\/\/xsposur.com",
+                    "profileURL": "https:\/\/www.facebook.com\/app_scoped_user_id\/10152855269202655\/",
+                    "photoURL": "https:\/\/graph.facebook.com\/10152855269202655\/picture?width=150&height=150",
+                    "displayName": "Jerez Bain",
+                    "description": "",
+                    "firstName": "Jerez",
+                    "lastName": "Bain",
+                    "gender": "male",
+                    "language": "en_US",
+                    "age": null,
+                    "birthDay": 6,
+                    "birthMonth": 8,
+                    "birthYear": 1990,
+                    "email": "jerezb31@hotmail.com",
+                    "emailVerified": "jerezb31@hotmail.com",
+                    "phone": null,
+                    "address": null,
+                    "country": "New Providence",
+                    "region": "Nassau, New Providence",
+                    "city": "Nassau",
+                    "zip": null,
+                    "username": "",
+                    "coverInfoURL": "https:\/\/graph.facebook.com\/10152855269202655?fields=cover&access_token=CAAJMYeZCMi5QBAJuGa0ZAhKTSqnZBPCzgZAQC5g5IEKipmnuiYhPHt95mBEZBtjUN0TAmaDez75NIx9DjyLaFpGVlqTUV8UOetQxePMwphXoFJuZCVkMykWZB1So904nxHl2ZC3oqITJu4SIfQ6q0KyNMBXbZCU3ZCfYd3QLjX5MUo2iXEKpyKw4UieHOmjHfddib2dWZBKwRRrfAZDZD",
+                    "created_at": "2015-03-03 12:40:14",
+                    "updated_at": "2015-05-05 20:04:32",
+                    "user": {
+                        "id": "2",
+                        "username": "jerezb31",
+                        "email": "jerezb31@hotmail.com",
+                        "password": "$2y$10$QTNPWKHafQg2mcY7pi3HveNZu2oaH4uDq4PpZ9Okv10ZiyYR669DC",
+                        "confirmation_code": "",
+                        "remember_token": "i3WVxGxiKhzCOtlkp45oNKX5FShUNlIm9qYTWy0AVYySUvjCKv2ya4dWyS8v",
+                        "confirmed": "0",
+                        "created_at": "2015-03-03 12:40:14",
+                        "updated_at": "2015-05-05 11:57:40",
+                        "fname": "Jerez",
+                        "lname": "Bain",
+                        "avatar": "https:\/\/graph.facebook.com\/10152855269202655\/picture?width=150&height=150",
+                        "slug": "jerezb31",
+                        "full_name": "Jerez Bain"
+                    }
+                }*/
+
             },
             FbCheckLogin: function () {
                 $cordovaFacebook.getLoginStatus()
-                    .then(function(success) {
+                    .then(function (success) {
                         console.log('GetLoginStatus');
                         console.log(success);
                         if (success.status === 'connected') {
@@ -127,7 +175,7 @@ angular.module('tabletops.services', [])
             },
             FbLogin: function () {
                 $cordovaFacebook.login(["public_profile", "email", "user_friends"])
-                    .then(function(success) {
+                    .then(function (success) {
                         console.log('Login');
                         console.log(success);
                         service.authHandler('facebook');
@@ -160,34 +208,36 @@ angular.module('tabletops.services', [])
                         })
                 });
 
-                /*$cordovaFacebook.api("me", [*//*"public_profile", "email", "user_friends"*//*])
-                    .then(function(response) {
-                        // success
-                        console.log('Facebook login succeeded');
-                        console.log(response);
-                        $localForage.setItem('useFacebook', true);
+                /*$cordovaFacebook.api("me", [*/
+                /*"public_profile", "email", "user_friends"*/
+                /*])
+                 .then(function(response) {
+                 // success
+                 console.log('Facebook login succeeded');
+                 console.log(response);
+                 $localForage.setItem('useFacebook', true);
 
 
-                        $cordovaFacebook.api(response.id + '/picture?redirect=false&width=200&height=200')
-                            .then(function (picture) {
+                 $cordovaFacebook.api(response.id + '/picture?redirect=false&width=200&height=200')
+                 .then(function (picture) {
 
 
 
-                                var user = {
-                                    id: response.id,
-                                    fname: response.first_name,
-                                    lname: response.last_name,
-                                    full_name: response.name,
-                                    avatar: picture.data.url,
-                                    email: response.email,
-                                    profiles: [response]
-                                };
+                 var user = {
+                 id: response.id,
+                 fname: response.first_name,
+                 lname: response.last_name,
+                 full_name: response.name,
+                 avatar: picture.data.url,
+                 email: response.email,
+                 profiles: [response]
+                 };
 
-                            })
+                 })
 
-                    }, function (error) {
-                        // error
-                    });*/
+                 }, function (error) {
+                 // error
+                 });*/
             }
         };
         return service;
@@ -261,34 +311,34 @@ angular.module('tabletops.services', [])
                 },
                 // Social Sharing
                 share: function (obj) {
-                    window.plugins.socialsharing.iPadPopupCoordinates = function() {
-                        var rect = document.getElementById('share_button_'+obj.id).getBoundingClientRect();
+                    window.plugins.socialsharing.iPadPopupCoordinates = function () {
+                        var rect = document.getElementById('share_button_' + obj.id).getBoundingClientRect();
                         return rect.left + "," + rect.top + "," + rect.width + "," + rect.height;
                     };
 
                     /*var btns = [
-                        { text: 'Copy Link' },
-                        { text: 'Email' },
-                        { text: 'Message' },
-                        { text: 'Facebook' },
-                        { text: 'Facebook Messenger' },
-                        { text: 'Twitter' },
-                        { text: 'WhatsApp' },
-                    ];
+                     { text: 'Copy Link' },
+                     { text: 'Email' },
+                     { text: 'Message' },
+                     { text: 'Facebook' },
+                     { text: 'Facebook Messenger' },
+                     { text: 'Twitter' },
+                     { text: 'WhatsApp' },
+                     ];
 
-                    // Show the action sheet
-                    var hideSheet = $ionicActionSheet.show({
-                        buttons: btns,
-                        //destructiveText: 'Delete',
-                        titleText: 'Tap a location to call',
-                        cancelText: 'Cancel',
-                        cancel: function () {
-                            // add cancel code..
-                        },
-                        buttonClicked: function (index) {
-                            return repo.callLocation(locations, index);
-                        }
-                    });*/
+                     // Show the action sheet
+                     var hideSheet = $ionicActionSheet.show({
+                     buttons: btns,
+                     //destructiveText: 'Delete',
+                     titleText: 'Tap a location to call',
+                     cancelText: 'Cancel',
+                     cancel: function () {
+                     // add cancel code..
+                     },
+                     buttonClicked: function (index) {
+                     return repo.callLocation(locations, index);
+                     }
+                     });*/
 
                     var message = '',
                         subject = 'Tabletops App: ' + obj.name,
@@ -355,31 +405,31 @@ angular.module('tabletops.services', [])
                                 data.push(obj.id);
                                 $localForage.setItem('been', data);
                                 $rootScope.been = data;
-                               //$cordovaToast.showShortBottom('\f122 Been Here!');
+                                //$cordovaToast.showShortBottom('\f122 Been Here!');
                                 /*var options = {
-                                    method: "share_open_graph",
-                                    action_type: 'restaurant.visited',
-                                    action_properties: JSON.stringify({
-                                        restaurant: {
-                                            "og:type": "restaurant.restaurant",
-                                            "og:url": "http:\/\/flamingo.gorigins.com/np-pi/" + obj.slug,
-                                            "og:title": obj.name,
-                                            "og:image": obj.logo ? obj.logo.path: 'http://flamingo.gorigins.com/public_assets/img/logo_red.png',
-                                            "place:location:latitude": obj.locations.length ? obj.locations[0].lat: '',
-                                            "place:location:longitude": obj.locations.length ? obj.locations[0].lng: ''
-                                        }
-                                    })
-                                };
-                                $cordovaFacebook.showDialog(options)
-                                    .then(function(success) {
-                                        // success
-                                        console.log('success');
-                                        console.log(success);
-                                    }, function (error) {
-                                        // error
-                                        console.log('error');
-                                        console.log(error);
-                                    });*/
+                                 method: "share_open_graph",
+                                 action_type: 'restaurant.visited',
+                                 action_properties: JSON.stringify({
+                                 restaurant: {
+                                 "og:type": "restaurant.restaurant",
+                                 "og:url": "http:\/\/flamingo.gorigins.com/np-pi/" + obj.slug,
+                                 "og:title": obj.name,
+                                 "og:image": obj.logo ? obj.logo.path: 'http://flamingo.gorigins.com/public_assets/img/logo_red.png',
+                                 "place:location:latitude": obj.locations.length ? obj.locations[0].lat: '',
+                                 "place:location:longitude": obj.locations.length ? obj.locations[0].lng: ''
+                                 }
+                                 })
+                                 };
+                                 $cordovaFacebook.showDialog(options)
+                                 .then(function(success) {
+                                 // success
+                                 console.log('success');
+                                 console.log(success);
+                                 }, function (error) {
+                                 // error
+                                 console.log('error');
+                                 console.log(error);
+                                 });*/
                             }
                         }
                     });

@@ -1,10 +1,10 @@
 <ion-view view-title="My Account">
     <ion-content class="has-header">
-        <div class="hero slide-up" style="background-image: url('img/bgs/profile-bg.gif');">
+        <div class="hero slide-up" style="background-image: url({{user.coverInfoURL? user.coverInfoURL : 'img/bgs/profile-bg.gif'}});">
             <div ng-if="user" class="content">
-                <div ng-if="::user.avatar" class="avatar" style="background-image: url('{{::user.avatar}}');"></div>
-                <div ng-if="::!user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
-                <h3><a class="dark" ng-bind="::user.full_name"></a></h3>
+                <div ng-if="::user.user.avatar" class="avatar" style="background-image: url('{{::user.avatar}}');"></div>
+                <div ng-if="::!user.user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
+                <h3><a class="dark" ng-bind="::user.user.full_name"></a></h3>
                 <h4 class="dark" ng-bind="'Foodie'"></h4>
             </div>
 
