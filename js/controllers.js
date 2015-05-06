@@ -832,7 +832,7 @@ angular.module('tabletops.controllers', [])
 
             $scope.toMap = function (id) {
                 $localForage.setItem('currentListing', $scope.listing).then(function () {
-                    $state.go('tabs.restaurant-map', {target: id});
+                    $state.go('tabs.restaurant-map', {id: $scope.listing.id, target: id});
                 })
             };
 
