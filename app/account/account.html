@@ -4,7 +4,11 @@
             <div ng-if="user" class="content">
                 <div ng-if="::user.user.avatar" class="avatar" style="background-image: url('{{::user.avatar}}');"></div>
                 <div ng-if="::!user.user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
-                <h3><a class="dark" ng-bind="::user.user.full_name"></a></h3>
+                <h3>
+                    <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>
+                    &nbsp;
+                    <a class="dark" ng-bind="::user.user.full_name"></a>
+                </h3>
                 <h4 class="dark" ng-bind="'Foodie'"></h4>
             </div>
 
