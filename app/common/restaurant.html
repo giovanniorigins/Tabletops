@@ -133,8 +133,8 @@
             <!-- Photos -->
             <h5 class="padding-horizontal assertive" ng-if="::listing.gallery.length">Photos</h5>
             <div class=""></div>
-            <ion-scroll ng-if="::!!listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller">
-                <div class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" collection-repeat="photo in listing.gallery|limitTo:25" item-height="100" item-width="110">
+            <ion-scroll ng-if="::listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller">
+                <div class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" collection-repeat="photo in listing.gallery|limitTo:6" item-height="100" item-width="110">
                     <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{::photo.path}});"></div>
                 </div>
             </ion-scroll>
@@ -178,11 +178,11 @@
             </div>
 
             <!-- Reviews-->
-            <h5 class="padding-horizontal assertive">Reviews</h5>
+            <h5 class="padding-horizontal assertive">Most Recent Reviews</h5>
 
-            <div class="item card-item" ng-repeat="review in listing.accepted_reviews|limitTo:25">
+            <div class="item card-item" ng-repeat="review in listing.accepted_reviews|limitTo:5">
                 <div class="card stable-bg ink ink-dark">
-                    <div class="item item-avatar item-text-wrap in" style="-webkit-transition-delay: 0.2s; transition-delay: 0.2s;">
+                    <div class="item item-avatar item-text-wrap in">
                         <span class="avatar" style="background-image: url('{{::review.user.avatar}}');"></span>
                         <strong ng-bind="::review.user ? review.user.full_name : 'Anonymous'"></strong>
                         {{::review.comment}}
@@ -197,22 +197,23 @@
                 </div>
             </div>
 
-            <ion-item class="item-text-wrap">
 
-
-            </ion-item>
-
-            <div class="list">
-                <label class="item item-input" data-tap-disabled="true">
-                    <rating ng-model="myReview.rate" max="myReview.max"></rating>
-                </label>
-                <label class="item item-input">
-                    <textarea ng-model="myReview.body" placeholder="Comments" ng-keyup="expandText()"
-                              ng-keydown="expandText()" reset-field></textarea>
-                </label>
+            <div class="item border-top">
+                <div class="list">
+                    <label class="item item-input" data-tap-disabled="true">
+                        <rating ng-model="myReview.rate" max="myReview.max"></rating>
+                    </label>
+                    <label class="item item-input">
+                        <textarea ng-model="myReview.body" ng-minlength="4" ng-enter placeholder="Write a review" ng-keyup="expandText()"
+                        ng-keydown="expandText()" reset-field></textarea>
+                    </label>
+                </div>
+                <div class="padding">
+                    <button class="button button-block button-positive" ng-disabled="myReview.body.length<4" ng-click="submitReview()">Submit Review</button>
+                </div>
             </div>
 
-
+            <h4 class="content padding double-padding-x" ng-if="listing.accepted_reviews.length>5" ui-sref="tabs.restaurant-reviews({id:listing.slug})">View All Reviews</h4>
         </div>
     </ion-content>
 </ion-view>

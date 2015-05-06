@@ -867,6 +867,10 @@ angular.module('tabletops.controllers', [])
                 body: ''
             };
 
+            $scope.submitReview = function () {
+                alert($scope.myReview);
+            };
+
             $scope.expandText = function(){
                 var element = document.getElementById("txtnotes");
                 element.style.height =  element.scrollHeight + "px";
