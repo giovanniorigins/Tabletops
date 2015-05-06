@@ -5,7 +5,7 @@
                 <div ng-if="::user.user.avatar" class="avatar" style="background-image: url('{{::user.user.avatar}}');"></div>
                 <div ng-if="::!user.user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
                 <h3>
-                    <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[::user.provider]"></i>
+                    <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>
                     &nbsp;
                     <a class="dark" ng-bind="::user.user.full_name"></a>
                 </h3>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="tabs tabs-dark tabs-icon-top static">
-            <a class="tab-item">
+            <a class="tab-item" ng-click="">
                 <i class="icon ion-person-add"></i> Invite Friends
             </a>
             <a ui-sref="app.friends" class="tab-item">
@@ -31,14 +31,17 @@
         </div>
 
         <div class="list" ng-if="friends">
-            <h4 class="content padding double-padding-x">Friends using Tabletops</h4>
-            <ion-item class="item-text-wrap">
-                {{user}}
-            </ion-item>
-            <a class="item item-avatar" ng-repeat="f in friends">
+            <h4 class="content padding double-padding-x">{{friends.length}} friends using Tabletops</h4>
+            <a class="item item-avatar item-button-right" ng-repeat="f in friends">
                 <span class="avatar" style="background-image: url('{{::f.picture.data.url}}');"></span>
-                <h2 ng-bind="::f.name"></h2>
+                <h2>
+                    <i class="icon ion-social-facebook positive"></i>
+                    &nbsp;
+                    {{::f.name}}
+                </h2>
                 <p>Foodie</p>
+                <button class="button button-balanced">Follow</button>
+                <button class="button button-balanced-900">unFollow</button>
             </a>
         </div>
     </ion-content>
