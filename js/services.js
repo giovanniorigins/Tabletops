@@ -74,7 +74,7 @@ angular.module('tabletops.services', [])
                 authService.loginCancelled();
             },
             authHandler: function (provider) {
-                $localForage.getItem('authorizationToken').then(function (token) {
+                $localForage.getItem('providerToken').then(function (token) {
 
                     switch (provider) {
                         case 'facebook':
@@ -109,55 +109,6 @@ angular.module('tabletops.services', [])
                             break;
                     }
                 });
-
-                /*var a = {
-                    "id": "1",
-                    "user_id": "2",
-                    "provider": "Facebook",
-                    "identifier": "10152855269202655",
-                    "webSiteURL": "www.gorigins.com\nhttp:\/\/xsposur.com",
-                    "profileURL": "https:\/\/www.facebook.com\/app_scoped_user_id\/10152855269202655\/",
-                    "photoURL": "https:\/\/graph.facebook.com\/10152855269202655\/picture?width=150&height=150",
-                    "displayName": "Jerez Bain",
-                    "description": "",
-                    "firstName": "Jerez",
-                    "lastName": "Bain",
-                    "gender": "male",
-                    "language": "en_US",
-                    "age": null,
-                    "birthDay": 6,
-                    "birthMonth": 8,
-                    "birthYear": 1990,
-                    "email": "jerezb31@hotmail.com",
-                    "emailVerified": "jerezb31@hotmail.com",
-                    "phone": null,
-                    "address": null,
-                    "country": "New Providence",
-                    "region": "Nassau, New Providence",
-                    "city": "Nassau",
-                    "zip": null,
-                    "username": "",
-                    "coverInfoURL": "https:\/\/graph.facebook.com\/10152855269202655?fields=cover&access_token=CAAJMYeZCMi5QBAJuGa0ZAhKTSqnZBPCzgZAQC5g5IEKipmnuiYhPHt95mBEZBtjUN0TAmaDez75NIx9DjyLaFpGVlqTUV8UOetQxePMwphXoFJuZCVkMykWZB1So904nxHl2ZC3oqITJu4SIfQ6q0KyNMBXbZCU3ZCfYd3QLjX5MUo2iXEKpyKw4UieHOmjHfddib2dWZBKwRRrfAZDZD",
-                    "created_at": "2015-03-03 12:40:14",
-                    "updated_at": "2015-05-05 20:04:32",
-                    "user": {
-                        "id": "2",
-                        "username": "jerezb31",
-                        "email": "jerezb31@hotmail.com",
-                        "password": "$2y$10$QTNPWKHafQg2mcY7pi3HveNZu2oaH4uDq4PpZ9Okv10ZiyYR669DC",
-                        "confirmation_code": "",
-                        "remember_token": "i3WVxGxiKhzCOtlkp45oNKX5FShUNlIm9qYTWy0AVYySUvjCKv2ya4dWyS8v",
-                        "confirmed": "0",
-                        "created_at": "2015-03-03 12:40:14",
-                        "updated_at": "2015-05-05 11:57:40",
-                        "fname": "Jerez",
-                        "lname": "Bain",
-                        "avatar": "https:\/\/graph.facebook.com\/10152855269202655\/picture?width=150&height=150",
-                        "slug": "jerezb31",
-                        "full_name": "Jerez Bain"
-                    }
-                }*/
-
             },
             FbCheckLogin: function () {
                 $cordovaFacebook.getLoginStatus()
@@ -167,7 +118,7 @@ angular.module('tabletops.services', [])
                         if (success.status === 'connected') {
                             var accessToken = success.authResponse.accessToken;
                             $localForage.setItem('useFacebook', true).then(function () {
-                                $localForage.setItem('authorizationToken', accessToken).then(function () {
+                                $localForage.setItem('providerToken', accessToken).then(function () {
                                     return service.authHandler('facebook');
                                 });
                             });
@@ -190,7 +141,7 @@ angular.module('tabletops.services', [])
 
             },
             FbMe: function () {
-                $localForage.getItem('authorizationToken').then(function (token) {
+                $localForage.getItem('providerToken').then(function (token) {
                     $http.post(ApiEndpoint.auth + '/Facebook?token=' + token)
                         .success(function (res) {
                             if (res.error) {
@@ -203,7 +154,8 @@ angular.module('tabletops.services', [])
 
                             $rootScope.isLoggedin = true;
 
-                            $localForage.setItem('user', res);
+                            $localForage.setItem('user', res.profile);
+                            $localForage.setItem('authorizationToken', res.token);
                             $rootScope.$broadcast('event:auth-loginConfirmed');
                             $state.go('tabs.dashboard');
                         })

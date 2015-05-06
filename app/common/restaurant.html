@@ -141,7 +141,7 @@
 
             <!-- Menus -->
             <h5 class="padding-horizontal assertive" ng-if="::listing.restaurant.menus[0].sections.length || listing.restaurant.menus[0].photos.length">Menus</h5>
-            <div ng-repeat="menu in listing.restaurant.menus" ng-if="::listing.restaurant.menus[0].sections.length">
+            <div ng-repeat="menu in listing.restaurant.menus" ng-if="::listing.restaurant.menus[0].sections.length || listing.restaurant.menus[0].photos.length">
                 <ion-item class="item-stable"
                           ng-click="toggleThisGroup(menu)"
                           ng-class="{active: isGroupShown(menu)}">

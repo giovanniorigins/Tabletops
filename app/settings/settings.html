@@ -1,27 +1,6 @@
 <ion-view view-title="Settings">
     <ion-content>
         <ul class="list">
-            <li class="item item-icon-left item-toggle">
-                <i class="icon ion-android-notifications"></i>
-                Notifications
-                <label class="toggle toggle-assertive">
-                    <input type="checkbox" local-forage="{key: 'notifications', scopeKey: 'settings.notifications', defaultValue: false}" ng-model="settings.notifications">
-                    <div class="track">
-                        <div class="handle"></div>
-                    </div>
-                </label>
-            </li>
-            <li class="item item-icon-left item-toggle">
-                <i class="icon ion-ios-location-outline"></i>
-                Use Location
-                <label class="toggle toggle-assertive">
-                    <input type="checkbox" local-forage="{key: 'geolocation', scopeKey: 'settings.geolocation', defaultValue: false}" ng-model="settings.geolocation">
-                    <div class="track">
-                        <div class="handle"></div>
-                    </div>
-                </label>
-            </li>
-
             <li class="item item-icon-left" ng-click="openProvinceModal($event)">
                 <i class="icon ion-ios-navigate"></i>
                 Select Province
