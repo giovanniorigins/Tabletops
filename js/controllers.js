@@ -786,65 +786,69 @@ angular.module('tabletops.controllers', [])
             ionic.material.ink.displayEffect();
 
         }])
-    .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$localForage', 'HoursDays', 'StartHours', 'EndHours',
-        function ($scope, Listing, listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $localForage, HoursDays, StartHours, EndHours) {
-            $scope.listing = listing.data;
-            $scope.isExpanded = true;
+    .controller('RestaurantCtrl', ['$scope', 'Listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$localForage', 'HoursDays', 'StartHours', 'EndHours',
+        function ($scope, Listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $localForage, HoursDays, StartHours, EndHours) {
 
-            $scope.hoursDays = HoursDays;
-            $scope.startHours = StartHours;
-            $scope.endHours = EndHours;
+            $localForage.getItem('currentListing').then(function (data) {
+                $scope.listing = data;
+                $scope.isExpanded = true;
 
-            $scope.toggleThisGroup = function (group) {
-                if ($scope.isGroupShown(group)) {
-                    $scope.shownGroup = null;
-                } else {
-                    $scope.shownGroup = group;
-                }
-            };
+                $scope.hoursDays = HoursDays;
+                $scope.startHours = StartHours;
+                $scope.endHours = EndHours;
 
-            $scope.isGroupShown = function (group) {
-                return $scope.shownGroup === group;
-            };
+                $scope.toggleThisGroup = function (group) {
+                    if ($scope.isGroupShown(group)) {
+                        $scope.shownGroup = null;
+                    } else {
+                        $scope.shownGroup = group;
+                    }
+                };
 
-            $scope.toMap = function (id) {
-                $localForage.setItem('currentListing', $scope.listing).then(function () {
-                    $state.go('tabs.restaurant-map', {id: $scope.listing.id, target: id});
-                })
-            };
+                $scope.isGroupShown = function (group) {
+                    return $scope.shownGroup === group;
+                };
 
-            // Image View Modal
-            $ionicModal.fromTemplateUrl('app/restaurants/image-modal.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.modal = modal;
+                $scope.toMap = function (id) {
+                    $localForage.setItem('currentListing', $scope.listing).then(function () {
+                        $state.go('tabs.restaurant-map', {id: $scope.listing.id, target: id});
+                    })
+                };
+
+                // Image View Modal
+                $ionicModal.fromTemplateUrl('app/restaurants/image-modal.html', {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    $scope.modal = modal;
+                });
+                $scope.openModal = function () {
+                    $scope.modal.show();
+                };
+                $scope.closeModal = function () {
+                    $scope.modal.hide();
+                };
+                //Cleanup the modal when we're done with it!
+                $scope.$on('$destroy', function () {
+                    $scope.modal.remove();
+                    $scope.isExpanded = false;
+                });
+                // Execute action on hide modal
+                $scope.$on('modal.hidden', function () {
+                    // Execute action
+                    $scope.imageSrc = undefined;
+                });
+                // Execute action on remove modal
+                $scope.$on('modal.removed', function () {
+                    // Execute action
+                });
+
+                $scope.showImage = function (photo) {
+                    $scope.imageSrc = photo;
+                    $scope.openModal();
+                };
             });
-            $scope.openModal = function () {
-                $scope.modal.show();
-            };
-            $scope.closeModal = function () {
-                $scope.modal.hide();
-            };
-            //Cleanup the modal when we're done with it!
-            $scope.$on('$destroy', function () {
-                $scope.modal.remove();
-                $scope.isExpanded = false;
-            });
-            // Execute action on hide modal
-            $scope.$on('modal.hidden', function () {
-                // Execute action
-                $scope.imageSrc = undefined;
-            });
-            // Execute action on remove modal
-            $scope.$on('modal.removed', function () {
-                // Execute action
-            });
 
-            $scope.showImage = function (photo) {
-                $scope.imageSrc = photo;
-                $scope.openModal();
-            };
 
             $scope.$on('$ionicView.leave', function() {
                 //$localForage.removeItem('currentListing');

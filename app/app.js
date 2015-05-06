@@ -143,7 +143,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'dashboard-tab': {
                         templateUrl: 'app/common/restaurant.html',
-                        controller: 'RestaurantCtrl',
+                        controller: 'RestaurantCtrl'/*,
                         resolve: {
                             listing: function (Listing, $stateParams, $http, $localForage) {
                                 return $localForage.getItem('currentListing').then(function (data) {
@@ -153,7 +153,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                                 });
                                 //return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
                             }
-                        }
+                        }*/
                     }
                 }
             })
