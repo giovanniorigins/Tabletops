@@ -33,7 +33,7 @@
 
         <h5 class="padding-horizontal assertive">Price Range</h5>
         <p class="padding-horizontal">
-            <span ng-bind-html="::showDollars(listing.restaurant.price_range)"></span>
+            <span ng-if="::listing.restaurant.price_range" ng-bind-html="::showDollars(listing.restaurant.price_range)"></span>
         </p>
 
         <blockquote ng-if="::listing.summary" class="padding" ng-bind="::listing.summary"></blockquote>
@@ -180,7 +180,7 @@
             <!-- Reviews-->
             <h5 class="padding-horizontal assertive">Reviews</h5>
 
-            <div class="item card-item in done" style="-webkit-transition-delay: 0.11s; transition-delay: 0.11s;" ng-repeat="review in listing.accepted_reviews|limitTo:25">
+            <div class="item card-item" ng-repeat="review in listing.accepted_reviews|limitTo:25">
                 <div class="card stable-bg ink ink-dark">
                     <div class="item item-avatar item-text-wrap in" style="-webkit-transition-delay: 0.2s; transition-delay: 0.2s;">
                         <span class="avatar" style="background-image: url('{{::review.user.avatar}}');"></span>
@@ -196,6 +196,22 @@
                     </div>
                 </div>
             </div>
+
+            <ion-item class="item-text-wrap">
+
+
+            </ion-item>
+
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <rating ng-model="myReview.rate" max="max"></rating>
+                </label>
+                <label class="item item-input">
+                    <textarea ng-model="myReview.body" placeholder="Comments" ng-keyup="expandText()"
+                              ng-keydown="expandText()" reset-field></textarea>
+                </label>
+            </div>
+
 
         </div>
     </ion-content>

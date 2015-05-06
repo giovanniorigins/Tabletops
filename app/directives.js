@@ -28,4 +28,14 @@ angular.module('tabletops.directives', [])
                 //this.shared = 'ok'; // add data to the controller instance
             }
         }
-    }]);
+    }])
+    .directive('ngEnter', function($cordovaKeyboard, $timeout) {
+        return function(scope, element, attrs) {
+            element.bind("keydown keypress", function(event) {
+                if(event.which === 13) {
+                    event.preventDefault();
+                    $cordovaKeyboard.close();
+                }
+            });
+        };
+    });

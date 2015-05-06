@@ -164,37 +164,6 @@ angular.module('tabletops.services', [])
                             console.log(res);
                         })
                 });
-
-                /*$cordovaFacebook.api("me", [*/
-                /*"public_profile", "email", "user_friends"*/
-                /*])
-                 .then(function(response) {
-                 // success
-                 console.log('Facebook login succeeded');
-                 console.log(response);
-                 $localForage.setItem('useFacebook', true);
-
-
-                 $cordovaFacebook.api(response.id + '/picture?redirect=false&width=200&height=200')
-                 .then(function (picture) {
-
-
-
-                 var user = {
-                 id: response.id,
-                 fname: response.first_name,
-                 lname: response.last_name,
-                 full_name: response.name,
-                 avatar: picture.data.url,
-                 email: response.email,
-                 profiles: [response]
-                 };
-
-                 })
-
-                 }, function (error) {
-                 // error
-                 });*/
             }
         };
         return service;

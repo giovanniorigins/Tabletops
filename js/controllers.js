@@ -859,6 +859,18 @@ angular.module('tabletops.controllers', [])
                 };
             });
 
+            //Review Functions
+            // set the rate and max variables
+            $scope.max = 5;
+            $scope.myReview = {
+                rate: 3,
+                body: ''
+            };
+
+            $scope.expandText = function(){
+                var element = document.getElementById("txtnotes");
+                element.style.height =  element.scrollHeight + "px";
+            };
 
             $scope.$on('$ionicView.leave', function() {
                 //$localForage.removeItem('currentListing');
