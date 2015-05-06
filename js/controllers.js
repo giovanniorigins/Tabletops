@@ -843,8 +843,8 @@ angular.module('tabletops.controllers', [])
                 $scope.openModal();
             };
 
-            $scope.$on('$ionicView.enter', function() {
-                $localForage.removeItem('currentListing');
+            $scope.$on('$ionicView.leave', function() {
+                //$localForage.removeItem('currentListing');
             })
         }])
     .controller('RestaurantMapCtrl', function ($scope, $localForage, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
