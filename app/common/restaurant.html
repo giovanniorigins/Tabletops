@@ -3,21 +3,10 @@
         <img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}}</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
-        <button class="button button-icon" ng-if="currentTab() == 2 && directionsSet" ng-click="toggleDirections()"
-                ng-class="{ true:'ion-ios-navigate', false:'ion-ios-navigate-outline' }[showDirections]"></button>
+        <button class="button button-icon button-clear icon ion-map" ng-if="::listing.locations.length" ng-click="toMap()"></button>
     </ion-nav-buttons>
-    <ion-content>
-        <ion-list>
-            <div class="item item-thumbnail-left">
-                <p class="row row-no-padding">
-                    <span class="col col-50">
-                        <span ng-bind-html="::showStars(listing.rating_count, listing.rating_cache)"></span>
-                    </span>
-                    <span class="col col-50 text-right">
-                       <span ng-bind-html="::showDollars(listing.restaurant.price_range)"></span>
-                    </span>
-                </p>
-            </div>
+    <ion-content class="has-header has-subheader">
+        <div class="bar bar-subheader">
             <div class="tabs tabs-light tabs-icon-top static" style="position:relative;">
                 <a class="tab-item" ng-click="initCaller(listing)">
                     <i class="icon ion-ios-telephone balanced"></i>
@@ -36,7 +25,17 @@
                     Visited
                 </a>
             </div>
-        </ion-list>
+        </div>
+
+        <h5 class="padding-horizontal assertive">Rating</h5>
+        <p class="padding-horizontal">
+            <span ng-bind-html="::showStars(listing.rating_count, listing.rating_cache)"></span>
+        </p>
+
+        <h5 class="padding-horizontal assertive">Price Range</h5>
+        <p class="padding-horizontal">
+            <span ng-bind-html="::showDollars(listing.restaurant.price_range)"></span>
+        </p>
 
         <blockquote ng-if="::listing.summary" class="padding" ng-bind="::listing.summary"></blockquote>
 
@@ -48,10 +47,13 @@
         <ion-list>
             <div ng-show="::listing.locations.length == 1" ng-repeat="loc in listing.locations">
                 <div class="list">
-                    <div class="item">
+                    <div class="item item-button-right">
                         {{::loc.address_1}} {{::loc.address_2}}<br/>
                         {{::loc.locality}}<br/>
-                        {{::loc.province}}
+                        {{::loc.province}}<br/>
+                        <button class="button button-positive ink" ng-click="toMap(loc.id)">
+                            <i class="icon ion-map"></i> &nbsp;Directions
+                        </button>
                     </div>
                     <div class="item" ng-show="loc.phone_1 || loc.phone_2">
                         <div class="button-bar bar-balanced">

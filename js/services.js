@@ -9,6 +9,11 @@ angular.module('tabletops.services', [])
             query: {url: ApiEndpoint.api + "/listings/:cuisine", method: 'GET', isArray: true, cache: true}
         });
     }])
+    .factory('Locations', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
+        return $resource(ApiEndpoint.api + "/locations/:id", {}, {
+            query: {method: 'GET', isArray: true, cache: true}
+        });
+    }])
     .factory('Cuisine', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
         return $resource(ApiEndpoint.api + "/cuisines/:id", {}, {
             query: {method: 'GET', isArray: true, cache: false}

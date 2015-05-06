@@ -809,8 +809,8 @@ angular.module('tabletops.controllers', [])
             ionic.material.ink.displayEffect();
 
         }])
-    .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', 'leafletData', 'leafletBoundsHelpers', 'HoursDays', 'StartHours', 'EndHours',
-        function ($scope, Listing, listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
+    .controller('RestaurantCtrl', ['$scope', 'Listing', 'listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$localForage', 'HoursDays', 'StartHours', 'EndHours',
+        function ($scope, Listing, listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $localForage, HoursDays, StartHours, EndHours) {
             $scope.listing = listing.data;
             $scope.isExpanded = true;
 
@@ -825,9 +825,57 @@ angular.module('tabletops.controllers', [])
                     $scope.shownGroup = group;
                 }
             };
+
             $scope.isGroupShown = function (group) {
                 return $scope.shownGroup === group;
             };
+
+            $scope.toMap = function (id) {
+                $localForage.setItem('currentListing', $scope.listing).then(function () {
+                    $state.go('tabs.restaurant-map', {target: id});
+                })
+            };
+
+            // Image View Modal
+            $ionicModal.fromTemplateUrl('app/restaurants/image-modal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+            $scope.openModal = function () {
+                $scope.modal.show();
+            };
+            $scope.closeModal = function () {
+                $scope.modal.hide();
+            };
+            //Cleanup the modal when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.modal.remove();
+                $scope.isExpanded = false;
+            });
+            // Execute action on hide modal
+            $scope.$on('modal.hidden', function () {
+                // Execute action
+                $scope.imageSrc = undefined;
+            });
+            // Execute action on remove modal
+            $scope.$on('modal.removed', function () {
+                // Execute action
+            });
+
+            $scope.showImage = function (photo) {
+                $scope.imageSrc = photo;
+                $scope.openModal();
+            };
+
+            $scope.$on('$ionicView.enter', function() {
+                $localForage.removeItem('currentListing');
+            })
+        }])
+    .controller('RestaurantMapCtrl', function ($scope, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
+        $localForage.getItem('currentListing').then(function (listing) {
+            $scope.listing = listing;
 
             // Leaflet Map Functions
             $scope.markers = [];
@@ -1004,40 +1052,8 @@ angular.module('tabletops.controllers', [])
 
             //Handling Route Steps
             //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
-
-            // Image View Modal
-            $ionicModal.fromTemplateUrl('app/restaurants/image-modal.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.modal = modal;
-            });
-            $scope.openModal = function () {
-                $scope.modal.show();
-            };
-            $scope.closeModal = function () {
-                $scope.modal.hide();
-            };
-            //Cleanup the modal when we're done with it!
-            $scope.$on('$destroy', function () {
-                $scope.modal.remove();
-                $scope.isExpanded = false;
-            });
-            // Execute action on hide modal
-            $scope.$on('modal.hidden', function () {
-                // Execute action
-                $scope.imageSrc = undefined;
-            });
-            // Execute action on remove modal
-            $scope.$on('modal.removed', function () {
-                // Execute action
-            });
-
-            $scope.showImage = function (photo) {
-                $scope.imageSrc = photo;
-                $scope.openModal();
-            };
-        }])
+        })
+    })
     .controller('AccountCtrl', function ($scope, $localForage, $cordovaFacebook, $timeout) {
         $localForage.getItem('user').then(function (res) {
             $scope.user = res;
