@@ -2,7 +2,7 @@
     <ion-content class="has-header">
         <div class="hero slide-up" style="background-image: url('{{user.coverInfoURL? user.coverInfoURL.cover.source : 'img/bgs/profile-bg.gif'}}');">
             <div ng-if="user" class="content">
-                <div ng-if="::user.user.avatar" class="avatar" style="background-image: url('{{::user.avatar}}');"></div>
+                <div ng-if="::user.user.avatar" class="avatar" style="background-image: url('{{::user.user.avatar}}');"></div>
                 <div ng-if="::!user.user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
                 <h3>
                     <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>
@@ -21,6 +21,9 @@
 
         <div class="list" ng-if="friends">
             <h4 class="content padding double-padding-x">Friends using Tabletops</h4>
+            <ion-item class="item-text-wrap">
+                {{user}}
+            </ion-item>
             <a class="item item-avatar" ng-repeat="f in friends">
                 <span class="avatar" style="background-image: url('{{::f.picture.data.url}}');"></span>
                 <h2 ng-bind="::f.name"></h2>

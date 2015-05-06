@@ -558,39 +558,7 @@ angular.module('tabletops.controllers', [])
                     }
                     //scrollWheelZoom: false
                 },
-                maxBounds: maxBounds,
-                /*layers: {
-                 baselayers: {
-                 mb: {
-                 name: "Bahamas",
-                 type: "xyz",
-                 url: "http://api.tiles.mapbox.com/v4/jgiovanni.lonlneon/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ",
-                 layerOptions: {
-                 subdomains: [
-                 "a",
-                 "b",
-                 "c"
-                 ],
-                 //attribution: "© OpenStreetMap contributors",
-                 continuousWorld: true
-                 },
-                 layerParams: {}
-                 }
-                 },
-                 overlays: {
-                 listings: {
-                 name: "Listings",
-                 type: "markercluster",
-                 visible: true,
-                 layerOptions: {
-                 chunkedLoading: true,
-                 showCoverageOnHover: false,
-                 removeOutsideVisibleBounds: true
-                 },
-                 layerParams: {}
-                 }
-                 }
-                 }*/
+                maxBounds: maxBounds
             });
             $scope.markers = [];
 
@@ -1054,7 +1022,7 @@ angular.module('tabletops.controllers', [])
             ionic.material.motion.slideUp({
                 selector: '.slide-up'
             });
-        }, 300);
+        }, 900);
 
     })
     .controller('SettingsCtrl', function ($scope, $localForage, $cordovaAppRate) {
