@@ -861,8 +861,8 @@ angular.module('tabletops.controllers', [])
 
             //Review Functions
             // set the rate and max variables
-            $scope.max = 5;
             $scope.myReview = {
+                max: 5,
                 rate: 3,
                 body: ''
             };

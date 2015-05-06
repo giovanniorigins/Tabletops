@@ -202,9 +202,9 @@
 
             </ion-item>
 
-            <div class="list list-inset">
-                <label class="item item-input">
-                    <rating ng-model="myReview.rate" max="max"></rating>
+            <div class="list">
+                <label class="item item-input" data-tap-disabled="true">
+                    <rating ng-model="myReview.rate" max="myReview.max"></rating>
                 </label>
                 <label class="item item-input">
                     <textarea ng-model="myReview.body" placeholder="Comments" ng-keyup="expandText()"
