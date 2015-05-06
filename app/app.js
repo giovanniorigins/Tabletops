@@ -145,8 +145,11 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                         templateUrl: 'app/common/restaurant.html',
                         controller: 'RestaurantCtrl',
                         resolve: {
-                            listing: function (Listing, $stateParams, $http) {
-                                return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
+                            listing: function (Listing, $stateParams, $http, $localForage) {
+                                $localForage.getItem('currentListing').then(function (data) {
+                                    return data;
+                                });
+                                //return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
                             }
                         }
                     }
@@ -161,6 +164,24 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                             'target'
                         ],
                         controller: 'RestaurantMapCtrl'
+                    }
+                }
+            })
+            .state('tabs.restaurant-reviews', {
+                url: '/dashboard/restaurants/:id/reviews',
+                views: {
+                    'dashboard-tab': {
+                        templateUrl: 'app/common/restaurant-reviews.html',
+                        controller: 'RestaurantReviewsCtrl'
+                    }
+                }
+            })
+            .state('tabs.restaurant-gallery', {
+                url: '/dashboard/restaurants/:id/gallery',
+                views: {
+                    'dashboard-tab': {
+                        templateUrl: 'app/common/restaurant-gallery.html',
+                        controller: 'RestaurantGalleryCtrl'
                     }
                 }
             })

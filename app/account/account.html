@@ -1,11 +1,11 @@
 <ion-view view-title="My Account">
     <ion-content class="has-header">
-        <div class="hero slide-up" style="background-image: url('{{user.coverInfoURL? user.coverInfoURL.cover.source : 'img/bgs/profile-bg.gif'}}');">
+        <div class="hero slide-up" style="background-image: url('{{::!user.coverInfoURL ? user.coverInfoURL : 'img/bgs/cs21.jpg'}}');">
             <div ng-if="user" class="content">
                 <div ng-if="::user.user.avatar" class="avatar" style="background-image: url('{{::user.user.avatar}}');"></div>
                 <div ng-if="::!user.user.avatar" class="avatar" style="background-image: url('icon.png');"></div>
                 <h3>
-                    <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>
+                    <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[::user.provider]"></i>
                     &nbsp;
                     <a class="dark" ng-bind="::user.user.full_name"></a>
                 </h3>
@@ -17,6 +17,17 @@
                     Sign in
                 </a>
             </div>
+        </div>
+        <div class="tabs tabs-dark tabs-icon-top static">
+            <a class="tab-item">
+                <i class="icon ion-person-add"></i> Invite Friends
+            </a>
+            <a ui-sref="app.friends" class="tab-item">
+                <i class="icon ion-android-people"></i> Friends
+            </a>
+            <a ui-sref="app.gallery" class="tab-item">
+                <i class="icon ion-images"></i> Photos
+            </a>
         </div>
 
         <div class="list" ng-if="friends">

@@ -664,8 +664,8 @@ angular.module('tabletops.controllers', [])
             // Execute action
         });
     })
-    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout',
-        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout) {
+    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state',
+        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state) {
             Cuisine.query({}, function (res) {
                 $scope.cuisines = res;
                 $scope.cuisineList = angular.copy(res);
@@ -762,6 +762,12 @@ angular.module('tabletops.controllers', [])
             $scope.$on('$destroy', function () {
                 $scope.modal.remove();
             });
+
+            $scope.toRestaurant = function (id) {
+                $localForage.setItem('currentListing', _.findWhere($scope.restaurants, {id: id})).then(function () {
+                    $state.go('tabs.restaurant', {id: id});
+                })
+            };
 
             //force refresh on province change
             $scope.$on('$ionicView.enter', function() {
@@ -896,7 +902,6 @@ angular.module('tabletops.controllers', [])
                 })
             }
             // Default Center
-            // TODO: Map center based on default province
             $scope.center = {
                 lat: 25.033965,
                 lng: -77.35176,
@@ -904,7 +909,7 @@ angular.module('tabletops.controllers', [])
             };
 
             $scope.height = window.screen.height;
-            var bounds = leafletBoundsHelpers.createBoundsFromArray([
+            var maxBounds = leafletBoundsHelpers.createBoundsFromArray([
                 [27.293689, -79.541016],
                 [20.797522, -71.015968]
             ]);
