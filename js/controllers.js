@@ -873,7 +873,7 @@ angular.module('tabletops.controllers', [])
                 $localForage.removeItem('currentListing');
             })
         }])
-    .controller('RestaurantMapCtrl', function ($scope, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
+    .controller('RestaurantMapCtrl', function ($scope, $localForage, leafletData, leafletBoundsHelpers, HoursDays, StartHours, EndHours) {
         $localForage.getItem('currentListing').then(function (listing) {
             $scope.listing = listing;
 

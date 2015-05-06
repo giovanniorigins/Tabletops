@@ -154,10 +154,12 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             })
             .state('tabs.restaurant-map', {
                 url: '/dashboard/restaurants/:id/map',
-                params: [ 'target' ],
                 views: {
                     'dashboard-tab': {
                         templateUrl: 'app/common/restaurant-map.html',
+                        params: [
+                            'target'
+                        ],
                         controller: 'RestaurantMapCtrl'
                     }
                 }
