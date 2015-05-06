@@ -5,28 +5,27 @@
     <ion-nav-buttons side="right">
         <button class="button button-icon button-clear icon ion-map" ng-if="::listing.locations.length" ng-click="toMap()"></button>
     </ion-nav-buttons>
-    <ion-content class="has-header has-subheader">
-        <div class="bar bar-subheader">
-            <div class="tabs tabs-light tabs-icon-top static" style="position:relative;">
-                <a class="tab-item" ng-click="initCaller(listing)">
-                    <i class="icon ion-ios-telephone balanced"></i>
-                    Call
-                </a>
-                <a class="tab-item" ng-click="shareThis(listing)">
-                    <i class="icon ion-ios-upload positive"></i>
-                    Share
-                </a>
-                <a class="tab-item" ng-click="favoriteThis(listing)" id="{{::'share_button_'+listing.id}}">
-                    <i class="icon ion-heart" ng-class="{true:'lovely'}[faved(listing.id)]"></i>
-                    Favorite
-                </a>
-                <a class="tab-item" ng-click="beenHere(listing)">
-                    <i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(listing.id)]"></i>
-                    Visited
-                </a>
-            </div>
+    <div class="bar bar-subheader">
+        <div class="tabs tabs-light tabs-icon-top" style="position:relative;">
+            <a class="tab-item" ng-click="initCaller(listing)">
+                <i class="icon ion-ios-telephone balanced"></i>
+                Call
+            </a>
+            <a class="tab-item" ng-click="shareThis(listing)">
+                <i class="icon ion-ios-upload positive"></i>
+                Share
+            </a>
+            <a class="tab-item" ng-click="favoriteThis(listing)" id="{{::'share_button_'+listing.id}}">
+                <i class="icon ion-heart" ng-class="{true:'lovely'}[faved(listing.id)]"></i>
+                Favorite
+            </a>
+            <a class="tab-item" ng-click="beenHere(listing)">
+                <i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(listing.id)]"></i>
+                Visited
+            </a>
         </div>
-
+    </div>
+    <ion-content class="has-header has-subheader">
         <h5 class="padding-horizontal assertive">Rating</h5>
         <p class="padding-horizontal">
             <span ng-bind-html="::showStars(listing.rating_count, listing.rating_cache)"></span>
