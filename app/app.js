@@ -25,7 +25,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         };
 
         $rootScope.$on('loading:show', function () {
-            $ionicLoading.show({template: '<ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>'});
+            $ionicLoading.show({template: '<div class="loader"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>'});
         });
 
         $rootScope.$on('loading:hide', function () {
