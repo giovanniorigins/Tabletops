@@ -1,11 +1,17 @@
 angular.module('tabletops.services', [])
     .constant('ApiEndpoint', {
         api: 'http://flamingo.gorigins.com/api/v1',
-        url: 'http://flamingo.gorigins.com/api/v1'
+        url: 'http://flamingo.gorigins.com/api/v1',
+        auth: 'http://flamingo.gorigins.com/api/v1/auth',
     })
     .factory('Listing', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
         return $resource(ApiEndpoint.api + "/listings/:id", {}, {
             query: {url: ApiEndpoint.api + "/listings/:cuisine", method: 'GET', isArray: true, cache: true}
+        });
+    }])
+    .factory('Locations', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
+        return $resource(ApiEndpoint.api + "/locations/:id", {}, {
+            query: {method: 'GET', isArray: true, cache: true}
         });
     }])
     .factory('Cuisine', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
@@ -23,7 +29,7 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state, $cordovaFacebook, hello) {
+    .factory('AuthenticationService', function ($rootScope, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook) {
         var service = {
             login: function (user) {
                 $localForage.setItem('userCreds', user);
@@ -37,19 +43,22 @@ angular.module('tabletops.services', [])
                             $localForage.removeItem('userCreds', user);
                             return $rootScope.$broadcast('event:auth-login-failed', status);
                         }
+
                         $localForage.setItem('authorizationToken', data.token);
-                        $http.defaults.headers.common.Authorization = data.token;  // Step 1
+                        $http.defaults.headers.common.Authorization = 'Bearer ' + data.token;
+
+                        // Step 1
 
                         // Need to inform the http-auth-interceptor that
                         // the user has logged in successfully.  To do this, we pass in a function that
                         // will configure the request headers with the authorization token so
                         // previously failed requests(aka with status == 401) will be resent with the
                         // authorization token placed in the header
-                        authService.loginConfirmed(data, function (config) {  // Step 2 & 3
+                        /*authService.loginConfirmed(data, function (config) {  // Step 2 & 3
                             config.headers["Authorization"] = data.token;
                             config.headers.Authorization = data.token;
                             return config;
-                        });
+                        });*/
                     })
                     .error(function (data, status, headers, config) {
                         $localForage.removeItem('userCreds', user);
@@ -67,13 +76,14 @@ angular.module('tabletops.services', [])
             loginCancelled: function () {
                 authService.loginCancelled();
             },
-            me: function () {
-                $localForage.getItem('authorizationToken').then(function (token) {
+            authHandler: function (provider) {
+                $localForage.getItem('providerToken').then(function (token) {
 
-                    $localForage.getItem('useFacebook').then(function (facebook) {
-                        if (facebook) {
+                    switch (provider) {
+                        case 'facebook':
                             return service.FbMe();
-                        } else if (token && !facebook) {
+                            break;
+                        case 'email':
                             $http.post(ApiEndpoint.api + '/me', {}, {
                                 ignoreAuthModule: true,
                                 headers: {
@@ -96,60 +106,67 @@ angular.module('tabletops.services', [])
                                         return $state.go('signin');
                                     }
                                 });
-                        } else {
+                            break;
+                        default:
                             return $state.go('signin');
-                        }
-                    });
-
-                });
-
-            },
-            FbCheckLogin: function () {
-                var online = hello.getAuthResponse('facebook');
-                $rootScope.$watch('online', function (newValue, oldValue) {
-                    if (online.access_token) {
-                        var accessToken = online.access_token;
-                        $localForage.setItem('useFacebook', true).then(function () {
-                            $localForage.setItem('authorizationToken', accessToken).then(function (data) {
-                                return service.FbMe();
-                            });
-                        });
-                    } else {
-                        return service.me();
+                            break;
                     }
                 });
             },
+            FbCheckLogin: function () {
+                $cordovaFacebook.getLoginStatus()
+                    .then(function (success) {
+                        console.log('GetLoginStatus');
+                        console.log(success);
+                        if (success.status === 'connected') {
+                            var accessToken = success.authResponse.accessToken;
+                            $localForage.setItem('useFacebook', true).then(function () {
+                                $localForage.setItem('providerToken', accessToken).then(function () {
+                                    return service.authHandler('facebook');
+                                });
+                            });
+                        } else {
+                            return service.authHandler();
+                        }
+                    }, function (error) {
+                        // error
+                    });
+            },
             FbLogin: function () {
-                hello('facebook').login({scope: 'email,friends,publish'}).then(function () {
-                    console.log('You are signed in to Facebook');
-                    // Call user information, for the given network
-                    return service.FbMe();
-                }, function (e) {
-                    alert('Signin error: ' + e.error.message);
-                    return $state.go('signin');
-                });
+                $cordovaFacebook.login(["public_profile", "email", "user_friends"])
+                    .then(function (success) {
+                        console.log('Login');
+                        console.log(success);
+                        service.authHandler('facebook');
+                    }, function (error) {
+                        // error
+                    });
+
             },
             FbMe: function () {
-                hello('facebook').api('/me').then(function(response) {
-                    console.log('Facebook login succeeded');
-                    $localForage.setItem('useFacebook', true).then(function () {
-                        var user = {
-                            id: response.id,
-                            fname: response.first_name,
-                            lname: response.last_name,
-                            full_name: response.name,
-                            avatar: response.picture,
-                            email: response,
-                            profiles: response
-                        };
-                        //console.log(user);
-                        $rootScope.isLoggedin = true;
+                $localForage.getItem('providerToken').then(function (token) {
+                    $http.post(ApiEndpoint.auth + '/Facebook?token=' + token)
+                        .success(function (res) {
+                            if (res.error) {
+                                console.log('Auth Error');
+                                console.log(res.error);
+                                return res.error;
+                            }
+                            console.log('Auth Success');
+                            console.log(res);
 
-                        $localForage.setItem('user', user).then(function () {
+                            $rootScope.isLoggedin = true;
+
+                            $localForage.setItem('user', res.profile);
+                            $localForage.setItem('authorizationToken', res.token);
+                            $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
                             $rootScope.$broadcast('event:auth-loginConfirmed');
-                        });
-                        $state.go('tabs.dashboard');
-                    });
+                            $state.go('tabs.dashboard');
+                        })
+                        .error(function (res) {
+                            console.log('Auth Error');
+                            console.log(res);
+                        })
                 });
             }
         };
@@ -163,170 +180,222 @@ angular.module('tabletops.services', [])
             }
         };
     })
-    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$sce', function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $sce) {
-        var repo = {
-            initCaller: function (obj) {
-                if (obj.locations.length > 1) {
-                    repo.callSelectLocation(obj.locations);
-                } else if (obj.locations.length == 1) {
-                    repo.callLocation(obj.locations);
-                } else {
-                    $cordovaToast.showShortBottom('No address/phone numbers available yet...');
-                    return false;
-                }
-            },
-            callSelectLocation: function (locations) {
-                var btns = [];
-                _.each(locations, function (loc) {
-                    btns.push({text: loc.name});
-                });
-
-                // Show the action sheet
-                var hideSheet = $ionicActionSheet.show({
-                    buttons: btns,
-                    //destructiveText: 'Delete',
-                    titleText: 'Tap a location to call',
-                    cancelText: 'Cancel',
-                    cancel: function () {
-                        // add cancel code..
-                    },
-                    buttonClicked: function (index) {
-                        return repo.callLocation(locations, index);
-                    }
-                });
-            },
-            callLocation: function (locations, index) {
-                var location = locations[index || 0],
-                    btns = [];
-
-                if (location.phone_1)
-                    btns.push({text: location.phone_1});
-                if (location.phone_2)
-                    btns.push({text: location.phone_2});
-
-                // Show the action sheet
-                var hideSheet = $ionicActionSheet.show({
-                    buttons: btns,
-                    //destructiveText: 'Delete',
-                    titleText: 'Tap a number to call ' + location.name,
-                    cancelText: 'Cancel',
-                    cancel: function () {
-                        // add cancel code..
-                    },
-                    buttonClicked: function (index) {
-                        var number = btns[index].text.replace(/[-() +,]/g, "");
-                        window.open('tel:' + number, '_system');
-                        return true;
-                    }
-                });
-            },
-            share: function (obj) {
-                var message = 'Check it out!',
-                    subject = 'Tabletops App: ' + obj.name,
-                    file = angular.isObject(obj.logo) ? obj.logo.path : null,
-                    link = 'http://flamingo.gorigins.com/np-pi/' + obj.slug;
-                $cordovaSocialSharing
-                    .share(message, subject, file, link) // Share via native share sheet
-                    .then(function (result) {
-                        // Success!
-                        console.log(result);
-                    }, function (err) {
-                        // An error occured. Show a message to the user
-                        console.log(err);
-                    });
-            },
-            favorite: function (obj) {
-                //$localForage.removeItem('favorites');
-                $localForage.getItem('favorites').then(function (data) {
-                    if (!data || angular.isUndefined(data)) {
-                        // Data doesnt exist
-                        data = [];
-                        data.push(obj.id);
-                        $localForage.setItem('favorites', data);
-                        $rootScope.favorites = data;
+    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$cordovaFacebook', '$sce', 'CIDs',
+        function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $cordovaFacebook, $sce, CIDs) {
+            var repo = {
+                // Call Handling
+                initCaller: function (obj) {
+                    if (obj.locations.length > 1) {
+                        repo.callSelectLocation(obj.locations);
+                    } else if (obj.locations.length == 1) {
+                        repo.callLocation(obj.locations);
                     } else {
-                        // Data exists
-                        var check = _.findWhere(data, {id: obj.id});
-                        if (!!check) { // remove it
-                            var newData = _.reject(data, function (a) {
-                                return a.id == obj.id
-                            });
-                            $localForage.setItem('favorites', newData);
-                            $rootScope.favorites = newData;
-                            $cordovaToast.showShortBottom('\f31d Awww, unfav\'d...');
-                        } else { // add it
+                        $cordovaToast.showShortBottom('No address/phone numbers available yet...');
+                        return false;
+                    }
+                },
+                callSelectLocation: function (locations) {
+                    var btns = [];
+                    _.each(locations, function (loc) {
+                        btns.push({text: loc.name});
+                    });
+
+                    // Show the action sheet
+                    var hideSheet = $ionicActionSheet.show({
+                        buttons: btns,
+                        //destructiveText: 'Delete',
+                        titleText: 'Tap a location to call',
+                        cancelText: 'Cancel',
+                        cancel: function () {
+                            // add cancel code..
+                        },
+                        buttonClicked: function (index) {
+                            return repo.callLocation(locations, index);
+                        }
+                    });
+                },
+                callLocation: function (locations, index) {
+                    var location = locations[index || 0],
+                        btns = [];
+
+                    if (location.phone_1)
+                        btns.push({text: location.phone_1});
+                    if (location.phone_2)
+                        btns.push({text: location.phone_2});
+
+                    // Show the action sheet
+                    var hideSheet = $ionicActionSheet.show({
+                        buttons: btns,
+                        //destructiveText: 'Delete',
+                        titleText: 'Tap a number to call ' + location.name,
+                        cancelText: 'Cancel',
+                        cancel: function () {
+                            // add cancel code..
+                        },
+                        buttonClicked: function (index) {
+                            var number = btns[index].text.replace(/[-() +,]/g, "");
+                            window.open('tel:' + number, '_system');
+                            return true;
+                        }
+                    });
+                },
+                // Social Sharing
+                share: function (obj) {
+                    window.plugins.socialsharing.iPadPopupCoordinates = function () {
+                        var rect = document.getElementById('share_button_' + obj.id).getBoundingClientRect();
+                        return rect.left + "," + rect.top + "," + rect.width + "," + rect.height;
+                    };
+
+                    /*var btns = [
+                     { text: 'Copy Link' },
+                     { text: 'Email' },
+                     { text: 'Message' },
+                     { text: 'Facebook' },
+                     { text: 'Facebook Messenger' },
+                     { text: 'Twitter' },
+                     { text: 'WhatsApp' },
+                     ];
+
+                     // Show the action sheet
+                     var hideSheet = $ionicActionSheet.show({
+                     buttons: btns,
+                     //destructiveText: 'Delete',
+                     titleText: 'Tap a location to call',
+                     cancelText: 'Cancel',
+                     cancel: function () {
+                     // add cancel code..
+                     },
+                     buttonClicked: function (index) {
+                     return repo.callLocation(locations, index);
+                     }
+                     });*/
+
+                    var message = '',
+                        subject = 'Tabletops App: ' + obj.name,
+                        file = angular.isObject(obj.logo) ? obj.logo.path : null,
+                        link = 'http://flamingo.gorigins.com/np-pi/' + obj.slug;
+                    $cordovaSocialSharing
+                        .share(message, subject, file, link) // Share via native share sheet
+                        .then(function (result) {
+                            // Success!
+                            console.log(result);
+                        }, function (err) {
+                            // An error occured. Show a message to the user
+                            console.log(err);
+                        });
+                },
+                favorite: function (obj) {
+                    //$localForage.removeItem('favorites');
+                    $localForage.getItem('favorites').then(function (data) {
+                        if (!data || angular.isUndefined(data)) {
+                            // Data doesnt exist
+                            data = [];
                             data.push(obj.id);
                             $localForage.setItem('favorites', data);
                             $rootScope.favorites = data;
-                            $cordovaToast.showShortBottom('\f141 Fav\'d!');
+                        } else {
+                            // Data exists
+                            var check = _.contains(data, obj.id);
+                            if (!!check) { // remove it
+                                var newData = _.reject(data, function (id) {
+                                    return id == obj.id;
+                                });
+                                $localForage.setItem('favorites', newData);
+                                $rootScope.favorites = newData;
+                                //$cordovaToast.showShortBottom(' Awww, unfav\'d...');
+                            } else { // add it
+                                data.push(obj.id);
+                                $localForage.setItem('favorites', data);
+                                $rootScope.favorites = data;
+                                //$cordovaToast.showShortBottom('Added to Favorites!');
+                            }
                         }
-                    }
-
-                });
-            },
-            been: function (obj) {
-                //$localForage.removeItem('been');
-                $localForage.getItem('been').then(function (data) {
-                    if (!data || angular.isUndefined(data)) {
-                        // Data doesnt exist
-                        data = [];
-                        data.push(obj.id);
-                        $localForage.setItem('been', data);
-                        $rootScope.been = data;
-                    } else {
-                        // Data exists
-                        var check = _.findWhere(data, {id: obj.id});
-                        if (!!check) { // remove it
-                            var newData = _.reject(data, function (a) {
-                                return a.id == obj.id
-                            });
-                            $localForage.setItem('been', newData);
-                            $rootScope.been = newData;
-                            $cordovaToast.showShortBottom('\f12a Guess you haven\'t been here...');
-                        } else { // add it
+                    });
+                },
+                been: function (obj) {
+                    //$localForage.removeItem('been');
+                    $localForage.getItem('been').then(function (data) {
+                        if (angular.isUndefined(data)) {
+                            // Data doesnt exist
+                            data = [];
                             data.push(obj.id);
                             $localForage.setItem('been', data);
-                            $rootScope.been = data;
-                            $cordovaToast.showShortBottom('\f122 Been Here!');
+                            $rootScope.beens = data;
+                        } else {
+                            // Data exists
+                            var check = _.contains(data, obj.id);
+                            if (!!check) { // remove it
+                                var newData = _.reject(data, function (id) {
+                                    return id == obj.id;
+                                });
+                                $localForage.setItem('been', newData).then(function (res) {
+                                    $rootScope.beens = newData;
+                                });
+                            } else { // add it
+                                data.push(obj.id);
+                                $localForage.setItem('been', data);
+                                $rootScope.been = data;
+                                //$cordovaToast.showShortBottom('\f122 Been Here!');
+                                /*var options = {
+                                 method: "share_open_graph",
+                                 action_type: 'restaurant.visited',
+                                 action_properties: JSON.stringify({
+                                 restaurant: {
+                                 "og:type": "restaurant.restaurant",
+                                 "og:url": "http:\/\/flamingo.gorigins.com/np-pi/" + obj.slug,
+                                 "og:title": obj.name,
+                                 "og:image": obj.logo ? obj.logo.path: 'http://flamingo.gorigins.com/public_assets/img/logo_red.png',
+                                 "place:location:latitude": obj.locations.length ? obj.locations[0].lat: '',
+                                 "place:location:longitude": obj.locations.length ? obj.locations[0].lng: ''
+                                 }
+                                 })
+                                 };
+                                 $cordovaFacebook.showDialog(options)
+                                 .then(function(success) {
+                                 // success
+                                 console.log('success');
+                                 console.log(success);
+                                 }, function (error) {
+                                 // error
+                                 console.log('error');
+                                 console.log(error);
+                                 });*/
+                            }
+                        }
+                    });
+                },
+                showDollars: function (range, noIcon) {
+                    noIcon = noIcon || false;
+                    var str = '';
+                    if (noIcon) {
+                        for (i = 1; i <= 4; i++) {
+                            str += i <= range ? '$' : '';
+                        }
+                    } else {
+                        for (i = 1; i <= 4; i++) {
+                            var ending = i <= range ? 'balanced' : '';
+                            str += '<i class="icon ion-social-usd ' + ending + '"></i>';
                         }
                     }
+                    return $sce.trustAsHtml(str);
+                },
+                showStars: function (count, rating) {
+                    var str = '';
+                    if (count > 0) {
+                        for (i = 1; i <= 5; i++) {
+                            var ending = i <= rating ? '' : (i > rating && rating > (i - 1)) ? '-half' : '-outline';
+                            str += '<i class="icon ion-ios-star' + ending + ' energized"></i>';
+                        }
+                    } else str = '<span class="icon ion-minus-round"></span>';
+                    return $sce.trustAsHtml(str);
+                },
+                foo2: function () {
 
-                });
-            },
-            showDollars: function (range, noIcon) {
-                noIcon = noIcon || false;
-                var str = '';
-                if (noIcon) {
-                    for (i = 1; i <= 4; i++) {
-                        str += i <= range ? '$' : '';
-                    }
-                } else {
-                    for (i = 1; i <= 4; i++) {
-                        var ending = i <= range ? 'balanced' : '';
-                        str += '<i class="icon ion-social-usd ' + ending + '"></i>';
-                    }
                 }
-                return $sce.trustAsHtml(str);
-            },
-            showStars: function (count, rating) {
-                var str = '';
-                if (count > 0) {
-                    for (i = 1; i <= 5; i++) {
-                        var ending = i <= rating ? '' : (i > rating && rating > (i - 1)) ? '-half' : '-outline';
-                        str += '<i class="icon ion-ios-star' + ending + ' energized"></i>';
-                    }
-                } else str = '<span class="icon ion-ios-minus-empty "></span> No ratings';
-                return $sce.trustAsHtml(str);
-            },
-            foo2: function () {
-
-            },
-            foo: function () {
-                alert("I'm foo!");
-            }
-        };
-        return repo;
-    }])
+            };
+            return repo;
+        }
+    ])
 /*.factory('', ['$scope', '$ionicModal', function ($scope, $ionicModal) {
  $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
  scope: $scope,

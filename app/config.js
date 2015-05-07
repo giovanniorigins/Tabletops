@@ -8,6 +8,18 @@ angular.module('tabletops.config', [])
         });
     }])
 
+    .config(['$ionicConfigProvider', function($ionicConfigProvider) {
+        $ionicConfigProvider.tabs.position('bottom'); //other values: top
+    }])
+
+    .config(function($cordovaFacebookProvider) {
+        var appID = 646933472119700;
+        var version = "v2.0"; // or leave blank and default is v2.0
+        ionic.Platform.ready(function () {
+            $cordovaFacebookProvider.browserInit(appID, version);
+        });
+    })
+
     // HTTP Defaults
     .config(function ($httpProvider) {
         //$httpProvider.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8';

@@ -1,21 +1,19 @@
 <ion-view view-title="{{cuisine.name}}">
-    <div class="bar bar-subheader item-input-inset">
+    <div class="bar bar-subheader item-input-inset bar-assertive-900 no-border">
         <label class="item-input-wrapper">
             <i class="icon ion-ios7-search placeholder-icon"></i>
-            <input type="search" placeholder="Search" ng-model="search">
+            <input type="search" placeholder="Search" ng-model="search" ng-keyup="scrollTop()" reset-field>
         </label>
-        <button class="button button-icon icon ion-ios-settings" ng-click="openFiltersModal()"
-                ng-hide="$exposeAside.active"></button>
+        <!--<button class="button button-clear button-icon icon ion-ios-close-outline" ng-click="filters.search=''"
+                ng-show="filters.search.length"></button>-->
+        <button class="button button-clear light button-icon icon ion-ios-settings-strong" ng-click="openFiltersModal()"></button>
     </div>
     <ion-content class="has-subheader">
-        <ion-refresher
-                pulling-text="Pull to refresh..."
-                on-refresh="refresh()">
-        </ion-refresher>
-        <ion-list>
-            <ion-item ng-repeat="res in cuisine.restaurants" class="item-avatar" ui-sref="tabs.cuisine-restaurant({cuisine_id: cuisine.id, id: res.listing.slug})">
-                <img ng-if="res.listing.logo" ng-src="{{::res.listing.logo.path}}">
-                <h2>{{::res.listing.name}}</h2>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+        <ion-list class="">
+            <a ng-repeat="res in cuisine.restaurants" class="item" data-ink-color="#B71C1C" ng-click="toRestaurant(res.listing.slug, cuisine.id)">
+                <!--<span class="avatar" style="background-image: url('{{::res.listing.logo.path}}');"></span>-->
+                <h2 class="assertive-900" ng-bind="::res.listing.name"></h2>
                 <p class="row row-no-padding">
                     <span class="col col-50">
                         <span ng-bind-html="::showStars(res.listing.rating_count, res.listing.rating_cache)"></span>
@@ -25,13 +23,11 @@
                     </span>
                 </p>
                 <p>
-                    <a href="#" class="subdued" ng-repeat="c in res.cuisines">{{c.name}}</a>
+                    <a href="#" class="subdued" ng-repeat="c in res.cuisines">{{::c.name}}</a>
                 </p>
-                <ion-option-button class="button-balanced" ng-click="initCaller(res.listing)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
-                <ion-option-button class="button-stable" ng-click="favoriteThis(res.listing)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.listing.id)]"></i></ion-option-button>
-                <ion-option-button class="button-positive" ng-click="shareThis(res.listing)">&nbsp;<i class="icon ion-ios-upload"></i></ion-option-button>
-                <ion-option-button class="button-dark" ng-click="beenHere(res.listing)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[been(res.listing.id)]"></i></ion-option-button>
-            </ion-item>
+                <!--<ion-option-button class="button-stable" ng-click="favoriteThis(res.listing)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.listing.id)]"></i></ion-option-button>
+                <ion-option-button class="button-balanced" ng-click="initCaller(res.listing)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>-->
+            </a>
         </ion-list>
     </ion-content>
 

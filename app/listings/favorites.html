@@ -1,21 +1,16 @@
 <ion-view view-title="Favorites">
-    <div class="bar bar-subheader item-input-inset">
+    <div class="bar bar-subheader item-input-inset bar-assertive-900 no-border">
         <label class="item-input-wrapper">
             <i class="icon ion-ios7-search placeholder-icon"></i>
-            <input type="search" placeholder="Search" ng-model="filters.search">
+            <input type="search" placeholder="Search" ng-model="filters.search" ng-keyup="scrollTop()" reset-field>
         </label>
-        <button class="button button-icon icon ion-ios-settings" ng-click="openFiltersModal()"
-                ng-hide="$exposeAside.active"></button>
     </div>
     <ion-content class="has-subheader">
-        <ion-refresher
-                pulling-text="Pull to refresh..."
-                on-refresh="refresh()">
-        </ion-refresher>
-        <ion-list>
-            <ion-item ng-repeat="res in faves|filter:filters.search" class="item-avatar" ui-sref="tabs.favorite({id: res.slug})">
-                <img ng-src="{{::res.logo.path}}">
-                <h2>{{::res.name}}</h2>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+        <ion-list class="">
+            <a ng-show="faves.length" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item" data-ink-color="#B71C1C" ng-click="toFavorite(res.slug)">
+                <!--<span class="avatar" style="background-image: url('{{::res.logo.path}}');"></span>-->
+                <h2 class="assertive-900" ng-bind="::res.name"></h2>
                 <p class="row row-no-padding">
                     <span class="col col-50">
                         <span ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></span>
@@ -25,14 +20,18 @@
                     </span>
                 </p>
                 <p>
-                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
+                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{::c.name}}</a>
                 </p>
-                <ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>
-                <ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>
-                <ion-option-button class="button-positive" ng-click="shareThis(res)">&nbsp;<i class="icon ion-ios-upload"></i></ion-option-button>
-                <ion-option-button class="button-dark" ng-click="beenHere(res)">&nbsp;<i class="icon ion-checkmark" ng-class="{true:'energized'}[been(res.id)]"></i></ion-option-button>
-            </ion-item>
+                <!--<ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>-->
+                <!--<ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>-->
+            </a>
+            <!--<ion-item ng-hide="faves.length" class="card card-item text-center">
+                <i class="icon ion-ios-heart-outline lovely" style="font-size: 2em"></i>
+                <p>You don't have any favorites yet. <a ui-sref="tabs.results">Browse</a> around for places that you love!</p>
+            </ion-item>-->
         </ion-list>
+
+
     </ion-content>
 
 </ion-view>
