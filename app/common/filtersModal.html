@@ -20,7 +20,7 @@
             <div class="input-label">
                 Cuisine
             </div>
-            <select ng-model="filters.cuisine" ng-init="filters.cuisine=null" ng-options="c.slug as c.name for c in cuisineList"></select>
+            <select ng-model="filters.cuisine" ng-init="filters.cuisine=null" ng-options="c.slug as c.name for c in cuisineList|orderBy:'name'"></select>
         </label>
 
         <label class="item item-input item-select">
@@ -42,7 +42,7 @@
             <div class="input-label">
                 Sort by
             </div>
-            <select ng-model="filters.sort" ng-options="sort.value as sort.name for sort in sorts"></select>
+            <select ng-model="filters.sort" ng-options="sort.value as sort.name for sort in sorts|orderBy:'name'"></select>
         </label>
 
         <label class="item item-input item-select">
