@@ -12,13 +12,13 @@ angular.module('tabletops.config', [])
         $ionicConfigProvider.tabs.position('bottom'); //other values: top
     }])
 
-    .config(function($cordovaFacebookProvider) {
+    /*.config(function($cordovaFacebookProvider) {
         var appID = 646933472119700;
         var version = "v2.0"; // or leave blank and default is v2.0
         ionic.Platform.ready(function () {
             $cordovaFacebookProvider.browserInit(appID, version);
         });
-    })
+    })*/
 
     // HTTP Defaults
     .config(function ($httpProvider) {
