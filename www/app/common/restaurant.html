@@ -1,47 +1,45 @@
-<ion-view>
+<ion-view >
     <ion-nav-title>
-        {{::listing.name}}
+        <img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}}</span>
+        </div>
     </ion-nav-title>
     <ion-nav-buttons side="right">
-        <button class="button button-icon"
-                ng-class="{ true:'ion-ios-navigate', false:'ion-ios-navigate-outline' }[showDirections]"
-                ng-if="currentTab() == 2 && directionsSet" ng-click="toggleDirections()"></button>
+        <button class="button button-clear button-icon" ng-click="shareThis(listing)">
+            <i class="icon ion-ios-upload"></i>
+        </button>
     </ion-nav-buttons>
-    <ion-content>
-        <ion-list>
-            <div class="item item-thumbnail-left">
-                <img ng-src="{{::listing.logo.path}}">
+    <ion-content class="has-header">
+        <div class="hero has-mask" style="background-image: url('img/bgs/cs21.jpg');height:125px;">
+            <div class="content">
+                <div class="" style="background-color: rgba(0,0,0,.3);height: 47px;">
+                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="beenHere(listing)">
+                        <i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(listing.id)]"></i>
+                    </button>
+                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="favoriteThis(listing)" id="{{::'share_button_'+listing.id}}">
+                        <i class="icon ion-heart" ng-class="{true:'lovely'}[faved(listing.id)]"></i>
+                    </button>
+                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="toMap()">
+                        <i class="icon ion-map light"></i>
+                    </button>
+                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="initCaller(listing)">
+                        <i class="icon ion-ios-telephone balanced"></i>
+                    </button>
+                </div>
 
-                <h2 ng-bind="::listing.name"></h2>
-
-                <p class="row row-no-padding">
-                    <span class="col col-50">
-                        <span ng-bind-html="::showStars(listing.rating_count, listing.rating_cache)"></span>
-                    </span>
-                    <span class="col col-50 text-right">
-                       <span ng-bind-html="::showDollars(listing.restaurant.price_range)"></span>
-                    </span>
-                </p>
             </div>
-            <div class="tabs tabs-light tabs-icon-top" style="position:relative;">
-                <a class="tab-item" ng-click="initCaller(listing)">
-                    <i class="icon ion-ios-telephone"></i>
-                    Call
-                </a>
-                <a class="tab-item" ng-click="favoriteThis(listing)">
-                    <i class="icon ion-heart" ng-class="{true:'calm'}[faved(listing.id)]"></i>
-                    Favorite
-                </a>
-                <a class="tab-item" ng-click="shareThis(listing)">
-                    <i class="icon ion-ios-upload"></i>
-                    Share
-                </a>
-                <a class="tab-item" ng-click="beenHere(listing)">
-                    <i class="icon ion-checkmark" ng-class="{true:'energized'}[been(listing.id)]"></i>
-                    Been There
-                </a>
+        </div>
+        <div class="dark-bg z1">
+            <!--<h3>Dachstein Glacier</h3>-->
+            <!--<p>$1,530 USD</p>-->
+            <div class="row row-no-padding text-center padding-vertical">
+                <div class="col">
+                    <span ng-if="listing" ng-bind-html="::showStars(listing.rating_count, listing.rating_cache)"></span>
+                </div>
+                <div class="col">
+                    <span ng-if="listing" ng-bind-html="::showDollars(listing.restaurant.price_range)"></span>
+                </div>
             </div>
-        </ion-list>
+        </div>
 
         <blockquote ng-if="::listing.summary" class="padding" ng-bind="::listing.summary"></blockquote>
 
@@ -49,21 +47,28 @@
         <p class="padding-horizontal">
             <a class="badge badge-stable" ng-repeat="c in listing.restaurant.cuisines">{{::c.name}}</a>
         </p>
-        <h5 class="padding-horizontal assertive">Address</h5>
-        <ion-list>
-            <div ng-show="::listing.locations.length == 1" ng-repeat="loc in listing.locations">
+        <h5 class="padding-horizontal assertive" ng-pluralize count="::listing.locations.length" when="{'1': 'Location', 'other': 'Locations'}"></h5>
+        <ion-list ng-show="::listing.locations">
+            <h4 class="content padding double-padding-x bar-assertive-100" ng-if="::listing.locations.length==0">Locations currently unavailable.</h4>
+
+            <!--<div ng-show="::listing.locations.length == 1" ng-repeat="loc in listing.locations">
                 <div class="list">
-                    <div class="item">
+                    <div class="item item-button-right">
                         {{::loc.address_1}} {{::loc.address_2}}<br/>
                         {{::loc.locality}}<br/>
-                        {{::loc.province}}
+                        {{::loc.province}}<br/>
+                        <button class="button button-positive ink" ng-click="toMap(loc.id)">
+                            <i class="icon ion-map"></i>
+                        </button>
                     </div>
                     <div class="item" ng-show="loc.phone_1 || loc.phone_2">
                         <div class="button-bar bar-balanced">
-                            <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}"
-                               class="button icon ion-ios-telephone"> {{::loc.phone_1}}</a>
-                            <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}"
-                               class="button icon ion-ios-telephone"> {{::loc.phone_2}}</a>
+                            <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}" class="button button-raised">
+                                <i class="icon ion-ios telephone"></i> {{::loc.phone_1}}
+                            </a>
+                            <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}" class="button button-raised">
+                                <i class="icon ion-ios telephone"></i> {{::loc.phone_2}}
+                            </a>
                         </div>
                     </div>
                     <ion-item ng-repeat="openHour in loc.opening_hours" style="padding: 4px 16px;">
@@ -71,12 +76,44 @@
                         openHour.open).name}} - {{::valById(endHours, openHour.close).name}}
                     </ion-item>
                     <div class="item" ng-if="!loc.opening_hours.length">
-                        Open hours not currently available.
+                        Open hours currently unavailable.
                     </div>
                 </div>
+            </div>-->
+
+            <div ng-if="listing.locations.length">
+                <ion-slide-box class="loc-slider">
+                    <ion-slide class="slide" ng-repeat="loc in listing.locations">
+                        <div class="item card-item double-padding-y">
+                            <div class="card stable-bg ink ink-dark">
+                                <div class="item item-button-right">
+                                    <h2 ng-bind="::loc.name"></h2>
+                                    {{::loc.address_1}}, {{::loc.locality}}<br/>
+                                    {{::loc.province}}<br/>
+                                    <button class="button button-positive ink" ng-click="toMap(loc.id)">
+                                        <i class="icon ion-map"></i>
+                                    </button>
+                                </div>
+                                <div ng-repeat="openHour in loc.opening_hours" class="item no-padding padding-left condensed-space">
+                                    <b>{{::valById(hoursDays, openHour.day).name}}</b>: {{::valById(startHours,
+                                    openHour.open).name}} - {{::valById(endHours, openHour.close).name}}
+                                </div>
+                                <div class="item" ng-if="::!loc.opening_hours.length">
+                                    Open hours currently unavailable.
+                                </div>
+                                <div class="item" ng-show="loc.phone_1 || loc.phone_2">
+                                    <div class="button-bar bar-balanced">
+                                        <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}" class="button button-raised"><i class="icon ion-ios telephone"></i> {{::loc.phone_1}}</a>
+                                        <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}" class="button button-raised"><i class="icon ion-ios telephone"></i> {{::loc.phone_2}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ion-slide>
+                </ion-slide-box>
             </div>
 
-            <div ng-repeat="loc in listing.locations" ng-show="::listing.locations.length>1">
+            <!--<div ng-repeat="loc in listing.locations" ng-show="::listing.locations.length>1">
                 <ion-item class="item-stable"
                           ng-click="toggleThisGroup(loc)"
                           ng-class="{active: isGroupShown(loc)}">
@@ -85,31 +122,33 @@
                 </ion-item>
 
                 <div class="list item-accordion" ng-show="isGroupShown(loc)">
-                    <div class="item">
+                    <div class="item item-button-right">
                         {{::loc.address_1}} {{::loc.address_2}}<br/>
                         {{::loc.locality}}<br/>
-                        {{::loc.province}}
+                        {{::loc.province}}<br/>
+                        <button class="button button-positive ink" ng-click="toMap(loc.id)">
+                            <i class="icon ion-map"></i>
+                        </button>
                     </div>
                     <div class="item" ng-show="loc.phone_1 || loc.phone_2">
                         <div class="button-bar bar-balanced">
-                            <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}"
-                               class="button icon ion-ios-telephone"> {{::loc.phone_1}}</a>
-                            <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}"
-                               class="button icon ion-ios-telephone"> {{::loc.phone_2}}</a>
+                            <a ng-show="loc.phone_1" ng-href="tel:{{loc.phone_1}}" class="button button-raised"><i class="icon ion-ios telephone"></i> {{::loc.phone_1}}</a>
+                            <a ng-show="loc.phone_2" ng-href="tel:{{loc.phone_2}}" class="button button-raised"><i class="icon ion-ios telephone"></i> {{::loc.phone_2}}</a>
                         </div>
                     </div>
-                    <ion-item ng-repeat="openHour in loc.opening_hours" style="padding: 4px 16px;">
+                    <div ng-repeat="openHour in loc.opening_hours" style="padding: 4px 16px;">
                         <b>{{::valById(hoursDays, openHour.day).name}}</b>: {{::valById(startHours,
                         openHour.open).name}} - {{::valById(endHours, openHour.close).name}}
-                    </ion-item>
+                    </div>
                     <div class="item" ng-if="::!loc.opening_hours.length">
-                        Open hours not currently available.
+                        Open hours currently unavailable.
                     </div>
                 </div>
-            </div>
+            </div>-->
         </ion-list>
 
         <div class="list">
+            <!-- Services -->
             <h5 class="padding-horizontal assertive">Services Available</h5>
             <div class="padding-horizontal services-list">
                 <p class="" ng-if="::listing.restaurant.reservations"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;
@@ -132,16 +171,17 @@
             </div>
 
             <!-- Photos -->
-            <h5 class="padding-horizontal assertive" ng-if="::listing.gallery.length">Photos</h5>
-            <ion-scroll ng-if="::!!listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller">
-                <div class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" collection-repeat="photo in listing.gallery|limitTo:25" item-height="100" item-width="110">
-                    <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{::photo.path}});"></div>
+            <h5 class="padding-horizontal assertive">Photos</h5>
+            <h4 class="content padding double-padding-x bar-assertive-100" ng-if="::listing.gallery.length==0">Price Range currently unavailable</h4>
+            <ion-scroll ng-if="::listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller wide-as-needed">
+                <div class="nearby-card" collection-repeat="photo in listing.gallery|limitTo:6" item-height="100" item-width="110">
+                    <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{::photo.path}});min-height: 100px" ></div>
                 </div>
             </ion-scroll>
 
             <!-- Menus -->
             <h5 class="padding-horizontal assertive" ng-if="::listing.restaurant.menus[0].sections.length || listing.restaurant.menus[0].photos.length">Menus</h5>
-            <div ng-repeat="menu in listing.restaurant.menus" ng-if="::listing.restaurant.menus[0].sections.length">
+            <div ng-repeat="menu in listing.restaurant.menus" ng-if="::listing.restaurant.menus[0].sections.length || listing.restaurant.menus[0].photos.length">
                 <ion-item class="item-stable"
                           ng-click="toggleThisGroup(menu)"
                           ng-class="{active: isGroupShown(menu)}">
@@ -178,75 +218,42 @@
             </div>
 
             <!-- Reviews-->
-            <h5 class="padding-horizontal assertive">Reviews</h5>
-            <ion-list type="card" ng-repeat="review in listing.accepted_reviews|limitTo:25">
-                <div class="item item-avatar">
-                    <img ng-src="{{::review.user.avatar}}">
-
-                    <h2 ng-bind="::review.user ? review.user.full_name : 'Anonymous'"></h2>
-
-                    <p class="row row-no-padding">
-                                <span class="col col-50">
-                                    <span ng-bind="::review.timeago"></span>
-                                </span>
-                                <span class="col col-50 text-right">
-                                   <span ng-bind-html="review.rating + ' <i class=\'icon ion-star energized\'></i>'"></span>
-                                </span>
-                    </p>
-                </div>
-
-                <div class="item item-body">
-                    <p ng-bind="review.comment"></p>
-
-                    <p>
-                        <a href="#" class="subdued">{{review.like_count}} Like</a>
-                        <!--<a href="#" class="subdued">5 Comments</a>-->
-                    </p>
-                </div>
-
-                <!--<div class="item tabs tabs-secondary tabs-icon-left">
-                    <a class="tab-item" href="#">
-                        <i class="icon ion-thumbsup"></i>
-                        Like
-                    </a>
-                    <a class="tab-item" href="#">
-                        <i class="icon ion-chatbox"></i>
-                        Comment
-                    </a>
-                    <a class="tab-item" href="#">
-                        <i class="icon ion-share"></i>
-                        Share
-                    </a>
-                </div>-->
-
-            </ion-list>
-        </div>
-
-    </ion-content>
-    <!--<ion-pane class="">
-        <ion-tabs class="tabs-icon-top tabs-dark tabs-bottom tabs-striped">
-
-            <ion-tab title="Map" icon-on="ion-map" icon-off="ion-map">
-                &lt;!&ndash; Tab 2 content &ndash;&gt;
-
-                <ion-content class="has-header must-header has-tabs" scroll="false" data-tap-disabled="true">
-                    <div id="map">
-                        <leaflet defaults="defaults" maxbounds="bounds" markers="markers" center="center" height="100%"
-                                 width="100%"></leaflet>
-                        <div id='errors'></div>
-                        <ion-scroll id='directions' class="animated fast"
-                                    ng-class="{true: 'fadeIn', false: 'fadeOut'}[showDirections && directionsSet]"
-                                    ng-show="showDirections && directionsSet">
-                            <div id='routes'></div>
-                            <div id='instructions'></div>
-                        </ion-scroll>
+            <h5 class="padding-horizontal assertive">Most Recent Reviews</h5>
+            <h4 class="content padding double-padding-x" ng-if="::listing.accepted_reviews.length==0">No reviews yet</h4>
+            <div class="item card-item" ng-repeat="review in listing.accepted_reviews|limitTo:5">
+                <div class="card stable-bg ink ink-dark">
+                    <div class="item item-avatar item-text-wrap in">
+                        <span class="avatar" style="background-image: url('{{::review.user.avatar}}');"></span>
+                        <strong ng-bind="::review.user ? review.user.full_name : 'Anonymous'"></strong>
+                        {{::review.comment}}
+                        <div class="card-footer text-right">
+                            <i class="icon ion-star energized"></i> {{::review.rating}}
+                            <i class="icon ion-heart assertive"></i> {{::review.like_count}}
+                            <div class="pull-left">
+                                <i class="icon ion-clock"></i> {{::review.timeago}}
+                            </div>
+                        </div>
                     </div>
-                </ion-content>
+                </div>
+            </div>
 
-            </ion-tab>
+            <!-- Review Form-->
+            <form class="item border-top" ng-submit="submitReview()">
+                <div class="list">
+                    <label class="item item-input" data-tap-disabled="true">
+                        <rating ng-model="myReview.rate" max="myReview.max"></rating>
+                    </label>
+                    <label class="item item-input">
+                        <textarea ng-model="myReview.body" ng-minlength="4" ng-enter placeholder="Write a review" ng-keyup="expandText()"
+                        ng-keydown="expandText()"></textarea>
+                    </label>
+                </div>
+                <div class="padding">
+                    <button class="button button-block button-positive" ng-disabled="myReview.body.length<4" type="submit">Submit Review</button>
+                </div>
+            </form>
 
-
-        </ion-tabs>
-    </ion-pane>-->
-
+            <h4 class="content padding double-padding-x" ng-if="listing.accepted_reviews.length>5" ui-sref="tabs.restaurant-reviews({id:listing.slug})">View All Reviews</h4>
+        </div>
+    </ion-content>
 </ion-view>

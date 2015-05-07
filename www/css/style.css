@@ -13,6 +13,10 @@
     line-height: 1.5;*/
 }
 
+[nav-view-transition="ios"][nav-view-direction="forward"], [nav-view-transition="ios"][nav-view-direction="back"] {
+    background-color: white;
+}
+
 .title-image {
     padding-top: 4px;
     height: 100%;
@@ -20,12 +24,26 @@
     padding-bottom: 4px;
 }
 
+.no-border {
+    border: none !important;
+}
 
+.lovely {
+    color: #E155BF;
+}
+
+.lovely-bg {
+    background-color: #E155BF;
+}
+
+ion-nav-view {
+    background-color: white;
+}
 /* Dashboard */
-/*.nearby-scroller .collection-repeat-container,
+/*.nearby-scroller .collection-repeat-container,*/
 .gallery-prev-scroller .collection-repeat-container {
     height: 105px;
-}*/
+}
 .nearby-card {
     height: 125px;
     max-width: 360px;
@@ -238,6 +256,18 @@
     font-size: .8rem;
 }
 
+/* Restaurant */
+.loc-slider {
+    height: auto; /* slider height you want */
+}
+.loc-slider .slide {
+    color: #000;
+    background-color: #fff;
+    height: 100%;
+}
+.loc-slider .slider-pager {
+    bottom: auto;
+}
 /* Accordion */
 .list .item.item-accordion {
     line-height: 38px;
@@ -344,15 +374,12 @@
 }
 
 .slider {
-    height: 100%;
+    /*height: 100%;*/
 }
 .slider-slide {
-    padding-top: 80px;
-    color: #000;
-    text-align: center;
-
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-weight: 300;
+    /*text-align: center;*/
+    /*font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;*/
+    /*font-weight: 300;*/
 }
 
 

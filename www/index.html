@@ -6,28 +6,29 @@
     <title>Tabletops</title>
 
     <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
-    <link href="lib/ionic-ion-ios-buttons/ionic.iosButtons.css" rel="stylesheet">
+    <link href="lib/ionic-material/ionic.material.min.css" rel="stylesheet">
+    <link href="lib/ionic-rating/ionic-rating.css" rel="stylesheet">
     <link href="lib/leaflet/dist/leaflet.css" rel="stylesheet">
     <link href="lib/mapbox.js/mapbox.css" rel="stylesheet">
     <link href="lib/leaflet.markercluster/dist/MarkerCluster.css" rel="stylesheet">
     <link href="lib/leaflet.markercluster/dist/MarkerCluster.Default.css" rel="stylesheet">
     <link href="lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css" rel="stylesheet">
     <link href="lib/Leaflet.extra-markers/src/leaflet.extra-markers.css" rel="stylesheet">
-    <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
     <script src="lib/underscore/underscore-min.js"></script>
-    <script src="lib/hello/dist/hello.all.js"></script>
-    <script src="lib/move.js/move.min.js"></script>
+    <!--<script src="lib/move.js/move.min.js"></script>-->
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.min.js"></script>
     <script src="lib/ionic-service-core/ionic-core.js"></script>
     <script src="lib/ionic-service-deploy/ionic-deploy.js"></script>
     <script src="lib/ionic-service-analytics/ionic-analytics.js"></script>
-    <script src="lib/ng-hello/dist/ng-hello.min.js"></script>
+    <script src="lib/ionic-material/ionic.material.min.js"></script>
+    <script src="lib/ionic-rating/ionic-rating.min.js"></script>
+    <script src="lib/ionic-resetfield/dist/ionic.resetfield.min.js"></script>
     <script src="lib/localforage/dist/localforage.min.js"></script>
     <script src="lib/angular-localforage/dist/angular-localForage.min.js"></script>
     <script src="lib/angular-resource/angular-resource.min.js"></script>
@@ -46,6 +47,24 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="lib/ngCordova/ng-cordova.min.js"></script>
     <script src="cordova.js"></script>
+    <script src="lib/facebook-connect-plugin/index.js"></script>
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '646933472119700',
+                xfbml      : true,
+                version    : 'v2.1'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 
     <!-- your app's js -->
     <script src="app/app.js"></script>
@@ -54,86 +73,13 @@
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
 
-    <!--<script src="http://debug.build.phonegap.com/target/target-script-min.js#015884ee-edfa-11e4-9809-5eaf6f758ba7"></script>-->
+    <script src="http://debug.build.phonegap.com/target/target-script-min.js#015884ee-edfa-11e4-9809-5eaf6f758ba7"></script>
 </head>
 <body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak>
-<ion-side-menus>
-    <ion-nav-bar class="bar-assertive" align-title="left">
-        <ion-nav-back-button class="button-clear">
-            <i class="ion-chevron-left"></i> Back
-        </ion-nav-back-button>
-        <ion-nav-buttons side="secondary">
-            <!--<button class="button button-icon ion-compass" ng-click="selectProvinces()"
-                    ng-hide="$exposeAside.active"></button>-->
-        </ion-nav-buttons>
+    <ion-nav-bar class="bar-assertive-900 no-border" ng-class="{expanded: isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
+        <ion-nav-back-button class="no-text"></ion-nav-back-button>
     </ion-nav-bar>
 
-    <ion-side-menu-content drag-content="false">
-        <ion-nav-view></ion-nav-view>
-    </ion-side-menu-content>
-
-    <ion-side-menu side="left">
-        <ion-content scroll="false">
-            <!--<div ng-if="user.id">
-                &lt;!&ndash; SIDEBAR USERPIC &ndash;&gt;
-                <div class="profile-userpic">
-                    <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="" width="100px">
-                    <img ng-if="::!user.avatar" src="http://lorempixel.com/food/200/200" class="img-responsive" alt="">
-                </div>
-                &lt;!&ndash; END SIDEBAR USERPIC &ndash;&gt;
-                &lt;!&ndash; SIDEBAR USER TITLE &ndash;&gt;
-                <div class="profile-usertitle">
-                    <div class="profile-usertitle-name" ng-bind="::user.full_name">
-                    </div>
-                    &lt;!&ndash;<div class="profile-usertitle-job">
-                        Developer
-                    </div>&ndash;&gt;
-                </div>
-            </div>-->
-
-            <!-- END SIDEBAR USER TITLE -->
-            <!-- SIDEBAR BUTTONS -->
-            <div class="profile-userbuttons" ng-if="!user.id">
-                <a menu-close type="button" class="button button-block icon ion-log-in button-clear" ui-sref="signin" ui-sref-active="active">
-                    Sign in
-                </a>
-            </div>
-            <!-- END SIDEBAR BUTTONS -->
-            <div class="list">
-                <a ng-if="user.id" class="item item-avatar" href="#">
-                    <img ng-if="::user.avatar" ng-src="{{::user.avatar}}" class="img-responsive" alt="">
-                    <img ng-if="::!user.avatar" src="http://lorempixel.com/food/200/200" class="img-responsive" alt="">
-                    <h2 ng-bind="::user.full_name"></h2>
-                    <p>Super Foodie</p>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.dashboard" ui-sref-active="active">
-                    <i class="icon ion-home"></i>
-                    Dashboard
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.favorites" ui-sref-active="active">
-                    <i class="icon ion-heart"></i>
-                    Favorites
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.map" ui-sref-active="active">
-                    <i class="icon ion-map"></i>
-                    Explore
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.restaurants" ui-sref-active="active">
-                    <i class="icon ion-pizza"></i>
-                    Restaurants
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-                <a menu-close class="item item-icon-left item-icon-right" ui-sref="tabs.settings" ui-sref-active="active">
-                    <i class="icon ion-gear-a"></i>
-                    Settings
-                    <i class="icon ion-ios-arrow-right"></i>
-                </a>
-            </div>
-        </ion-content>
-    </ion-side-menu>
-</ion-side-menus>
+    <ion-nav-view></ion-nav-view>
 </body>
 </html>

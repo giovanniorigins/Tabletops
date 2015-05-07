@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ngHello', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
+angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
     .run(function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage) {
         $ionicPlatform.ready(function () {
@@ -18,21 +18,14 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 // org.apache.cordova.statusbar required
                 StatusBar.styleLightContent();
             }
-
-            /*var info = {
-                deviceInformation: ionic.Platform.device(),
-
-            isWebView: ionic.Platform.isWebView(),
-            isIPad: ionic.Platform.isIPad(),
-            isIOS: ionic.Platform.isIOS(),
-            isAndroid: ionic.Platform.isAndroid(),
-            isWindowsPhone: ionic.Platform.isWindowsPhone()
-            };
-            console.log(info);*/
         });
 
+        $rootScope.navbarColor = function (color) {
+            return color || 'bar-assertive';
+        };
+
         $rootScope.$on('loading:show', function () {
-            $ionicLoading.show({template: '<ion-spinner icon="ripple" class="spinner-assertive"></ion-spinner>'});
+            $ionicLoading.show({template: '<div class="loader"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>'});
         });
 
         $rootScope.$on('loading:hide', function () {
@@ -47,20 +40,10 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             });
 
         $rootScope.$on('$stateChangeSuccess', function (e, toState/*, toParams, fromState, fromParams, a*/) {
-            console.log('To: ', toState);
+            //console.log('To: ', toState);
             //console.log('Params: ', fromParams);
             $rootScope.filtersMenu = toState.name === "restaurants";
-            /*if (toState.data.checkAuth && !User.isAuthorized) {
-             e.preventDefault();
-             AuthService.doAsyncThing().then(function (res) {
-             $state.go(toState, toParams, {notify: false}).then(function () {
-             $rootScope.$broadcast('$stateChangeSuccess', toState, toParams, fromState);
-             }).catch(function (err) {
-             // do something here, redirect, or let your $stateChangeError handler catch
-             console.log('Error: ', err);
-             })
-             });
-             }*/
+            ionic.material.ink.displayEffect();
         });
 
         $rootScope.valById = function (arr, id) {
@@ -71,10 +54,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         $rootScope.filters = {
             toggles: {}
         };
-        $rootScope.filtersMenu = false;
-
         $rootScope.directionsSet = false;
-        $rootScope.provincesMenu = false;
 
         $rootScope.cuisines = $rootScope.sorts = $rootScope.favorites = $rootScope.been = [];
         $rootScope.myLocation = {};
@@ -86,15 +66,11 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
 
         //Load Been
         $localForage.getItem('been').then(function (data) {
-            $rootScope.been = data;
+            $rootScope.beens = data;
         });
     })
 
-    .config(function ($stateProvider, $urlRouterProvider, helloProvider, CIDs) {
-        helloProvider.init({
-            facebook: CIDs.facebook
-        });
-
+    .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
             // Tabs
             .state('tabs', {
@@ -153,12 +129,12 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'dashboard-tab': {
                         templateUrl: 'app/common/restaurant.html',
-                        controller: 'RestaurantCtrl',
+                        controller: 'RestaurantCtrl'/*,
                         resolve: {
                             listing: function (Listing, $stateParams, $http) {
                                 return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
                             }
-                        }
+                        }*/
                     }
                 }
             })
@@ -167,12 +143,47 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'dashboard-tab': {
                         templateUrl: 'app/common/restaurant.html',
-                        controller: 'RestaurantCtrl',
+                        controller: 'RestaurantCtrl'/*,
                         resolve: {
-                            listing: function (Listing, $stateParams, $http) {
-                                return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
+                            listing: function (Listing, $stateParams, $http, $localForage) {
+                                return $localForage.getItem('currentListing').then(function (data) {
+                                    console.log('Getting "currentListing"');
+                                    console.log(data);
+                                    return data;
+                                });
+                                //return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
                             }
-                        }
+                        }*/
+                    }
+                }
+            })
+            .state('tabs.restaurant-map', {
+                url: '/dashboard/restaurants/:id/map',
+                views: {
+                    'dashboard-tab': {
+                        templateUrl: 'app/common/restaurant-map.html',
+                        params: [
+                            'target'
+                        ],
+                        controller: 'RestaurantMapCtrl'
+                    }
+                }
+            })
+            .state('tabs.restaurant-reviews', {
+                url: '/dashboard/restaurants/:id/reviews',
+                views: {
+                    'dashboard-tab': {
+                        templateUrl: 'app/common/restaurant-reviews.html',
+                        controller: 'RestaurantReviewsCtrl'
+                    }
+                }
+            })
+            .state('tabs.restaurant-gallery', {
+                url: '/dashboard/restaurants/:id/gallery',
+                views: {
+                    'dashboard-tab': {
+                        templateUrl: 'app/common/restaurant-gallery.html',
+                        controller: 'RestaurantGalleryCtrl'
                     }
                 }
             })
@@ -190,12 +201,12 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'favorites-tab': {
                         templateUrl: 'app/common/restaurant.html',
-                        controller: 'RestaurantCtrl',
+                        controller: 'RestaurantCtrl'/*,
                         resolve: {
                             listing: function (Listing, $stateParams, $http) {
                                 return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
                             }
-                        }
+                        }*/
                     }
                 }
             })
@@ -205,6 +216,17 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                     'map-tab': {
                         templateUrl: "app/map/map.html",
                         controller: 'MapCtrl'
+                    }
+                }
+            })
+
+            // Account Tab
+            .state('tabs.account', {
+                url: '/account',
+                views: {
+                    'account-tab': {
+                        templateUrl: 'app/account/account.html',
+                        controller: 'AccountCtrl'
                     }
                 }
             })
@@ -304,7 +326,8 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             });
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/tab/dashboard');
+        //$urlRouterProvider.otherwise('/tab/dashboard');
         //$urlRouterProvider.otherwise('/sign-in');
+        $urlRouterProvider.otherwise('/splash');
 
     });
