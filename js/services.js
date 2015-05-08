@@ -396,6 +396,46 @@ angular.module('tabletops.services', [])
             return repo;
         }
     ])
+    .factory('UserActions', function ($rootScope, $http, $cordovaCamera, $localForage, $cordovaFacebook) {
+        var repo = {
+            takePicture: function (obj) {
+                var options = {
+                    quality: 50,
+                    destinationType: Camera.DestinationType.DATA_URL,
+                    sourceType: Camera.PictureSourceType.CAMERA,
+                    allowEdit: true,
+                    encodingType: Camera.EncodingType.JPEG,
+                    targetWidth: 300,
+                    targetHeight: 300,
+                    popoverOptions: CameraPopoverOptions,
+                    correctOrientation: true,
+                    saveToPhotoAlbum: true
+                };
+
+                $cordovaCamera.getPicture(options).then(function(imageData) {
+                    console.log(imageData);
+                    console.log("data:image/jpeg;base64," + imageData);
+                    //var image = document.getElementById('myImage');
+                    //image.src = "data:image/jpeg;base64," + imageData;
+                }, function(err) {
+                    // error
+                    console.log('Camera Error');
+                    console.log(err);
+                });
+
+                $cordovaCamera.cleanup().then(function (res) {
+                    console.log(res);
+                }, function (err) {
+                    console.log(err);
+                });
+
+            },
+            review: function () {
+
+            }
+        };
+        return repo;
+    })
 /*.factory('', ['$scope', '$ionicModal', function ($scope, $ionicModal) {
  $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
  scope: $scope,
