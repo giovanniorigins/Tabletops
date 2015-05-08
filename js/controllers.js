@@ -95,7 +95,7 @@ var closestLocation = function (targetLocation, locationData) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl',
-    function ($rootScope, $scope, $ionicPlatform, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal, $timeout) {
+    function ($rootScope, $scope, $ionicPlatform, $ionicScrollDelegate, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal, $timeout) {
         $scope.settings = {
             geolocation: false,
             province: {}
@@ -219,6 +219,18 @@ angular.module('tabletops.controllers', [])
 
         $scope.initCaller = function (obj) {
             ListingRepository.initCaller(obj);
+        };
+
+        $scope.initCaller = function (obj) {
+            ListingRepository.initCaller(obj);
+        };
+
+        $scope.callLocation = function (locations, index) {
+            ListingRepository.callLocation(locations, index)
+        };
+
+        $scope.scrollTop = function() {
+            $ionicScrollDelegate.scrollTop();
         };
 
         $scope.$on('event:auth-loginConfirmed', function () {
@@ -427,6 +439,9 @@ angular.module('tabletops.controllers', [])
                 if (data && data.length > 0) {
                     Listing.query({ids: angular.toJson(data)}, function (res) {
                         $scope.faves = res;
+                        $scope.$broadcast('scroll.refreshComplete');
+                    }, function (res) {
+                        console.log(res);
                         $scope.$broadcast('scroll.refreshComplete');
                     });
                 }
@@ -723,11 +738,12 @@ angular.module('tabletops.controllers', [])
                 }
                 $scope.restaurants = Listing.query($scope.filters);
                 $scope.restaurants.$promise.finally(function () {
-                    ionic.material.motion.blinds();
                     $timeout(function () {
                         // Set Ink
+                        ionic.material.motion.blinds();
+
                         ionic.material.ink.displayEffect();
-                    }, 600);
+                    }, 300);
                     $scope.$broadcast('scroll.refreshComplete');
                     $scope.$watchCollection('filters', function (newValue, oldValue) {
 
@@ -776,7 +792,7 @@ angular.module('tabletops.controllers', [])
             $scope.toRestaurant = function (id) {
                 var obj = _.findWhere($scope.restaurants, {slug: id});
                 $localForage.setItem('currentListing', obj).then(function () {
-                    $scope.$broadcast('loading:show');
+                    $rootScope.$emit('loading:show');
                     $state.go('tabs.restaurant', {id: id});
                 })
             };
@@ -795,8 +811,8 @@ angular.module('tabletops.controllers', [])
             ionic.material.ink.displayEffect();
 
         }])
-    .controller('RestaurantCtrl', ['$scope', 'Listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$localForage', 'HoursDays', 'StartHours', 'EndHours',
-        function ($scope, Listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $localForage, HoursDays, StartHours, EndHours) {
+    .controller('RestaurantCtrl', ['$scope', 'Listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$localForage', 'HoursDays', 'StartHours', 'EndHours', 'UserActions',
+        function ($scope, Listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $localForage, HoursDays, StartHours, EndHours, UserActions) {
 
             $localForage.getItem('currentListing').then(function (data) {
                 $scope.listing = data;
@@ -824,23 +840,45 @@ angular.module('tabletops.controllers', [])
                         $state.go('tabs.restaurant-map', {id: $scope.listing.id, target: id});
                     })
                 };
+                $scope.addPhotos = function () {
+                    var picture = UserActions.takePicture(data);
+                    console.log(picture);
+                };
+
+                // Review Modal
+                $ionicModal.fromTemplateUrl('app/restaurants/review-modal.html', {
+                    scope: $scope,
+                    animation: 'slide-in-up'
+                }).then(function (modal) {
+                    $scope.reviewModal = modal;
+                });
+
+                $scope.openReviewModal = function () {
+                    $scope.reviewModal.show();
+                };
+                $scope.closeReviewModal = function () {
+                    $scope.reviewModal.hide();
+                };
 
                 // Image View Modal
                 $ionicModal.fromTemplateUrl('app/restaurants/image-modal.html', {
                     scope: $scope,
                     animation: 'slide-in-up'
                 }).then(function (modal) {
-                    $scope.modal = modal;
+                    $scope.imageModal = modal;
                 });
+
                 $scope.openModal = function () {
-                    $scope.modal.show();
+                    $scope.imageModal.show();
                 };
                 $scope.closeModal = function () {
-                    $scope.modal.hide();
+                    $scope.imageModal.hide();
                 };
+
                 //Cleanup the modal when we're done with it!
                 $scope.$on('$destroy', function () {
-                    $scope.modal.remove();
+                    $scope.reviewModal.remove();
+                    $scope.imageModal.remove();
                     $scope.isExpanded = false;
                 });
                 // Execute action on hide modal
@@ -869,10 +907,11 @@ angular.module('tabletops.controllers', [])
 
             $scope.submitReview = function () {
                 alert($scope.myReview);
+                UserActions.review();
             };
 
             $scope.expandText = function(){
-                var element = document.getElementById("txtnotes");
+                var element = document.getElementsByTagName("textarea")[0];
                 element.style.height =  element.scrollHeight + "px";
             };
 

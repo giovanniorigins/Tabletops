@@ -43,19 +43,22 @@ angular.module('tabletops.services', [])
                             $localForage.removeItem('userCreds', user);
                             return $rootScope.$broadcast('event:auth-login-failed', status);
                         }
+
                         $localForage.setItem('authorizationToken', data.token);
-                        $http.defaults.headers.common.Authorization = data.token;  // Step 1
+                        $http.defaults.headers.common.Authorization = 'Bearer ' + data.token;
+
+                        // Step 1
 
                         // Need to inform the http-auth-interceptor that
                         // the user has logged in successfully.  To do this, we pass in a function that
                         // will configure the request headers with the authorization token so
                         // previously failed requests(aka with status == 401) will be resent with the
                         // authorization token placed in the header
-                        authService.loginConfirmed(data, function (config) {  // Step 2 & 3
+                        /*authService.loginConfirmed(data, function (config) {  // Step 2 & 3
                             config.headers["Authorization"] = data.token;
                             config.headers.Authorization = data.token;
                             return config;
-                        });
+                        });*/
                     })
                     .error(function (data, status, headers, config) {
                         $localForage.removeItem('userCreds', user);
@@ -156,6 +159,7 @@ angular.module('tabletops.services', [])
 
                             $localForage.setItem('user', res.profile);
                             $localForage.setItem('authorizationToken', res.token);
+                            $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
                             $rootScope.$broadcast('event:auth-loginConfirmed');
                             $state.go('tabs.dashboard');
                         })
@@ -387,14 +391,51 @@ angular.module('tabletops.services', [])
                 },
                 foo2: function () {
 
-                },
-                foo: function () {
-                    alert("I'm foo!");
                 }
             };
             return repo;
         }
     ])
+    .factory('UserActions', function ($rootScope, $http, $cordovaCamera, $localForage, $cordovaFacebook) {
+        var repo = {
+            takePicture: function (obj) {
+                var options = {
+                    quality: 50,
+                    destinationType: Camera.DestinationType.DATA_URL,
+                    sourceType: Camera.PictureSourceType.CAMERA,
+                    allowEdit: true,
+                    encodingType: Camera.EncodingType.JPEG,
+                    targetWidth: 300,
+                    targetHeight: 300,
+                    popoverOptions: CameraPopoverOptions,
+                    correctOrientation: true,
+                    saveToPhotoAlbum: true
+                };
+
+                $cordovaCamera.getPicture(options).then(function(imageData) {
+                    console.log(imageData);
+                    console.log("data:image/jpeg;base64," + imageData);
+                    //var image = document.getElementById('myImage');
+                    //image.src = "data:image/jpeg;base64," + imageData;
+                }, function(err) {
+                    // error
+                    console.log('Camera Error');
+                    console.log(err);
+                });
+
+                $cordovaCamera.cleanup().then(function (res) {
+                    console.log(res);
+                }, function (err) {
+                    console.log(err);
+                });
+
+            },
+            review: function () {
+
+            }
+        };
+        return repo;
+    })
 /*.factory('', ['$scope', '$ionicModal', function ($scope, $ionicModal) {
  $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
  scope: $scope,
