@@ -902,12 +902,20 @@ angular.module('tabletops.controllers', [])
             $scope.myReview = {
                 max: 5,
                 rate: 3,
-                body: ''
+                body: '',
+                user_id: $localForage.getItem('user').then(function (res) {
+                    return $scope.myReview.user_id = res.user_id;
+                }),
+                facebook: false,
+                google: false
             };
 
             $scope.submitReview = function () {
-                alert($scope.myReview);
-                UserActions.review();
+                var promise = UserActions.review($scope.listing, $scope.myReview);
+                promise.$promise.then(function(data) {
+                    console.log(data);
+                    $scope.closeReviewModal();
+                });
             };
 
             $scope.expandText = function(){

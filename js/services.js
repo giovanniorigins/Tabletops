@@ -6,7 +6,8 @@ angular.module('tabletops.services', [])
     })
     .factory('Listing', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
         return $resource(ApiEndpoint.api + "/listings/:id", {}, {
-            query: {url: ApiEndpoint.api + "/listings/:cuisine", method: 'GET', isArray: true, cache: true}
+            query: {url: ApiEndpoint.api + "/listings/:cuisine", method: 'GET', isArray: true, cache: true},
+            update: { method: 'PUT' }
         });
     }])
     .factory('Locations', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
@@ -374,7 +375,7 @@ angular.module('tabletops.services', [])
                     } else {
                         for (i = 1; i <= 4; i++) {
                             var ending = i <= range ? 'balanced' : '';
-                            str += '<i class="icon ion-social-usd ' + ending + '"></i>';
+                            str += '<i class="icon ion-social-usd ' + ending + '"></i> ';
                         }
                     }
                     return $sce.trustAsHtml(str);
@@ -396,7 +397,7 @@ angular.module('tabletops.services', [])
             return repo;
         }
     ])
-    .factory('UserActions', function ($rootScope, $http, $cordovaCamera, $localForage, $cordovaFacebook) {
+    .factory('UserActions', function ($rootScope, Listing, $http, $cordovaCamera, $localForage, $cordovaFacebook) {
         var repo = {
             takePicture: function (obj) {
                 var options = {
@@ -430,37 +431,29 @@ angular.module('tabletops.services', [])
                 });
 
             },
-            review: function () {
+            review: function (listing, review) {
+                return Listing.update({id: listing.id}, { action: 'review', comment: review.body, user_id: review.user_id, rating: review.rate }, function (response) {
+                    console.log(response);
+                    return $localForage.getItem('user').then(function (user) {
+                        if (user.provider === 'Facebook' && review.facebook) {
+                            var message = angular.toJson(review.body);
+                            return $cordovaFacebook.api('/me/bahamastabletops:review?method=post&message='+message+'&restaurant=http://flamingo.gorigins.com/np-pi/'+listing.slug, ['publish_actions'])
+                                .then(function(success) {
+                                    // success
+                                    console.log(success);
+                                    return success;
+                                }, function (error) {
+                                    // error
+                                    console.log(error);
+                                    return error;
+                                });
+                        }
+                    })
+                }, function (err) {
+                    console.log(err);
 
+                })
             }
         };
         return repo;
     })
-/*.factory('', ['$scope', '$ionicModal', function ($scope, $ionicModal) {
- $ionicModal.fromTemplateUrl('app/common/filtersModal.html', {
- scope: $scope,
- animation: 'slide-in-up'
- }).then(function(modal) {
- $scope.modal = modal;
- });
- //Cleanup the modal when we're done with it!
- $scope.$on('$destroy', function() {
- $scope.modal.remove();
- });
- // Execute action on hide modal
- $scope.$on('modal.hidden', function() {
- // Execute action
- });
- // Execute action on remove modal
- $scope.$on('modal.removed', function() {
- // Execute action
- });
- return {
- openFiltersModal: function () {
- $scope.modal.show();
- },
- closeFiltersModal: function () {
- $scope.modal.hide();
- }
- }
- }])*/

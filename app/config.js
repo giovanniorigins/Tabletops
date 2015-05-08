@@ -23,6 +23,7 @@ angular.module('tabletops.config', [])
     // HTTP Defaults
     .config(function ($httpProvider) {
         //$httpProvider.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8';
+        $httpProvider.defaults.withCredentials = true;
         $httpProvider.interceptors.push('timeoutHttpIntercept');
         $httpProvider.interceptors.push(function ($rootScope) {
             return {
