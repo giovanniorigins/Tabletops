@@ -1,0 +1,27 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-assertive-900">
+        <div class="buttons buttons-left">
+            <span class="left-buttons">
+                <button class="button button-clear light button-icon icon ion-ios-arrow-left" ng-click="closeReviewModal()"></button>
+            </span>
+        </div>
+
+        <h1 class="title title-center light">Review</h1>
+    </ion-header-bar>
+    <ion-content>
+        <form class="item border-top" ng-submit="submitReview()">
+            <div class="list">
+                <label class="item item-input" data-tap-disabled="true">
+                    <rating ng-model="myReview.rate" max="myReview.max"></rating>
+                </label>
+                <label class="item item-input">
+                        <textarea ng-model="myReview.body" ng-minlength="4" ng-enter placeholder="Write a review" ng-keyup="expandText()"
+                                  ng-keydown="expandText()"></textarea>
+                </label>
+            </div>
+            <div class="padding">
+                <button class="button button-block button-positive" ng-disabled="myReview.body.length<4" type="submit">Submit Review</button>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

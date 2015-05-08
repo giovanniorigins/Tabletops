@@ -10,7 +10,7 @@
     </div>
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
-        <ion-list class="animate-ripple">
+        <ion-list class="">
             <a ng-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" class="item" data-ink-color="#B71C1C" ng-click="toRestaurant(res.slug)">
                 <!--<span class="avatar" style="background-image: url('{{::res.logo.path}}');"></span>-->
                 <h2 class="assertive-900" ng-bind="::res.name"></h2>
