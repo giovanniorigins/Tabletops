@@ -14,6 +14,7 @@
     <link href="lib/leaflet.markercluster/dist/MarkerCluster.Default.css" rel="stylesheet">
     <link href="lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css" rel="stylesheet">
     <link href="lib/Leaflet.extra-markers/src/leaflet.extra-markers.css" rel="stylesheet">
+    <link href='https://api.tiles.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.1.0/mapbox.directions.css' type='text/css' />
     <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
@@ -37,7 +38,6 @@
     <script src="lib/leaflet/dist/leaflet.js"></script>
     <script src="lib/mapbox.js/mapbox.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.1.0/mapbox.directions.js'></script>
-    <link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox.js/plugins/mapbox-directions.js/v0.1.0/mapbox.directions.css' type='text/css' />
     <script src="lib/leaflet.offline/offlinemap.js"></script>
     <script src="lib/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <script src="lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js"></script>
@@ -47,7 +47,7 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="lib/ngCordova/ng-cordova.min.js"></script>
     <script src="cordova.js"></script>
-    <script src="lib/facebook-connect-plugin/index.js"></script>
+    <!--<script src="lib/facebook-connect-plugin/index.js"></script>
     <script>
         window.fbAsyncInit = function() {
             FB.init({
@@ -64,7 +64,7 @@
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-    </script>
+    </script>-->
 
     <!-- your app's js -->
     <script src="app/app.js"></script>
@@ -76,7 +76,7 @@
     <script src="http://debug.build.phonegap.com/target/target-script-min.js#015884ee-edfa-11e4-9809-5eaf6f758ba7"></script>
 </head>
 <body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak>
-<div id="fb-root"></div>
+<!--<div id="fb-root"></div>-->
     <ion-nav-bar class="bar-assertive-900 no-border" ng-class="{expanded: isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
         <ion-nav-back-button class="no-text"></ion-nav-back-button>
     </ion-nav-bar>
