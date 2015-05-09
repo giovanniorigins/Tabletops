@@ -432,28 +432,53 @@ angular.module('tabletops.services', [])
 
             },
             review: function (listing, review) {
-                return Listing.update({id: listing.id}, { action: 'review', comment: review.body, user_id: review.user_id, rating: review.rate }, function (response) {
-                    console.log(response);
-                    return $localForage.getItem('user').then(function (user) {
-                        if (user.provider === 'Facebook' && review.facebook) {
-                            var message = angular.toJson(review.body);
-                            return $cordovaFacebook.api('/me/bahamastabletops:review?method=post&message='+message+'&restaurant=http://flamingo.gorigins.com/np-pi/'+listing.slug, ['publish_actions'])
-                                .then(function(success) {
-                                    // success
-                                    console.log(success);
-                                    return success;
-                                }, function (error) {
-                                    // error
-                                    console.log(error);
-                                    return error;
-                                });
-                        }
-                    })
-                }, function (err) {
-                    console.log(err);
+                $localForage.get('user').then(function (res) {
+                   if (res && res.id) {
+                       return Listing.update({id: listing.id}, { action: 'review', comment: review.body, user_id: review.user_id, rating: review.rate }, function (response) {
+                           console.log(response);
+                           return $localForage.getItem('user').then(function (user) {
+                               if (user.provider === 'Facebook' && review.facebook) {
+                                   var message = angular.toJson(review.body);
+                                   return $cordovaFacebook.api('/me/bahamastabletops:review?method=post&message='+message+'&restaurant=http://flamingo.gorigins.com/np-pi/'+listing.slug, ['publish_actions'])
+                                       .then(function(success) {
+                                           // success
+                                           console.log(success);
+                                           return success;
+                                       }, function (error) {
+                                           // error
+                                           console.log(error);
+                                           return error;
+                                       });
+                               }
+                           })
+                       }, function (err) {
+                           console.log(err);
 
+                       })
+                   } else {
+                       //Dialogs.promptToLogin('write a review.');
+                   }
                 })
+
             }
         };
         return repo;
     })
+    .factory('Dialogs', ['$cordovaDialogs', function ($cordovaDialogs, $state) {
+        var repo = {
+            promptToLogin: function (action) {
+                $cordovaDialogs.confirm('You must login, before you can ' + action, 'Must Login', ['Cancel','Login'])
+                    .then(function(buttonIndex) {
+                        // no button = 0, 'Cancel' = 1, 'Login' = 2
+                        var btnIndex = buttonIndex;
+                        switch (btnIndex) {
+                            case 2:
+                                return $state.go('signin');
+                                break
+                        }
+
+                    });
+            }
+        };
+        return repo;
+    }]);
