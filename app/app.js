@@ -18,8 +18,6 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 // org.apache.cordova.statusbar required
                 StatusBar.styleLightContent();
             }
-
-
         });
 
         $rootScope.navbarColor = function (color) {
@@ -34,12 +32,13 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
             $ionicLoading.hide();
         });
 
-        $ionicDeploy.watch().then(function () {
+        /*$ionicDeploy.watch().then(function () {
             }, function () {
+
             },
             function (hasUpdate) {
                 // Handle response
-            });
+            });*/
 
         $rootScope.$on('$stateChangeSuccess', function (e, toState/*, toParams, fromState, fromParams, a*/) {
             //console.log('To: ', toState);
