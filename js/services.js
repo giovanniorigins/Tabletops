@@ -46,6 +46,7 @@ angular.module('tabletops.services', [])
                         }
 
                         $localForage.setItem('authorizationToken', data.token);
+                        $localForage.setItem('providerToken', data.token);
                         $http.defaults.headers.common.Authorization = 'Bearer ' + data.token;
 
                         service.authHandler('email');
