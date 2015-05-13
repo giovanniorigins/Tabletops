@@ -6,7 +6,7 @@
     <description>Tabletops helps you to find and explore great foods and share your experiences with others.</description>
     <author href="http://gorigins.com" email="jerezb31@gmail.com">Jerez Bain</author>
     <access origin="*" />
-    <!--<content src="index.html"/>-->
+    <content src="index.html"/>
     <!--<access origin="*.gorigins.com" />-->
     <icon src="resources/icon.png" />
     <gap:splash src="resources/splash.png"/>
