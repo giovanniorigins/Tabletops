@@ -1,0 +1,31 @@
+{
+  "node": true,
+  "browser": true,
+  "esnext": true,
+  "bitwise": true,
+  "camelcase": false,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "indent": 2,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "quotmark": "single",
+  "regexp": true,
+  "undef": false,
+  "unused": false,
+  "strict": true,
+  "trailing": true,
+  "smarttabs": true,
+  "globals": {
+    //"_": false,
+    "L": false,
+    "Camera": false,
+    "CameraPopoverOptions": false,
+    "angular": false,
+    "cordova": false,
+    "ionic": false,
+    "StatusBar": false
+  }
+}

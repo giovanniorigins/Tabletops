@@ -1,0 +1,32 @@
+{
+  "name": "ionic-resetfield",
+  "version": "0.1.0",
+  "homepage": "https://github.com/fraserxu/ionic-resetfield",
+  "authors": [
+    "fraserxu <xvfeng123@gmail.com>"
+  ],
+  "description": "A ionic style angularjs directive to display a info bar in the page header.",
+  "main": "dist/ionic.resetfield.js",
+  "keywords": [
+    "ionic",
+    "angularjs"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "b615393b03f014540ca799bfe3fd35f93346ee7e"
+  },
+  "_source": "git://github.com/fraserxu/ionic-resetfield.git",
+  "_target": "~0.1.0",
+  "_originalSource": "ionic-resetfield",
+  "_direct": true
+}

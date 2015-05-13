@@ -1,0 +1,21 @@
+<ion-view view-title="Search Cuisines">
+    <div class="bar bar-subheader item-input-inset">
+        <label class="item-input-wrapper">
+            <i class="icon ion-ios7-search placeholder-icon"></i>
+            <input type="search" placeholder="Search" ng-model="filters.search">
+        </label>
+    </div>
+    <ion-content class="has-subheader has-tabs">
+        <ion-refresher
+                pulling-text="Pull to refresh..."
+                on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list>
+            <a ng-repeat="c in cuisines|filter:filters.search|orderBy:'name'" ng-show="::c.restaurants_count.length" class="item ink" data-ink-color="#B71C1C" ui-sref="tabs.cuisine({id: c.slug})">
+                <h2>{{::c.name}}</h2>
+                <span class="badge badge-dark" ng-bind="::c.restaurants_count.length"></span>
+            </a>
+        </ion-list>
+    </ion-content>
+
+</ion-view>
