@@ -259,6 +259,17 @@ module.exports = function (grunt) {
                 dest: '.temp/<%= yeoman.styles %>/',
                 src: '{,*/}*.css'
             },
+            resources: {
+                expand: true,
+                cwd: 'resources/',
+                dest: '<%= yeoman.dist %>/resources/',
+                src: '*'
+            },
+            config: {
+                expand: true,
+                dest: '<%= yeoman.dist %>/',
+                src: 'config.xml'
+            },
             fonts: {
                 expand: true,
                 cwd: 'app/lib/ionic/release/fonts/',
@@ -298,6 +309,7 @@ module.exports = function (grunt) {
             server: [
                 'copy:styles',
                 'copy:vendor',
+                'copy:resources',
                 'copy:fonts'
             ],
             test: [
@@ -308,7 +320,9 @@ module.exports = function (grunt) {
             dist: [
                 'copy:styles',
                 'copy:vendor',
-                'copy:fonts'
+                'copy:resources',
+                'copy:fonts',
+                'copy:config'
             ]
         },
 
