@@ -72,6 +72,7 @@
         <param name="APP_ID" value="646933472119700"/>
         <param name="APP_NAME" value="Tabletops"/>
     </gap:plugin>
+    <!--<gap:plugin name="com.angelolakra.cordova.mbxmapkit"/>-->
     <gap:plugin name="com.ohh2ahh.plugins.appavailability"/>
     <gap:plugin name="org.pushandplay.cordova.apprate"/>
     <gap:plugin name="nl.x-services.plugins.socialsharing" source="plugins.cordova.io"/>

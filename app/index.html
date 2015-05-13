@@ -28,6 +28,8 @@
     <!-- build:js js/ionic-ext.js -->
     <script src="lib/ionic-service-core/ionic-core.js"></script>
     <script src="lib/ionic-service-deploy/ionic-deploy.js"></script>
+    <script src="lib/angular-websocket/angular-websocket.min.js"></script>
+    <script src="lib/ionic-service-push/ionic-push.js"></script>
     <script src="lib/ionic-service-analytics/ionic-analytics.js"></script>
     <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
     <script src="lib/ionic-rating/ionic-rating.js"></script>
@@ -43,14 +45,12 @@
     <script src="lib/mapbox.js/mapbox.js"></script>
     <!-- endbuild -->
 
-    <!-- build:js js/leaflet-exts.js -->
     <script src='vendor/mapbox.directions.js'></script>
     <script src="lib/leaflet.offline/offlinemap.js"></script>
     <script src="lib/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <script src="lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.min.js"></script>
     <script src="lib/Leaflet.extra-markers/src/leaflet.extra-markers.js"></script>
     <script src="lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
-    <!-- endbuild -->
 
     <!-- build:js js/cordova-exts.js -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
@@ -59,7 +59,7 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <script>
+    <!--<script>
         window.fbAsyncInit = function() {
             FB.init({
                 appId      : '646933472119700',
@@ -75,7 +75,7 @@
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-    </script>
+    </script>-->
 
     <!-- build:js js/app-tabletops.js -->
     <script src="scripts/app.js"></script>

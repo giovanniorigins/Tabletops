@@ -5,13 +5,17 @@ angular.module('tabletops.config', [])
         $ionicAppProvider.identify({
             app_id: 'b6dadb11',
             api_key: '01a8f4b712103d1b9c6186b4795e2a298a1ed1afe28dc027',
-            api_write_key: '75b5d94940459ffdb9931c83d5def7ee78cd7f6686ce5782a7f963e3b1a7d1bbb9508ba5aec7d80883b320958fcd2149966ac93cfff7edc9937dbd864f632e0b865cc74823cbb40716f85d32f45b6dfa54abfa4440c1fb649bda66443085201d0179f6732b9579fd5d15dc1ea670474bc27e4e06fb3fed65ef4f54b45a991eb19a3a1c436595815329593c3267953852'
+            api_write_key: '75b5d94940459ffdb9931c83d5def7ee78cd7f6686ce5782a7f963e3b1a7d1bbb9508ba5aec7d80883b320958fcd2149966ac93cfff7edc9937dbd864f632e0b865cc74823cbb40716f85d32f45b6dfa54abfa4440c1fb649bda66443085201d0179f6732b9579fd5d15dc1ea670474bc27e4e06fb3fed65ef4f54b45a991eb19a3a1c436595815329593c3267953852',
+            gcm_id: 'bahama-foodie'
         });
     }])
 
     .config(['$ionicConfigProvider', function($ionicConfigProvider) {
         'use strict';
-        $ionicConfigProvider.tabs.position('bottom'); //other values: top
+        // Tabs
+        $ionicConfigProvider.tabs.position('bottom');
+        // Native Scrolling: false, JS Scrolling: true
+        $ionicConfigProvider.platform.android.scrolling.jsScrolling(false);
     }])
 
     .config(['$cordovaFacebookProvider', function($cordovaFacebookProvider) {
@@ -173,6 +177,6 @@ angular.module('tabletops.config', [])
     .filter('groupBy', ['_', function (_) {
         'use strict';
         return function (items, group) {
-            _.groupBy(items, group);
+            return _.groupBy(items, group);
         };
     }]);

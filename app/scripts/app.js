@@ -5,7 +5,7 @@ var valById = function (arr, id) {
     });
 };
 
-angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'underscore', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
+angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
     .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$localForage', function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage) {
         'use strict';
@@ -70,6 +70,11 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
         $localForage.getItem('been').then(function (data) {
             $rootScope.beens = data;
         });
+
+        $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
+            console.log('Got token', data.token, data.platform);
+            // Do something with the token
+        });
     }])
 
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
@@ -132,12 +137,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'dashboard-tab': {
                         templateUrl: 'views/common/restaurant.html',
-                        controller: 'RestaurantCtrl'/*,
-                         resolve: {
-                         listing: function (Listing, $stateParams, $http) {
-                         return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
-                         }
-                         }*/
+                        controller: 'RestaurantCtrl'
                     }
                 }
             })
@@ -146,17 +146,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 views: {
                     'dashboard-tab': {
                         templateUrl: 'views/common/restaurant.html',
-                        controller: 'RestaurantCtrl'/*,
-                         resolve: {
-                         listing: function (Listing, $stateParams, $http, $localForage) {
-                         return $localForage.getItem('currentListing').then(function (data) {
-                         console.log('Getting 'currentListing'');
-                         console.log(data);
-                         return data;
-                         });
-                         //return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
-                         }
-                         }*/
+                        controller: 'RestaurantCtrl'
                     }
                 }
             })

@@ -58,25 +58,30 @@ angular.module('tabletops.controllers', [])
 
         var isOnline = function () {
             var isConnected = false;
-            var networkConnection = navigator.connection;
-            if (!networkConnection || !networkConnection.type) {
-                $log.error('networkConnection.type is not defined');
-                return false;
-            }
 
-            switch (networkConnection.type.toLowerCase()) {
-                case 'ethernet':
-                case 'wifi':
-                case 'cell_2g':
-                case 'cell_3g':
-                case 'cell_4g':
-                case '2g':
-                case '3g':
-                case '4g':
-                case 'cell':
-                case 'cellular':
-                    isConnected = true;
-                    break;
+            if (angular.isDefined(navigator.connection)) {
+                var networkConnection = navigator.connection;
+                if (!networkConnection || !networkConnection.type) {
+                    $log.error('networkConnection.type is not defined');
+                    return false;
+                }
+
+                switch (networkConnection.type.toLowerCase()) {
+                    case 'ethernet':
+                    case 'wifi':
+                    case 'cell_2g':
+                    case 'cell_3g':
+                    case 'cell_4g':
+                    case '2g':
+                    case '3g':
+                    case '4g':
+                    case 'cell':
+                    case 'cellular':
+                        isConnected = true;
+                        break;
+                }
+            } else {
+                isConnected = true;
             }
 
             $log.log('isOnline? '+ isConnected);
@@ -506,7 +511,7 @@ angular.module('tabletops.controllers', [])
                             lng: loc.lng,
                             getMessageScope: returnScope,
                             compileMessage: true,
-                            message: '<div><h6 class=\'text-center\'>' + v.name + '</h6><div class=\'row\'><button class=\'button button-small button-clear col col-33\'>' + v.like_count + ' <span class=\'icon ion-heart calm\'></span></button><button class=\'button button-small button-clear col col-33\'>' + v.rating_count + ' <span class=\'icon ion-chatbubbles energized\'></span></button><button class=\'button button-small button-clear balanced col col-33\'>' + $scope.showDollars(v.restaurant.price_range, true) + '</button></div><div class=\'row\'><div class=\'col col-50\'><a ui-sref=\'tabs.restaurant({id:"' + v.slug + '"})\' class=\'button button-clear button-small button-icon icon ion-eye\'></a></div><div class=\'col col-50\'><tt-directions get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directions></div></div></div>',
+                            message: '<div><h6 class=\'text-center\'>' + v.name + '</h6><div class=\'button-bar\'><button class=\'button button-raised\'>' + v.like_count + ' <span class=\'icon ion-heart calm\'></span></button><button class=\'button button-raised\'>' + v.rating_count + ' <span class=\'icon ion-chatbubbles energized\'></span></button><button class=\'button button-raised\'>' + $scope.showDollars(v.restaurant.price_range, true) + '</button></div><div class=\'row\'><div class=\'col col-50\'><a ui-sref=\'tabs.restaurant({id:"' + v.slug + '"})\' class=\'button button-clear button-small button-icon icon ion-eye\'></a></div><div class=\'col col-50\'><tt-directions get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directions></div></div></div>',
                             icon: {
                                 prefix: 'ion',
                                 type: 'extraMarker',
@@ -691,7 +696,7 @@ angular.module('tabletops.controllers', [])
                 search: $stateParams.search || undefined,
                 province: $scope.settings.province.slug,
                 province_id: $scope.settings.province.id,
-                sort: undefined,
+                sort: 'name',
                 cuisine: $stateParams.cuisine || undefined,
                 price_range: undefined,
                 type: undefined,
@@ -745,7 +750,6 @@ angular.module('tabletops.controllers', [])
             $scope.refresh();
 
             $scope.sorts = [
-                {name: 'Default', value: undefined},
                 {name: 'Name', value: 'name'},
                 {name: 'Price', value: 'restaurant.price_range'},
                 {name: 'Highest Rating', value: '-rating_cache'},
@@ -939,7 +943,7 @@ angular.module('tabletops.controllers', [])
                     lng: loc.lng,
                     getMessageScope: returnScope,
                     compileMessage: true,
-                    message: '<div><h6 class=\'text-center\'>' + $scope.listing.name + '</h6><div class=\'row row-no-padding\'><div class=\'col\'><tt-directionsa get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directionsa></div></div></div>',
+                    message: '<div><h6 class=\'text-center\'>' + $scope.listing.name + '</h6><div class=\'button-bar\'><tt-directionsa get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directionsa></div></div>',
                     icon: {
                         prefix: 'ion',
                         type: 'extraMarker',

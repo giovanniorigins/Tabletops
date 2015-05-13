@@ -184,7 +184,7 @@ module.exports = function (grunt) {
             html: ['<%= yeoman.dist %>/**/*.html'],
             css: ['<%= yeoman.dist %>/<%= yeoman.styles %>/**/*.css'],
             options: {
-                assetsDirs: ['<%= yeoman.dist %>']
+                assetsDirs: ['<%= yeoman.dist %>/vendor']
             }
         },
 
@@ -242,8 +242,8 @@ module.exports = function (grunt) {
                         '<%= yeoman.images %>/**/*.{png,jpg,jpeg,gif,webp,svg}',
                         '*.html',
                         //'views/**/*.html',
-                        'vendor/*',
-                        'lib/**/*.{css,js}',
+                        'vendor/**/*',
+                        'lib/**/*.{css,js,png,gif,jpg,jpeg,svg}',
                         'fonts/*'
                     ]
                 }, {
@@ -251,6 +251,11 @@ module.exports = function (grunt) {
                     cwd: '.temp/<%= yeoman.images %>',
                     dest: '<%= yeoman.dist %>/<%= yeoman.images %>',
                     src: ['generated/*']
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/vendor/',
+                    dest: '<%= yeoman.dist %>/js/',
+                    src: 'images/*.{png,jpg,jpeg,gif,webp}'
                 }]
             },
             styles: {
@@ -258,6 +263,12 @@ module.exports = function (grunt) {
                 cwd: '<%= yeoman.app %>/<%= yeoman.styles %>',
                 dest: '.temp/<%= yeoman.styles %>/',
                 src: '{,*/}*.css'
+            },
+            libImages: {
+                expand: true,
+                cwd: '<%= yeoman.app %>/vendor/',
+                dest: '<%= yeoman.dist %>/js/',
+                src: '**/**/*.{png,jpg,jpeg,gif,webp,svg}'
             },
             resources: {
                 expand: true,

@@ -68,8 +68,8 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook',
-        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook) {
+    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$ionicUser', '$ionicPush',
+        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $ionicUser, $ionicPush) {
             'use strict';
             var service = {
                 login: function (user) {
@@ -132,6 +132,20 @@ angular.module('tabletops.services', [])
                                 });
                                 break;
                             default:
+                                // Set Anon Info
+                                $ionicPush.register({
+                                    canShowAlert: false, //Should new pushes show an alert on your screen?
+                                    canSetBadge: true, //Should new pushes be allowed to update app icon badges?
+                                    canPlaySound: true, //Should notifications be allowed to play a sound?
+                                    canRunActionsOnWake: true, // Whether to run auto actions outside the app,
+                                    onNotification: function(notification) {
+                                        // Called for each notification.
+                                        console.log(notification);
+                                    }
+                                }, {
+                                    user_id: $cordovaDevice.getUUID()
+                                });
+
                                 $state.go('signin');
                         }
                     });
@@ -141,6 +155,8 @@ angular.module('tabletops.services', [])
 
                         switch (provider) {
                             case 'facebook':
+                                return service.FbMe();
+                            case 'google':
                                 return service.FbMe();
                             case 'email':
                                 $http.post(ApiEndpoint.api + '/me', {}, {
@@ -152,7 +168,11 @@ angular.module('tabletops.services', [])
                                     .success(function (data) {
                                         if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
                                             $rootScope.user = data.user;
-                                            $localForage.setItem('user', data.user).then(function () {
+                                            $localForage.setItem('user', data.user).then(function (user) {
+                                                // Set User Info
+
+
+                                                // Check if this is first run
                                                 $localForage.getItem('pastInitialStart').then(function (res) {
                                                     if (!!res) {
                                                         return $state.go('tabs.dashboard', null, {location: 'replace'});
@@ -220,7 +240,14 @@ angular.module('tabletops.services', [])
 
                                 $rootScope.isLoggedin = true;
 
-                                $localForage.setItem('user', res.profile);
+                                $localForage.setItem('user', res.profile).then(function (user) {
+                                    $ionicUser.set('user_id', user.user.id);
+                                    $ionicUser.set('name', user.user.full_name);
+                                    $ionicUser.set('created_at', user.user.created_at);
+                                    $ionicUser.set('language', user.language);
+                                    $ionicUser.set('gender', user.gender);
+                                    $ionicUser.push('providers', user.provider, true);
+                                });
                                 $localForage.setItem('authorizationToken', res.token);
                                 $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
                                 $rootScope.$broadcast('event:auth-loginConfirmed');
