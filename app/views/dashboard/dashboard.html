@@ -1,0 +1,79 @@
+<ion-view hide-back-button="true">
+    <ion-nav-title>
+        <img class="title-image" src="img/logo2.png" style="width: auto;display: block; height: 40px"/>
+    </ion-nav-title>
+    <ion-nav-buttons side="right">
+        <button class="button button-energized-900 button-fab drop hide" id="fab-search" ng-click="openSearchModal()">
+            <i class="icon ion-ios-search"></i>
+        </button>
+        <!--<button class="button button-dark button-fab" ng-click="openProvinceModal($event)">
+            <i class="icon ion-location"></i>
+        </button>-->
+    </ion-nav-buttons>
+    <ion-content class="has-header padding-top" id="dashboard">
+        <div class="">
+            <div class="">
+                <fieldset class="featured-header">
+                    <legend class="assertive">PLACES NEARBY</legend>
+                </fieldset>
+
+                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                    <ion-item class="nearby-card card ink" ng-repeat="res in restaurants">
+                        <div class="item ink" ng-click="toRestaurant(res.slug, restaurants)">
+                            <!--<img ng-src="{{::res.logo.path}}">-->
+                            <h2>{{::res.name}}</h2>
+                            <p class="row row-no-padding">
+                        <span class="col col-50">
+                            <span ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></span>
+                        </span>
+                        <span class="col col-50 text-right">
+                           <span ng-bind-html="::showDollars(res.restaurant.price_range)"></span>
+                        </span>
+                            </p>
+                            <p>
+                                <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
+                            </p>
+                            <p style="font-size: 80%">
+                                <span class="distance-badge badge badge-stable">{{::res.distance|number:2}} miles away</span>
+                            </p>
+                        </div>
+                    </ion-item>
+                    <!--<a class="nearby-card more-card hide" ui-sref="tabs.nearby">
+                        <div><i class="icon ion-plus-circled"></i> <br>View All</div>
+                    </a>-->
+                </ion-scroll>
+            </div>
+
+            <div class="padding-top">
+                <fieldset class="featured-header assertive">
+                    <legend class="assertive">CUISINES</legend>
+                </fieldset>
+
+                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                    <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines">
+                        <img ng-src="{{::c.img}}">
+                    </a>
+                    <a class="nearby-card more-card" ui-sref="tabs.cuisines">
+                        <div><i class="icon ion-plus-circled"></i> <br>View All</div>
+                    </a>
+                </ion-scroll>
+            </div>
+
+            <div class="padding-top hide">
+                <fieldset class="featured-header assertive">
+                    <legend class="assertive">EVENTS</legend>
+                </fieldset>
+
+                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                    <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines">
+                        <img ng-src="{{::c.img}}">
+                    </a>
+                    <a class="nearby-card more-card" ui-sref="tabs.cuisines">
+                        <div><i class="icon ion-plus-circled"></i> <br>View All</div>
+                    </a>
+                </ion-scroll>
+            </div>
+
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,99 @@
+<ion-view view-title="Settings">
+    <ion-content>
+        <div class="list">
+
+            <div class="card">
+                <div class="item item-avatar item-text-wrap stable-bg waves-effect waves-block waves-dark">
+                    <span ng-if="::user.user.avatar" class="avatar"
+                          style="background-image: url('{{::user.user.avatar}}');"></span>
+                    <span ng-if="::user.avatar" class="avatar"
+                          style="background-image: url('{{::user.avatar}}');"></span>
+
+                    <h2 ng-if="::user.user.full_name">
+                        <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>&nbsp;
+                        {{::user.user.full_name}}
+                    </h2>
+
+                    <h2 ng-if="::user.full_name">
+                        <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>&nbsp;
+                        {{::user.full_name}}
+                    </h2>
+
+                    <p class="">@ {{::user.user.username}}</p>
+
+                </div>
+
+                <a class="item item-icon-left item-icon-right" ui-sref="tabs.faq">
+                    <i class="icon ion-social-facebook calm calm"></i>
+                    Facebook <span ng-if="::connectedProviders" ng-bind="isProviderConnected('Facebook') ? 'Connected' : 'Connect'"></span>
+                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[isProviderConnected('Facebook')]"></i>
+                </a>
+                <a class="item item-icon-left item-icon-right" ui-sref="tabs.faq">
+                    <i class="icon ion-social-google energized-900"></i>
+                    Google <span ng-if="::connectedProviders" ng-bind="isProviderConnected('Google') ? 'Connected' : 'Connect'"></span>
+                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[isProviderConnected('Google')]"></i>
+                </a>
+            </div>
+
+            <div class="card">
+                <a class="item item-icon-left item-icon-right" ng-click="openProvinceModal($event)">
+                    <i class="icon ion-ios-navigate"></i>
+                    Set Province
+                    <i class="icon ion-ios-arrow-right stable"></i>
+                </a>
+                <a class="item item-icon-right" ng-click="openProvinceModal($event)">
+                    Profile Settings
+                    <i class="icon ion-ios-arrow-right stable"></i>
+                </a>
+                <a class="item item-icon-right" ng-click="openProvinceModal($event)">
+                    Notification Settings
+                    <i class="icon ion-ios-arrow-right stable"></i>
+                </a>
+            </div>
+
+            <div class="card">
+                <a class="item item-icon-left" ng-click="rateApp()">
+                    <i class="icon ion-heart"></i>
+                    Rate Tabletops App
+                </a>
+                <a class="item item-icon-left item-icon-right" ui-sref="tabs.usage">
+                    <i class="icon ion-ios-analytics"></i>
+                    Share Usage Data
+                    <i class="icon ion-ios-arrow-right stable"></i>
+                </a>
+                <!--<a class="item item-icon-left" ui-sref="about">
+                    <i class="icon ion-ios-information-outline"></i>
+                    About Tabletops
+                </a>-->
+                <a class="item item-icon-left item-icon-right" ui-sref="tabs.faq">
+                    <i class="icon ion-help"></i>
+                    FAQs
+                    <i class="icon ion-ios-arrow-right stable"></i>
+                </a>
+                <a class="item item-icon-left" ng-click="feedbackModal()">
+                    <i class="icon ion-chatbox"></i>
+                    Send Feedback
+                </a>
+                <a class="item item-icon-left item-icon-right" ui-sref="tabs.terms">
+                    <i class="icon ion-ios-book"></i>
+                    Terms & Conditions
+                    <i class="icon ion-ios-arrow-right stable"></i>
+                </a>
+                <a class="item item-icon-left item-icon-right" ui-sref="tabs.privacy">
+                    <i class="icon ion-eye"></i>
+                    Privacy Policy
+                    <i class="icon ion-ios-arrow-right stable"></i>
+                </a>
+                <a class="item" ui-sref="intro">
+                    Show Tutorial
+                </a>
+                <a class="item">
+                    App Version: 1.0.0
+                </a>
+                <a class="item">
+                    Copyright &copy; 2015 Tabletops
+                </a>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
