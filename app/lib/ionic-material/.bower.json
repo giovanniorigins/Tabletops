@@ -1,11 +1,16 @@
 {
-  "name": "Ionic Material",
-  "version": "0.0.1",
+  "name": "ionic-material",
+  "version": "0.2.1",
   "authors": [
     "Zach Fitzgerald"
   ],
   "description": "Ionic Material - Material Design for the Ionic Framework",
-  "main": "dist/ionic-material.min.js",
+  "main": [
+    "./dist/ionic.material.css",
+    "./dist/ionic.material.min.css",
+    "./dist/ionic.material.js",
+    "./dist/ionic.material.min.js"
+  ],
   "keywords": [
     "Ionic",
     "Material",
@@ -21,24 +26,20 @@
   "private": false,
   "ignore": [
     "bower_components",
-    "bower.json",
     "demo",
     "docs",
     "Gulpfile.js",
     "index.html",
-    "node_modules",
-    "package.json",
-    "README.md",
-    "src"
+    "node_modules"
   ],
   "dependencies": {
     "ionic": "~1.0.0"
   },
-  "_release": "0.0.1",
+  "_release": "0.2.1",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.1",
-    "commit": "0c8c7a0b20886603bf8d6eea801de25ba2a4325d"
+    "tag": "v0.2.1",
+    "commit": "5ba5ab01e3cbd909bbf0ea7b7a3dba5984eb8155"
   },
   "_source": "git://github.com/zachsoft/Ionic-Material.git",
   "_target": "*",

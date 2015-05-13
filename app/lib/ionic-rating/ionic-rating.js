@@ -4,7 +4,7 @@
     max: 5,
     stateOn: null,
     stateOff: null
-  }).controller('RatingController', function($scope, $attrs, ratingConfig) {
+  }).controller('RatingController', ['$scope', '$attrs', 'ratingConfig', function($scope, $attrs, ratingConfig) {
     var ngModelCtrl;
     ngModelCtrl = {
       $setViewValue: angular.noop
@@ -64,7 +64,7 @@
       return $scope.value = ngModelCtrl.$viewValue;
     };
     return this;
-  }).directive('rating', function() {
+  }]).directive('rating', function() {
     return {
       restrict: 'EA',
       require: ['rating', 'ngModel'],
