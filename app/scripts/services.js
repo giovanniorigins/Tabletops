@@ -68,8 +68,8 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$ionicUser', '$ionicPush',
-        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $ionicUser, $ionicPush) {
+    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaDevice', '$ionicUser', '$ionicPush',
+        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaDevice, $ionicUser, $ionicPush) {
             'use strict';
             var service = {
                 login: function (user) {
