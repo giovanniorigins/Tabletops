@@ -138,7 +138,7 @@
                     <!--<a class="button button-icon icon ion-camera button-clear button padding-left padding-right" ng-click="addPhotos()"></a>-->
                 </legend>
             </fieldset>
-            <h4 class="content padding double-padding-x stable" ng-if="listing.gallery.length==0">No photos currently unavailable</h4>
+            <h4 class="content padding double-padding-x stable" ng-if="listing.gallery.length==0">No photos are currently available</h4>
             <ion-scroll ng-if="::listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller wide-as-needed">
                 <div class="nearby-card" collection-repeat="photo in listing.gallery|limitTo:6" item-height="100" item-width="110">
                     <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{::photo.path}});min-height: 100px" ></div>

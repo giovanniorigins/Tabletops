@@ -40,437 +40,441 @@ var closestLocation = function (targetLocation, locationData) {
 
 angular.module('tabletops.controllers', [])
     .controller('MainCtrl', ['$rootScope', '$scope', '$ionicPlatform', '$ionicScrollDelegate', '$cordovaNetwork', '$cordovaGeolocation', '$cordovaToast', '$state', '$localForage', 'Province', 'ListingRepository', '$ionicModal', '$timeout', '$log', '_',
-    function ($rootScope, $scope, $ionicPlatform, $ionicScrollDelegate, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal, $timeout, $log, _) {
-        'use strict';
-        $scope.settings = {
-            geolocation: false,
-            province: {}
-        };
+        function ($rootScope, $scope, $ionicPlatform, $ionicScrollDelegate, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal, $timeout, $log, _) {
+            'use strict';
+            $scope.settings = {
+                geolocation: false,
+                province: {}
+            };
 
-        $scope.hasHeaderFabRight = false;
+            $scope.hasHeaderFabRight = false;
 
-        // Handle Settings
-        $localForage.getItem('province').then(function (data) {
-            if ( angular.isObject(data) ) {
-                $scope.settings.province = data;
-            }
-        });
+            // Handle Settings
+            $localForage.getItem('province').then(function (data) {
+                if (angular.isObject(data)) {
+                    $scope.settings.province = data;
+                }
+            });
 
-        var isOnline = function () {
-            var isConnected = false;
+            var isOnline = function () {
+                var isConnected = false;
 
-            if (angular.isDefined(navigator.connection)) {
-                var networkConnection = navigator.connection;
-                if (!networkConnection || !networkConnection.type) {
-                    $log.error('networkConnection.type is not defined');
-                    return false;
+                if (angular.isDefined(navigator.connection)) {
+                    var networkConnection = navigator.connection;
+                    if (!networkConnection || !networkConnection.type) {
+                        $log.error('networkConnection.type is not defined');
+                        return false;
+                    }
+
+                    switch (networkConnection.type.toLowerCase()) {
+                        case 'ethernet':
+                        case 'wifi':
+                        case 'cell_2g':
+                        case 'cell_3g':
+                        case 'cell_4g':
+                        case '2g':
+                        case '3g':
+                        case '4g':
+                        case 'cell':
+                        case 'cellular':
+                            isConnected = true;
+                            break;
+                    }
+                } else {
+                    isConnected = true;
                 }
 
-                switch (networkConnection.type.toLowerCase()) {
-                    case 'ethernet':
-                    case 'wifi':
-                    case 'cell_2g':
-                    case 'cell_3g':
-                    case 'cell_4g':
-                    case '2g':
-                    case '3g':
-                    case '4g':
-                    case 'cell':
-                    case 'cellular':
-                        isConnected = true;
-                        break;
-                }
-            } else {
-                isConnected = true;
-            }
+                $log.log('isOnline? ' + isConnected);
+                return isConnected;
+            };
 
-            $log.log('isOnline? '+ isConnected);
-            return isConnected;
-        };
+            // Handle Network Status
+            $ionicPlatform.ready(function () {
 
-        // Handle Network Status
-        $ionicPlatform.ready(function () {
+                $rootScope.connectionState = isOnline();
 
-            $rootScope.connectionState = isOnline();
+                // listen for Online event
+                $rootScope.$on('$cordovaNetwork:online', function () {
+                    $log.log('App Online');
+                    $rootScope.connectionState = true;
+                });
 
-            // listen for Online event
-            $rootScope.$on('$cordovaNetwork:online', function () {
-                $log.log('App Online');
-                $rootScope.connectionState = true;
+                // listen for Offline event
+                $rootScope.$on('$cordovaNetwork:offline', function () {
+                    $log.log('App Offline');
+                    $rootScope.connectionState = false;
+                });
             });
 
-            // listen for Offline event
-            $rootScope.$on('$cordovaNetwork:offline', function () {
-                $log.log('App Offline');
-                $rootScope.connectionState = false;
-            });
-        });
+            // Handle Geolocation
+            var geoOptions = {
+                enableHighAccuracy: true,
+                timeout: 600000,
+                maximumAge: 599000
+            };
 
-        // Handle Geolocation
-        var geoOptions = {
-            enableHighAccuracy: true,
-            timeout: 600000,
-            maximumAge: 599000
-        };
+            /*$scope.myLocation = $cordovaGeolocation.watchPosition($scope.geoOptions);*/
 
-        /*$scope.myLocation = $cordovaGeolocation.watchPosition($scope.geoOptions);*/
+            var watch = $cordovaGeolocation.watchPosition(geoOptions);
+            watch.then(
+                null,
+                function (err) {
+                    // error
+                    $log.log(err);
+                },
+                function (position) {
+                    //console.log(position);
+                    $scope.myLocation = position;
+                });
 
-        var watch = $cordovaGeolocation.watchPosition(geoOptions);
-        watch.then(
-            null,
-            function (err) {
-                // error
-                $log.log(err);
-            },
-            function (position) {
-                //console.log(position);
-                $scope.myLocation = position;
-            });
+            $scope.selectProvinces = function () {
+                $localForage.getItem('provinces').then(function (data) {
+                    $scope.provinces = angular.isDefined(data) ? data : Province.query({}, function (res) {
+                        $scope.provinces = res;
+                        $localForage.setItem('provinces', res);
+                        return $scope.toggleRight();
+                    });
+                });
+            };
 
-        $scope.selectProvinces = function () {
             $localForage.getItem('provinces').then(function (data) {
                 $scope.provinces = angular.isDefined(data) ? data : Province.query({}, function (res) {
                     $scope.provinces = res;
                     $localForage.setItem('provinces', res);
-                    return $scope.toggleRight();
                 });
-            });
-        };
 
-        $localForage.getItem('provinces').then(function (data) {
-            $scope.provinces = angular.isDefined(data) ? data : Province.query({}, function (res) {
-                $scope.provinces = res;
-                $localForage.setItem('provinces', res);
+                $scope.settings.province = _.findWhere($scope.provinces, {slug: 'np-pi'});
             });
 
-            $scope.settings.province = _.findWhere($scope.provinces, {slug: 'np-pi'});
-        });
+            $scope.setProvince = function (p) {
+                $scope.settings.province = p;
+                $localForage.setItem('province', p);
+                $scope.closeProvinceModal();
+                $cordovaToast.showShortBottom(p.name + ' is now your default province.');
+            };
 
-        $scope.setProvince = function (p) {
-            $scope.settings.province = p;
-            $localForage.setItem('province', p);
-            $scope.closeProvinceModal();
-            $cordovaToast.showShortBottom(p.name + ' is now your default province.');
-        };
+            $scope.findClosest = function (targetLocation, locations) {
+                var closest = closestLocation(targetLocation, locations);
+                $log.log(closest);
+                return closest;
+            };
 
-        $scope.findClosest = function (targetLocation, locations) {
-            var closest = closestLocation(targetLocation, locations);
-            $log.log(closest);
-            return closest;
-        };
+            $scope.selectClosestProvince = function () {
+                var closest = $scope.findClosest($scope.myLocation.coords, $scope.provinces);
+                $scope.setProvince(closest);
+            };
 
-        $scope.selectClosestProvince = function () {
-            var closest = $scope.findClosest($scope.myLocation.coords, $scope.provinces);
-            $scope.setProvince(closest);
-        };
+            $scope.shareThis = function (obj) {
+                ListingRepository.share(obj);
+            };
 
-        $scope.shareThis = function (obj) {
-            ListingRepository.share(obj);
-        };
+            $scope.favoriteThis = function (obj) {
+                ListingRepository.favorite(obj);
+            };
 
-        $scope.favoriteThis = function (obj) {
-            ListingRepository.favorite(obj);
-        };
+            $scope.faved = function (id) {
+                return _.contains($rootScope.favorites, id);
+            };
 
-        $scope.faved = function (id) {
-            return _.contains($rootScope.favorites, id);
-        };
+            $scope.visited = function (id) {
+                return _.contains($rootScope.beens, id);
+            };
 
-        $scope.visited = function (id) {
-            return _.contains($rootScope.beens, id);
-        };
+            $scope.beenHere = function (obj) {
+                ListingRepository.been(obj);
+            };
 
-        $scope.beenHere = function (obj) {
-            ListingRepository.been(obj);
-        };
+            $scope.showDollars = function (range, noIcon) {
+                return ListingRepository.showDollars(range, noIcon);
+            };
 
-        $scope.showDollars = function (range, noIcon) {
-            return ListingRepository.showDollars(range, noIcon);
-        };
+            $scope.showStars = function (count, rating) {
+                return ListingRepository.showStars(count, rating);
+            };
 
-        $scope.showStars = function (count, rating) {
-            return ListingRepository.showStars(count, rating);
-        };
+            $scope.initCaller = function (obj) {
+                ListingRepository.initCaller(obj);
+            };
 
-        $scope.initCaller = function (obj) {
-            ListingRepository.initCaller(obj);
-        };
+            $scope.initCaller = function (obj) {
+                ListingRepository.initCaller(obj);
+            };
 
-        $scope.initCaller = function (obj) {
-            ListingRepository.initCaller(obj);
-        };
+            $scope.callLocation = function (locations, index) {
+                ListingRepository.callLocation(locations, index);
+            };
 
-        $scope.callLocation = function (locations, index) {
-            ListingRepository.callLocation(locations, index);
-        };
+            $scope.scrollTop = function () {
+                $ionicScrollDelegate.scrollTop();
+            };
 
-        $scope.scrollTop = function() {
-            $ionicScrollDelegate.scrollTop();
-        };
+            $scope.$on('event:auth-loginConfirmed', function () {
+                $rootScope.isLoggedin = true;
+                $state.go('tabs.dashboard');
+            });
 
-        $scope.$on('event:auth-loginConfirmed', function () {
-            $rootScope.isLoggedin = true;
-            $state.go('tabs.dashboard');
-        });
+            // Province Modal
+            $ionicModal.fromTemplateUrl('views/common/ProvinceModal.html', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.provModal = modal;
+            });
 
-        // Province Modal
-        $ionicModal.fromTemplateUrl('views/common/ProvinceModal.html', {
-            scope: $scope
-        }).then(function (modal) {
-            $scope.provModal = modal;
-        });
+            $scope.openProvinceModal = function ($event) {
+                $scope.provModal.show($event)
+                    .then(function () {
+                        // Set Ink
+                        ionic.material.ink.displayEffect();
+                    });
+            };
+            $scope.closeProvinceModal = function () {
+                $scope.provModal.hide();
+            };
+            //Cleanup the popover when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.provModal.remove();
+            });
 
-        $scope.openProvinceModal = function ($event) {
-            $scope.provModal.show($event)
-                .then(function () {
+            $scope.$on('$ionicView.enter', function () {
+                $timeout(function () {
+                    $log.log('Set Ink');
                     // Set Ink
                     ionic.material.ink.displayEffect();
-                });
-        };
-        $scope.closeProvinceModal = function () {
-            $scope.provModal.hide();
-        };
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function () {
-            $scope.provModal.remove();
-        });
+                }, 600);
+            });
 
-        $scope.$on('$ionicView.enter', function() {
-            $timeout(function () {
-                $log.log('Set Ink');
-                // Set Ink
-                ionic.material.ink.displayEffect();
-            }, 600);
-        });
-
-    }])
+        }])
     .controller('SplashCtrl', ['$scope', 'AuthenticationService', '$state', '$localForage', '$ionicPlatform',
         function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
-        'use strict';
-        $ionicPlatform.ready(function () {
-            AuthenticationService.FbCheckLogin();
-        });
-    }])
+            'use strict';
+            $ionicPlatform.ready(function () {
+                AuthenticationService.authCheck();
+            });
+        }])
     .controller('IntroCtrl', ['$scope', '$state', '$ionicSlideBoxDelegate',
         function ($scope, $state, $ionicSlideBoxDelegate) {
-        'use strict';
+            'use strict';
 
-        // Called to navigate to the main app
-        $scope.startApp = function () {
-            $state.go('tabs.dashboard');
-        };
-        $scope.next = function () {
-            $ionicSlideBoxDelegate.next();
-        };
-        $scope.previous = function () {
-            $ionicSlideBoxDelegate.previous();
-        };
+            // Called to navigate to the main app
+            $scope.startApp = function () {
+                $state.go('tabs.dashboard');
+            };
+            $scope.next = function () {
+                $ionicSlideBoxDelegate.next();
+            };
+            $scope.previous = function () {
+                $ionicSlideBoxDelegate.previous();
+            };
 
-        // Called each time the slide changes
-        $scope.slideChanged = function (index) {
-            $scope.slideIndex = index;
-        };
-    }])
+            // Called each time the slide changes
+            $scope.slideChanged = function (index) {
+                $scope.slideIndex = index;
+            };
+        }])
     .controller('SignInCtrl', ['$rootScope', '$scope', '$state', 'AuthenticationService', '$localForage',
         function ($rootScope, $scope, $state, AuthenticationService, $localForage) {
-        'use strict';
-        $localForage.getItem('userCreds').then(function (data) {
-            console.log(data);
-            if (!angular.isUndefined(data) || data) {
-                AuthenticationService.login(data);
-            }
-        });
-
-        $scope.message = '';
-
-        $scope.user = {
-            email: null,
-            password: null
-        };
-
-        $scope.login = function () {
-            AuthenticationService.login($scope.user);
-        };
-
-        $scope.signInFacebook = function () {
-            AuthenticationService.FbLogin();
-        };
-
-        $scope.$on('event:auth-loginRequired', function () {
-            console.log('handling login required');
-            $state.go('signin');
-        });
-
-        $scope.$on('event:auth-login-failed', function (e, status) {
-            var error = 'Login failed.';
-            if (parseInt(status) === 401) {
-                error = 'Invalid Username or Password.';
-            }
-            $scope.message = error;
-        });
-
-        $scope.$on('event:auth-logout-complete', function () {
-            console.log('logout complete');
-            $state.go('signin', {}, {reload: true, inherit: false});
-        });
-    }])
-    .controller('LogoutCtrl', ['$scope', 'AuthenticationService',
-        function ($scope, AuthenticationService) {
-        'use strict';
-        $scope.$on('$ionicView.enter', function () {
-            AuthenticationService.logout();
-        });
-    }])
-    .controller('DashboardCtrl', ['$rootScope', '$scope', 'Province', 'Listing', 'Cuisine', '$state', '$interval', '$ionicModal', '$timeout', '$localForage', '_',
-        function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout, $localForage, _) {
-        'use strict';
-        $scope.getNearby = function () {
-            $scope.qData = {app_search: true, range: 5, limit: 5};
-            if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
-                angular.extend($scope.qData, {
-                    lat: $scope.myLocation.coords.latitude,
-                    lng: $scope.myLocation.coords.longitude
-                });
-            }
-            $scope.restaurants = Listing.query($scope.qData);
-            $scope.restaurants.$promise.finally(function () {
-                $scope.$broadcast('scroll.refreshComplete');
-            });
-        };
-
-        $scope.$watch('myLocation', function (newValue, oldValue) {
-            if (angular.isUndefined(oldValue) && angular.isDefined(newValue)) {
-                var stopNearby = $interval($scope.getNearby(), 600000);
-
-                $scope.$on('$destroy', function () {
-                    $interval.cancel(stopNearby);
-                });
-
-            }
-        });
-
-        $scope.getNearby();
-
-        $scope.cuisines = [
-            { img: 'img/cuisines/bahamian.jpg', slug: 'bahamian' },
-            { img: 'img/cuisines/italian.jpg', slug: 'italian' },
-            { img: 'img/cuisines/steakhouse.jpg', slug: 'steakhouse' },
-            { img: 'img/cuisines/chinese.jpg', slug: 'chinese' },
-            { img: 'img/cuisines/burgers.jpg', slug: 'burgers' }
-        ];
-
-        $scope.toRestaurant = function (id, array) {
-            var obj = _.findWhere(array, {slug: id});
-            $localForage.setItem('currentListing', obj).then(function () {
-                $scope.$broadcast('loading:show');
-                $state.go('tabs.restaurant', {id: id});
-            });
-        };
-
-        $scope.startSearch = function () {
-            $state.go('tabs.results', {search: this.search});
-        };
-
-        $scope.getWidth = function () {
-            return document.getElementById('dashboard').offsetWidth - 21;
-        };
-
-        $timeout(function () {
-            document.getElementById('fab-search').classList.toggle('on');
-        }, 1100);
-
-        // Search Modal
-        $ionicModal.fromTemplateUrl('views/dashboard/SearchModal.html', {
-            scope: $scope,
-            focusFirstInput: true
-        }).then(function (modal) {
-            $scope.SearchModal = modal;
-        });
-
-        $scope.openSearchModal = function ($event) {
-            $scope.SearchModal.show($event)
-                .then(function () {
-                    // Set Ink
-                    ionic.material.ink.displayEffect();
-                });
-        };
-        $scope.closeSearchModal = function () {
-            $scope.SearchModal.hide();
-        };
-        //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function () {
-            $scope.SearchModal.remove();
-            $scope.$parent.hasHeaderFabRight = false;
-        });
-
-        $scope.$on('$ionicView.enter', function() {
-            $scope.$parent.hasHeaderFabRight = true;
-            document.getElementById('fab-search').classList.toggle('hide');
-        });
-
-        $scope.$on('$ionicView.leave', function() {
-            $scope.$parent.hasHeaderFabRight = false;
-            document.getElementById('fab-search').classList.toggle('hide');
-        });
-
-        // Set Ink
-        ionic.material.ink.displayEffect();
-    }])
-    .controller('FavoritesCtrl', ['$scope', '$localForage', 'Listing', '$ionicModal', '$state', '_',
-        function ($scope, $localForage, Listing, $ionicModal, $state, _) {
-        'use strict';
-        $scope.faves = [];
-        $scope.refresh = function () {
-            $localForage.getItem('favorites').then(function (data) {
-                if (data && data.length > 0) {
-                    Listing.query({ids: angular.toJson(data)}, function (res) {
-                        $scope.faves = res;
-                        $scope.$broadcast('scroll.refreshComplete');
-                    }, function (res) {
-                        console.log(res);
-                        $scope.$broadcast('scroll.refreshComplete');
-                    });
+            'use strict';
+            $localForage.getItem('userCreds').then(function (data) {
+                console.log(data);
+                if (!angular.isUndefined(data) || data) {
+                    AuthenticationService.login(data);
                 }
             });
-        };
 
-        $scope.toFavorite = function (id) {
-            var obj = _.findWhere($scope.faves, {slug: id});
-            $localForage.setItem('currentListing', obj).then(function () {
-                $scope.$broadcast('loading:show');
-                $state.go('tabs.favorite', {id: id});
+            $scope.message = '';
+
+            $scope.user = {
+                email: null,
+                password: null
+            };
+
+            $scope.login = function () {
+                AuthenticationService.login($scope.user);
+            };
+
+            $scope.signInFacebook = function () {
+                AuthenticationService.FbLogin();
+            };
+
+            $scope.signInGoogle = function () {
+                AuthenticationService.GoogleLogin();
+            };
+
+            $scope.$on('event:auth-loginRequired', function () {
+                console.log('handling login required');
+                $state.go('signin');
             });
-        };
 
-        $scope.refresh();
+            $scope.$on('event:auth-login-failed', function (e, status) {
+                var error = 'Login failed.';
+                if (parseInt(status) === 401) {
+                    error = 'Invalid Username or Password.';
+                }
+                $scope.message = error;
+            });
 
-        // FiltersModal
-        $ionicModal.fromTemplateUrl('views/common/filtersModal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        }).then(function (modal) {
-            $scope.modal = modal;
-        });
-        $scope.openFiltersModal = function () {
-            $scope.modal.show();
-        };
-        $scope.closeFiltersModal = function () {
-            $scope.modal.hide();
-        };
-        //Cleanup the modal when we're done with it!
-        $scope.$on('$destroy', function () {
-            $scope.modal.remove();
-        });
-        // Execute action on hide modal
-        $scope.$on('modal.hidden', function () {
-            // Execute action
-        });
-        // Execute action on remove modal
-        $scope.$on('modal.removed', function () {
-            // Execute action
-        });
+            $scope.$on('event:auth-logout-complete', function () {
+                console.log('logout complete');
+                $state.go('signin', {}, {reload: true, inherit: false});
+            });
+        }])
+    .controller('LogoutCtrl', ['$scope', 'AuthenticationService',
+        function ($scope, AuthenticationService) {
+            'use strict';
+            $scope.$on('$ionicView.enter', function () {
+                AuthenticationService.logout();
+            });
+        }])
+    .controller('DashboardCtrl', ['$rootScope', '$scope', 'Province', 'Listing', 'Cuisine', '$state', '$interval', '$ionicModal', '$timeout', '$localForage', '_',
+        function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout, $localForage, _) {
+            'use strict';
+            $scope.getNearby = function () {
+                $scope.qData = {app_search: true, range: 5, limit: 5};
+                if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
+                    angular.extend($scope.qData, {
+                        lat: $scope.myLocation.coords.latitude,
+                        lng: $scope.myLocation.coords.longitude
+                    });
+                }
+                $scope.restaurants = Listing.query($scope.qData);
+                $scope.restaurants.$promise.finally(function () {
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+            };
 
-    }])
+            $scope.$watch('myLocation', function (newValue, oldValue) {
+                if (angular.isUndefined(oldValue) && angular.isDefined(newValue)) {
+                    var stopNearby = $interval($scope.getNearby(), 600000);
+
+                    $scope.$on('$destroy', function () {
+                        $interval.cancel(stopNearby);
+                    });
+
+                }
+            });
+
+            $scope.getNearby();
+
+            $scope.cuisines = [
+                {img: 'img/cuisines/bahamian.jpg', slug: 'bahamian'},
+                {img: 'img/cuisines/italian.jpg', slug: 'italian'},
+                {img: 'img/cuisines/steakhouse.jpg', slug: 'steakhouse'},
+                {img: 'img/cuisines/chinese.jpg', slug: 'chinese'},
+                {img: 'img/cuisines/burgers.jpg', slug: 'burgers'}
+            ];
+
+            $scope.toRestaurant = function (id, array) {
+                var obj = _.findWhere(array, {slug: id});
+                $localForage.setItem('currentListing', obj).then(function () {
+                    $scope.$broadcast('loading:show');
+                    $state.go('tabs.restaurant', {id: id});
+                });
+            };
+
+            $scope.startSearch = function () {
+                $state.go('tabs.results', {search: this.search});
+            };
+
+            $scope.getWidth = function () {
+                return document.getElementById('dashboard').offsetWidth - 21;
+            };
+
+            $timeout(function () {
+                document.getElementById('fab-search').classList.toggle('on');
+            }, 1100);
+
+            // Search Modal
+            $ionicModal.fromTemplateUrl('views/dashboard/SearchModal.html', {
+                scope: $scope,
+                focusFirstInput: true
+            }).then(function (modal) {
+                $scope.SearchModal = modal;
+            });
+
+            $scope.openSearchModal = function ($event) {
+                $scope.SearchModal.show($event)
+                    .then(function () {
+                        // Set Ink
+                        ionic.material.ink.displayEffect();
+                    });
+            };
+            $scope.closeSearchModal = function () {
+                $scope.SearchModal.hide();
+            };
+            //Cleanup the popover when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.SearchModal.remove();
+                $scope.$parent.hasHeaderFabRight = false;
+            });
+
+            $scope.$on('$ionicView.enter', function () {
+                $scope.$parent.hasHeaderFabRight = true;
+                document.getElementById('fab-search').classList.toggle('hide');
+            });
+
+            $scope.$on('$ionicView.leave', function () {
+                $scope.$parent.hasHeaderFabRight = false;
+                document.getElementById('fab-search').classList.toggle('hide');
+            });
+
+            // Set Ink
+            ionic.material.ink.displayEffect();
+        }])
+    .controller('FavoritesCtrl', ['$scope', '$localForage', 'Listing', '$ionicModal', '$state', '_',
+        function ($scope, $localForage, Listing, $ionicModal, $state, _) {
+            'use strict';
+            $scope.faves = [];
+            $scope.refresh = function () {
+                $localForage.getItem('favorites').then(function (data) {
+                    if (data && data.length > 0) {
+                        Listing.query({ids: angular.toJson(data)}, function (res) {
+                            $scope.faves = res;
+                            $scope.$broadcast('scroll.refreshComplete');
+                        }, function (res) {
+                            console.log(res);
+                            $scope.$broadcast('scroll.refreshComplete');
+                        });
+                    }
+                });
+            };
+
+            $scope.toFavorite = function (id) {
+                var obj = _.findWhere($scope.faves, {slug: id});
+                $localForage.setItem('currentListing', obj).then(function () {
+                    $scope.$broadcast('loading:show');
+                    $state.go('tabs.favorite', {id: id});
+                });
+            };
+
+            $scope.refresh();
+
+            // FiltersModal
+            $ionicModal.fromTemplateUrl('views/common/filtersModal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+            $scope.openFiltersModal = function () {
+                $scope.modal.show();
+            };
+            $scope.closeFiltersModal = function () {
+                $scope.modal.hide();
+            };
+            //Cleanup the modal when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.modal.remove();
+            });
+            // Execute action on hide modal
+            $scope.$on('modal.hidden', function () {
+                // Execute action
+            });
+            // Execute action on remove modal
+            $scope.$on('modal.removed', function () {
+                // Execute action
+            });
+
+        }])
     .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage',
         function ($scope, leafletData, leafletBoundsHelpers, $cordovaGeolocation, Listing, $ionicModal, $localForage) {
             'use strict';
@@ -572,7 +576,8 @@ angular.module('tabletops.controllers', [])
                     map.panTo(new L.LatLng(res.lat, res.lng));
                 });
 
-                /*var provWatch = */$scope.$watch('settings.province', function (newValue) {
+                /*var provWatch = */
+                $scope.$watch('settings.province', function (newValue) {
                     map.panTo(new L.LatLng(newValue.lat, newValue.lng));
                 });
 
@@ -580,16 +585,20 @@ angular.module('tabletops.controllers', [])
                 $scope.directions = L.mapbox.directions();
                 $scope.directions.setOrigin(L.latLng($scope.myLocation.coords.latitude, $scope.myLocation.coords.longitude));
 
-                /*var directionsLayer = */L.mapbox.directions.layer($scope.directions, {readonly: true})
+                /*var directionsLayer = */
+                L.mapbox.directions.layer($scope.directions, {readonly: true})
                     .addTo(map);
 
-                /*var directionsErrorsControl = */L.mapbox.directions.errorsControl('errors', $scope.directions)
+                /*var directionsErrorsControl = */
+                L.mapbox.directions.errorsControl('errors', $scope.directions)
                     .addTo(map);
 
-                /*var directionsRoutesControl = */L.mapbox.directions.routesControl('routes', $scope.directions)
+                /*var directionsRoutesControl = */
+                L.mapbox.directions.routesControl('routes', $scope.directions)
                     .addTo(map);
 
-                /*var directionsInstructionsControl = */L.mapbox.directions.instructionsControl('instructions', $scope.directions)
+                /*var directionsInstructionsControl = */
+                L.mapbox.directions.instructionsControl('instructions', $scope.directions)
                     .addTo(map);
             });
 
@@ -619,76 +628,76 @@ angular.module('tabletops.controllers', [])
     ])
     .controller('CuisinesCtrl', ['$rootScope', '$scope', '$localForage', 'Cuisine',
         function ($rootScope, $scope, $localForage, Cuisine) {
-        'use strict';
-        $scope.refresh = function () {
-            $localForage.getItem('cuisines').then(function (data) {
-                if (!!data && data.length) {
-                    $scope.$broadcast('scroll.refreshComplete');
-                    $scope.cuisines = data;
-                } else {
-                    Cuisine.query({}, function (res) {
-                        $localForage.setItem('cuisines', res);
+            'use strict';
+            $scope.refresh = function () {
+                $localForage.getItem('cuisines').then(function (data) {
+                    if (!!data && data.length) {
                         $scope.$broadcast('scroll.refreshComplete');
-                        $scope.cuisines = res;
-                    });
-                }
-            });
-        };
-        $scope.refresh();
-    }])
+                        $scope.cuisines = data;
+                    } else {
+                        Cuisine.query({}, function (res) {
+                            $localForage.setItem('cuisines', res);
+                            $scope.$broadcast('scroll.refreshComplete');
+                            $scope.cuisines = res;
+                        });
+                    }
+                });
+            };
+            $scope.refresh();
+        }])
     .controller('CuisineCtrl', ['$rootScope', '$scope', '$localForage', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$state', '_',
         function ($rootScope, $scope, $localForage, Cuisine, $stateParams, ListingRepository, $ionicModal, $state, _) {
-        'use strict';
-        $scope.refresh = _.throttle(function () {
-            Cuisine.get({id: $stateParams.id, restaurants: true}, function (res) {
-                $scope.cuisine = res;
-                $scope.$broadcast('scroll.refreshComplete');
+            'use strict';
+            $scope.refresh = _.throttle(function () {
+                Cuisine.get({id: $stateParams.id, restaurants: true}, function (res) {
+                    $scope.cuisine = res;
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+            }, 5000);
+            $scope.refresh();
+
+            // FiltersModal
+            $ionicModal.fromTemplateUrl('views/common/filtersModal.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
             });
-        }, 5000);
-        $scope.refresh();
-
-        // FiltersModal
-        $ionicModal.fromTemplateUrl('views/common/filtersModal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        }).then(function (modal) {
-            $scope.modal = modal;
-        });
-        $scope.openFiltersModal = function () {
-            $scope.modal.show();
-        };
-        $scope.closeFiltersModal = function () {
-            $scope.modal.hide();
-        };
-        //Cleanup the modal when we're done with it!
-        $scope.$on('$destroy', function () {
-            $scope.modal.remove();
-        });
-        // Execute action on hide modal
-        $scope.$on('modal.hidden', function () {
-            // Execute action
-        });
-        // Execute action on remove modal
-        $scope.$on('modal.removed', function () {
-            // Execute action
-        });
-
-        $scope.toRestaurant = function (id, cid) {
-            var obj = _.findWhere($scope.faves, {slug: id});
-            $localForage.setItem('currentListing', obj).then(function () {
-                $scope.$broadcast('loading:show');
-                $state.go('tabs.cuisine-restaurant', { id: id, cuisine_id: cid});
+            $scope.openFiltersModal = function () {
+                $scope.modal.show();
+            };
+            $scope.closeFiltersModal = function () {
+                $scope.modal.hide();
+            };
+            //Cleanup the modal when we're done with it!
+            $scope.$on('$destroy', function () {
+                $scope.modal.remove();
             });
-        };
+            // Execute action on hide modal
+            $scope.$on('modal.hidden', function () {
+                // Execute action
+            });
+            // Execute action on remove modal
+            $scope.$on('modal.removed', function () {
+                // Execute action
+            });
 
-    }])
+            $scope.toRestaurant = function (id, cid) {
+                var obj = _.findWhere($scope.faves, {slug: id});
+                $localForage.setItem('currentListing', obj).then(function () {
+                    $scope.$broadcast('loading:show');
+                    $state.go('tabs.cuisine-restaurant', {id: id, cuisine_id: cid});
+                });
+            };
+
+        }])
     .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state', '_',
         function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state, _) {
             'use strict';
             Cuisine.query({}, function (res) {
                 $scope.cuisines = res;
                 $scope.cuisineList = angular.copy(res);
-                $scope.cuisineList.push({ slug: null, name:'Any'});
+                $scope.cuisineList.push({slug: null, name: 'Any'});
             });
 
             $scope.filters = {
@@ -716,12 +725,17 @@ angular.module('tabletops.controllers', [])
                 {icon: 'icon ion-model-s', name: 'Delivery', slug: 'delivery', value: undefined},
                 {icon: 'icon ion-help-buoy', name: 'Handicap Accessible', slug: 'disability', value: undefined},
                 {icon: 'icon ion-ios-sunny', name: 'Outdoor Seating', slug: 'outdoor_seating', value: undefined},
-                {icon: 'icon ion-checkmark ', name: 'Reservations Pref/Only', slug: 'reservations_preferred', value: undefined}
+                {
+                    icon: 'icon ion-checkmark ',
+                    name: 'Reservations Pref/Only',
+                    slug: 'reservations_preferred',
+                    value: undefined
+                }
             ];
 
             /*$scope.$watchCollection('filters', function (newValue, oldValue) {
-                console.log(newValue);
-            });*/
+             console.log(newValue);
+             });*/
 
             $scope.refresh = _.throttle(function () {
                 if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
@@ -789,7 +803,7 @@ angular.module('tabletops.controllers', [])
             };
 
             //force refresh on province change
-            $scope.$on('$ionicView.enter', function() {
+            $scope.$on('$ionicView.enter', function () {
                 $localForage.getItem('province').then(function (data) {
                     if (data.slug !== $scope.filters.province) {
                         $scope.filters.province = data.slug;
@@ -906,244 +920,253 @@ angular.module('tabletops.controllers', [])
 
             $scope.submitReview = function () {
                 var promise = UserActions.review($scope.listing, $scope.myReview);
-                promise.$promise.then(function(data) {
+                promise.$promise.then(function (data) {
                     console.log(data);
                     $scope.closeReviewModal();
                 });
             };
 
-            $scope.expandText = function(){
+            $scope.expandText = function () {
                 var element = document.getElementsByTagName('textarea')[0];
-                element.style.height =  element.scrollHeight + 'px';
+                element.style.height = element.scrollHeight + 'px';
             };
 
-            $scope.$on('$ionicView.leave', function() {
+            $scope.$on('$ionicView.leave', function () {
                 //$localForage.removeItem('currentListing');
             });
         }])
     .controller('RestaurantMapCtrl', ['$scope', '$localForage', 'leafletData', 'leafletBoundsHelpers',
         function ($scope, $localForage, leafletData, leafletBoundsHelpers) {
-        'use strict';
-        $scope.directionsSet = false;
-        $scope.showDirections = false;
+            'use strict';
+            $scope.directionsSet = false;
+            $scope.showDirections = false;
 
-        $localForage.getItem('currentListing').then(function (listing) {
-            $scope.listing = listing;
+            $localForage.getItem('currentListing').then(function (listing) {
+                $scope.listing = listing;
 
-            // Leaflet Map Functions
-            $scope.markers = [];
-            var returnScope = function () {
-                return $scope;
-            };
-            for (var i = 0, len = $scope.listing.locations.length; i < len; i++) {
-                var loc = $scope.listing.locations[i];
-                $scope.markers.push({
-                    //layer: 'listings',
-                    lat: loc.lat,
-                    lng: loc.lng,
-                    getMessageScope: returnScope,
-                    compileMessage: true,
-                    message: '<div><h6 class=\'text-center\'>' + $scope.listing.name + '</h6><div class=\'button-bar\'><tt-directionsa get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directionsa></div></div>',
-                    icon: {
-                        prefix: 'ion',
-                        type: 'extraMarker',
-                        icon: 'ion-pizza',
-                        markerColor: 'aqua',
-                        /*v.rating_count != 0
-                         ? v.rating_cache > 2
-                         ? v.rating_cache > 4
-                         ? 'green'
-                         :'orange'
-                         :'red'
-                         : 'white'*/
-                        shape: 'penta'
-                    }
-                });
-            }
-            //console.log($scope.markers);
-            if ($scope.myLocation.coords) {
-                $scope.center = {
-                    lat: $scope.myLocation.coords.latitude,
-                    lng: $scope.myLocation.coords.longitude,
-                    zoom: 12
+                // Leaflet Map Functions
+                $scope.markers = [];
+                var returnScope = function () {
+                    return $scope;
                 };
-                $scope.markers.push({
-                    lat: $scope.myLocation.coords.latitude,
-                    lng: $scope.myLocation.coords.longitude,
-                    icon: {
-                        prefix: 'ion',
-                        type: 'extraMarker',
-                        icon: 'ion-person',
-                        markerColor: 'black',
-                        shape: 'circle'
-                    }
-                });
-            }
-            // Default Center
-            $scope.center = {
-                lat: 25.033965,
-                lng: -77.35176,
-                zoom: 11
-            };
+                for (var i = 0, len = $scope.listing.locations.length; i < len; i++) {
+                    var loc = $scope.listing.locations[i];
+                    $scope.markers.push({
+                        //layer: 'listings',
+                        lat: loc.lat,
+                        lng: loc.lng,
+                        getMessageScope: returnScope,
+                        compileMessage: true,
+                        message: '<div><h6 class=\'text-center\'>' + $scope.listing.name + '</h6><div class=\'button-bar\'><tt-directionsa get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directionsa></div></div>',
+                        icon: {
+                            prefix: 'ion',
+                            type: 'extraMarker',
+                            icon: 'ion-pizza',
+                            markerColor: 'aqua',
+                            /*v.rating_count != 0
+                             ? v.rating_cache > 2
+                             ? v.rating_cache > 4
+                             ? 'green'
+                             :'orange'
+                             :'red'
+                             : 'white'*/
+                            shape: 'penta'
+                        }
+                    });
+                }
+                //console.log($scope.markers);
+                if ($scope.myLocation.coords) {
+                    $scope.center = {
+                        lat: $scope.myLocation.coords.latitude,
+                        lng: $scope.myLocation.coords.longitude,
+                        zoom: 12
+                    };
+                    $scope.markers.push({
+                        lat: $scope.myLocation.coords.latitude,
+                        lng: $scope.myLocation.coords.longitude,
+                        icon: {
+                            prefix: 'ion',
+                            type: 'extraMarker',
+                            icon: 'ion-person',
+                            markerColor: 'black',
+                            shape: 'circle'
+                        }
+                    });
+                }
+                // Default Center
+                $scope.center = {
+                    lat: 25.033965,
+                    lng: -77.35176,
+                    zoom: 11
+                };
 
-            $scope.height = window.screen.height;
-            var maxBounds = leafletBoundsHelpers.createBoundsFromArray([
-                [27.293689, -79.541016],
-                [20.797522, -71.015968]
-            ]);
+                $scope.height = window.screen.height;
+                var maxBounds = leafletBoundsHelpers.createBoundsFromArray([
+                    [27.293689, -79.541016],
+                    [20.797522, -71.015968]
+                ]);
 
-            angular.extend($scope, {
-                defaults: {
-                    tileLayer: 'http://api.tiles.mapbox.com/v4/jgiovanni.lonlneon/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ',
-                    //maxZoom: 16,
-                    minZoom: 8,
-                    attributionControl: false,
-                    zoomControlPosition: 'topright',
-                    path: {
-                        weight: 10,
-                        color: '#800000',
-                        opacity: 1
+                angular.extend($scope, {
+                    defaults: {
+                        tileLayer: 'http://api.tiles.mapbox.com/v4/jgiovanni.lonlneon/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ',
+                        //maxZoom: 16,
+                        minZoom: 8,
+                        attributionControl: false,
+                        zoomControlPosition: 'topright',
+                        path: {
+                            weight: 10,
+                            color: '#800000',
+                            opacity: 1
+                        },
+                        tileLayerOptions: {
+                            detectRetina: true,
+                            reuseTiles: true,
+                            unloadInvisibleTiles: false
+                        }
+                        //scrollWheelZoom: false
                     },
-                    tileLayerOptions: {
-                        detectRetina: true,
-                        reuseTiles: true,
-                        unloadInvisibleTiles: false
-                    }
-                    //scrollWheelZoom: false
-                },
-                maxBounds: maxBounds
-                /*layers: {
-                 baselayers: {
-                 mb: {
-                 name: 'Bahamas',
-                 type: 'xyz',
-                 url: 'http://api.tiles.mapbox.com/v4/jgiovanni.lonlneon/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ',
-                 layerOptions: {
-                 subdomains: [
-                 'a',
-                 'b',
-                 'c'
-                 ],
-                 //attribution: '© OpenStreetMap contributors',
-                 continuousWorld: true
-                 },
-                 layerParams: {}
-                 }
-                 },
-                 overlays: {
-                 listings: {
-                 name: 'Listings',
-                 type: 'markercluster',
-                 visible: true,
-                 layerOptions: {
-                 chunkedLoading: true,
-                 showCoverageOnHover: false,
-                 removeOutsideVisibleBounds: true
-                 },
-                 layerParams: {}
-                 }
-                 }
-                 }*/
-            });
-
-            leafletData.getMap().then(function (map) {
-                L.mapbox.accessToken = 'pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ';
-                $scope.directions = L.mapbox.directions();
-                $scope.directions.setOrigin(L.latLng($scope.myLocation.coords.latitude, $scope.myLocation.coords.longitude));
-
-                var directionsLayer = L.mapbox.directions.layer($scope.directions, {readonly: true})
-                    .addTo(map);
-
-                var directionsErrorsControl = L.mapbox.directions.errorsControl('errors', $scope.directions)
-                    .addTo(map);
-
-                var directionsRoutesControl = L.mapbox.directions.routesControl('routes', $scope.directions)
-                    .addTo(map);
-
-                var directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', $scope.directions)
-                    .addTo(map);
-            });
-
-            $scope.startDirections = function (lat, lng) {
-                $scope.directions.setDestination(L.latLng(lat, lng));
-                $scope.directions.query();
-                $scope.directionsSet = true;
-                $scope.showDirections = false;
-                leafletData.getMap().then(function (map) {
-                    map.closePopup();
-                    map.fitBounds([
-                        [$scope.directions.origin.geometry.coordinates[1], $scope.directions.origin.geometry.coordinates[0]],
-                        [$scope.directions.destination.geometry.coordinates[1], $scope.directions.destination.geometry.coordinates[0]]
-                    ]);
+                    maxBounds: maxBounds
+                    /*layers: {
+                     baselayers: {
+                     mb: {
+                     name: 'Bahamas',
+                     type: 'xyz',
+                     url: 'http://api.tiles.mapbox.com/v4/jgiovanni.lonlneon/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ',
+                     layerOptions: {
+                     subdomains: [
+                     'a',
+                     'b',
+                     'c'
+                     ],
+                     //attribution: '© OpenStreetMap contributors',
+                     continuousWorld: true
+                     },
+                     layerParams: {}
+                     }
+                     },
+                     overlays: {
+                     listings: {
+                     name: 'Listings',
+                     type: 'markercluster',
+                     visible: true,
+                     layerOptions: {
+                     chunkedLoading: true,
+                     showCoverageOnHover: false,
+                     removeOutsideVisibleBounds: true
+                     },
+                     layerParams: {}
+                     }
+                     }
+                     }*/
                 });
-                console.log($scope.directions);
-            };
 
-            $scope.toggleDirections = function () {
-                $scope.showDirections = !$scope.showDirections;
-            };
+                leafletData.getMap().then(function (map) {
+                    L.mapbox.accessToken = 'pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ';
+                    $scope.directions = L.mapbox.directions();
+                    $scope.directions.setOrigin(L.latLng($scope.myLocation.coords.latitude, $scope.myLocation.coords.longitude));
 
-            //Handling Route Steps
-            //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
-        });
-    }])
+                    var directionsLayer = L.mapbox.directions.layer($scope.directions, {readonly: true})
+                        .addTo(map);
+
+                    var directionsErrorsControl = L.mapbox.directions.errorsControl('errors', $scope.directions)
+                        .addTo(map);
+
+                    var directionsRoutesControl = L.mapbox.directions.routesControl('routes', $scope.directions)
+                        .addTo(map);
+
+                    var directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', $scope.directions)
+                        .addTo(map);
+                });
+
+                $scope.startDirections = function (lat, lng) {
+                    $scope.directions.setDestination(L.latLng(lat, lng));
+                    $scope.directions.query();
+                    $scope.directionsSet = true;
+                    $scope.showDirections = false;
+                    leafletData.getMap().then(function (map) {
+                        map.closePopup();
+                        map.fitBounds([
+                            [$scope.directions.origin.geometry.coordinates[1], $scope.directions.origin.geometry.coordinates[0]],
+                            [$scope.directions.destination.geometry.coordinates[1], $scope.directions.destination.geometry.coordinates[0]]
+                        ]);
+                    });
+                    console.log($scope.directions);
+                };
+
+                $scope.toggleDirections = function () {
+                    $scope.showDirections = !$scope.showDirections;
+                };
+
+                //Handling Route Steps
+                //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
+            });
+        }])
     .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout',
         function ($scope, $localForage, $cordovaFacebook, $timeout) {
-        'use strict';
-        $localForage.getItem('user').then(function (res) {
-            $scope.user = res;
-        });
-        $localForage.getItem('useFacebook').then(function (res) {
-            $scope.useFacebook = res;
-        });
-
-        $cordovaFacebook.api('me/friends?fields=name,id,picture.width(200)')
-            .then(function (res) {
-                $scope.friends = res.data;
+            'use strict';
+            $localForage.getItem('user').then(function (res) {
+                $scope.user = res;
+            });
+            $localForage.getItem('useFacebook').then(function (res) {
+                $scope.useFacebook = res;
             });
 
-        // Set Motion
-        $timeout(function() {
-            ionic.material.motion.slideUp({
-                selector: '.slide-up'
-            });
-        }, 900);
+            $cordovaFacebook.api('me/friends?fields=name,id,picture.width(200)')
+                .then(function (res) {
+                    $scope.friends = res.data;
+                });
 
-    }])
-    .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_',
-        function ($scope, $localForage, $cordovaAppRate, $log, _) {
-        'use strict';
-        $scope.settings = {
-            enableFriends: true
-        };
+            // Set Motion
+            $timeout(function () {
+                ionic.material.motion.slideUp({
+                    selector: '.slide-up'
+                });
+            }, 900);
 
-        $localForage.getItem('user').then(function (user) {
-            $scope.user = user;
-        });
-
-        $localForage.getItem('usedProvider').then(function (provider) {
-            $scope.connectedProviders = [provider];
-            $scope.isProviderConnected = function (a) {
-                return _.contains($scope.connectedProviders, a);
+        }])
+    .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_', 'AuthenticationService',
+        function ($scope, $localForage, $cordovaAppRate, $log, _, AuthenticationService) {
+            'use strict';
+            $scope.settings = {
+                enableFriends: true
             };
-        });
 
-        $scope.rateApp = function () {
-            $cordovaAppRate.promptForRating(true).then(function (result) {
-                $log.log(result);
+            $localForage.getItem('user').then(function (user) {
+                $scope.user = user;
             });
-        };
 
-        $scope.toggleThisGroup = function (group) {
-            if ($scope.isGroupShown(group)) {
-                $scope.shownGroup = null;
-            } else {
-                $scope.shownGroup = group;
-            }
-        };
-        $scope.isGroupShown = function (group) {
-            return $scope.shownGroup === group;
-        };
+            $localForage.getItem('usedProvider').then(function (provider) {
+                $scope.connectedProviders = [provider];
+                $scope.isProviderConnected = function (a) {
+                    return _.contains($scope.connectedProviders, a);
+                };
+            });
 
-    }]);
+            $scope.rateApp = function () {
+                $cordovaAppRate.promptForRating(true).then(function (result) {
+                    $log.log(result);
+                });
+            };
+
+            $scope.signInFacebook = function () {
+                AuthenticationService.FbLogin();
+            };
+
+            $scope.signInGoogle = function () {
+                AuthenticationService.GoogleLogin();
+            };
+
+
+            $scope.toggleThisGroup = function (group) {
+                if ($scope.isGroupShown(group)) {
+                    $scope.shownGroup = null;
+                } else {
+                    $scope.shownGroup = group;
+                }
+            };
+            $scope.isGroupShown = function (group) {
+                return $scope.shownGroup === group;
+            };
+
+        }]);
 

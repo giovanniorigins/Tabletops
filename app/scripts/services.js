@@ -68,8 +68,8 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaDevice', '$ionicUser', '$ionicPush',
-        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaDevice, $ionicUser, $ionicPush) {
+    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaOauth', '$cordovaDevice', '$ionicUser', '$ionicPush', '$window',
+        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaOauth, $cordovaDevice, $ionicUser, $ionicPush, $window) {
             'use strict';
             var service = {
                 login: function (user) {
@@ -120,7 +120,34 @@ angular.module('tabletops.services', [])
                     authService.loginCancelled();
                 },
                 authCheck: function () {
+                    var IoUser = $ionicUser.get();
+                    if(!IoUser.user_id) {
+                        // Set your user_id here, or generate a random one.
+                        IoUser.user_id = angular.isDefined($window.device) ? $cordovaDevice.getUUID() : $ionicUser.generateGUID();
+                        console.log('New IoUser');
+                    }
+
+                    // Identify your user with the Ionic User Service
+                    $ionicUser.identify(IoUser).then(function(){
+                        $localForage.setItem('IoIdentified', true);
+                        console.log('Identified user: ', IoUser);
+                    });
+
+                    if (angular.isDefined($window.pushNotification)) {
+                        $ionicPush.register({
+                            canShowAlert: false, //Should new pushes show an alert on your screen?
+                            canSetBadge: true, //Should new pushes be allowed to update app icon badges?
+                            canPlaySound: true, //Should notifications be allowed to play a sound?
+                            canRunActionsOnWake: true, // Whether to run auto actions outside the app,
+                            onNotification: function (notification) {
+                                // Called for each notification.
+                                console.log(notification);
+                            }
+                        });
+                    }
+
                     $localForage.getItem('usedProvider').then(function (provider) {
+                        provider = false;
                         switch (provider) {
                             case 'facebook':
                                 return service.FbCheckLogin();
@@ -132,32 +159,17 @@ angular.module('tabletops.services', [])
                                 });
                                 break;
                             default:
-                                // Set Anon Info
-                                $ionicPush.register({
-                                    canShowAlert: false, //Should new pushes show an alert on your screen?
-                                    canSetBadge: true, //Should new pushes be allowed to update app icon badges?
-                                    canPlaySound: true, //Should notifications be allowed to play a sound?
-                                    canRunActionsOnWake: true, // Whether to run auto actions outside the app,
-                                    onNotification: function(notification) {
-                                        // Called for each notification.
-                                        console.log(notification);
-                                    }
-                                }, {
-                                    user_id: $cordovaDevice.getUUID()
-                                });
-
                                 $state.go('signin');
                         }
                     });
                 },
                 authHandler: function (provider) {
                     $localForage.getItem('providerToken').then(function (token) {
-
                         switch (provider) {
                             case 'facebook':
                                 return service.FbMe();
                             case 'google':
-                                return service.FbMe();
+                                return service.GoogleMe();
                             case 'email':
                                 $http.post(ApiEndpoint.api + '/me', {}, {
                                     ignoreAuthModule: true,
@@ -261,91 +273,64 @@ angular.module('tabletops.services', [])
                 },
                 // Google Auth
                 GoogleCheckLogin: function () {
-
+                    $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function(result) {
+                        // results
+                        console.log(result);
+                        $localForage.setItem('usedProvider', 'Google').then(function () {
+                            $localForage.setItem('providerToken', result.access_token).then(function () {
+                                return service.authHandler('google');
+                            });
+                        });
+                    }, function(error) {
+                        // error
+                        console.log(error);
+                    });
                 },
                 GoogleLogin: function () {
-                    var googleapi = {
-                        authorize: function (options) {
-                            var deferred = $q.defer();
-
-                            //Build the OAuth consent page URL
-                            var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + serializeData({
-                                    client_id: options.client_id,
-                                    redirect_uri: options.redirect_uri,
-                                    response_type: 'code',
-                                    scope: options.scope
-                                });
-
-                            var browserOptions = {
-                                location: 'no',
-                                clearcache: 'yes',
-                                toolbar: 'no'
-                            };
-
-                            //Open the OAuth consent page in the InAppBrowser
-                            $cordovaInAppBrowser.open(authUrl, '_blank', browserOptions)
-                                .then(function (event) {
-                                    // success
-                                })
-                                .catch(function (event) {
-                                    // error
-                                });
-
-                            //The recommendation is to use the redirect_uri "urn:ietf:wg:oauth:2.0:oob"
-                            //which sets the authorization code in the browser's title. However, we can't
-                            //access the title of the InAppBrowser.
-                            //
-                            //Instead, we pass a bogus redirect_uri of "http://localhost", which means the
-                            //authorization code will get set in the url. We can access the url in the
-                            //loadstart and loadstop events. So if we bind the loadstart event, we can
-                            //find the authorization code and close the InAppBrowser after the user
-                            //has granted us access to their data.
-                            $rootScope.$on('$cordovaInAppBrowser:loadstart', function (e, event) {
-                                var url = e.originalEvent.url;
-                                var code = /\?code=(.+)$/.exec(url);
-                                var error = /\?error=(.+)$/.exec(url);
-
-                                if (code || error) {
-                                    //Always close the browser when match is found
-                                    $cordovaInAppBrowser.close();
-                                }
-
-                                if (code) {
-                                    //Exchange the authorization code for an access token
-                                    $http('https://accounts.google.com/o/oauth2/token', {
-                                        code: code[1],
-                                        client_id: options.client_id,
-                                        client_secret: options.client_secret,
-                                        redirect_uri: options.redirect_uri,
-                                        grant_type: 'authorization_code'
-                                    })
-                                        .success(function (data) {
-                                            deferred.resolve(data.data);
-                                        })
-                                        .error(function (res) {
-                                            deferred.reject(res.data);
-                                        });
-                                } else if (error) {
-                                    //The user denied access to the app
-                                    deferred.reject({
-                                        error: error[1]
-                                    });
-                                }
+                    $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function(result) {
+                        // results
+                        console.log(result);
+                        $localForage.setItem('usedProvider', 'Google').then(function () {
+                            $localForage.setItem('providerToken', result.access_token).then(function () {
+                                return service.authHandler('google');
                             });
+                        });
+                    }, function(error) {
+                        // error
+                        console.log(error);
+                    });
+                },
+                GoogleMe: function () {
+                    $localForage.getItem('providerToken').then(function (token) {
+                        $http.post(ApiEndpoint.auth + '/Google?token=' + token)
+                            .success(function (res) {
+                                if (res.error) {
+                                    console.log('Auth Error');
+                                    console.log(res.error);
+                                    return res.error;
+                                }
+                                console.log('Auth Success');
+                                console.log(res);
 
-                            return deferred.promise();
-                        }
-                    };
+                                $rootScope.isLoggedin = true;
 
-                    googleapi.authorize({
-                        client_id: '861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com',
-                        client_secret: '_A1F9odJIABM-zFrf45k2_wi',
-                        redirect_uri: 'http://localhost',
-                        scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
-                    }).done(function (data) {
-                        //$loginStatus.html('Access Token: ' + data.access_token);
-                    }).fail(function (data) {
-                        //$loginStatus.html(data.error);
+                                $localForage.setItem('user', res.profile).then(function (user) {
+                                    $ionicUser.set('user_id', user.user.id);
+                                    $ionicUser.set('name', user.user.full_name);
+                                    $ionicUser.set('created_at', user.user.created_at);
+                                    $ionicUser.set('language', user.language);
+                                    $ionicUser.set('gender', user.gender);
+                                    $ionicUser.push('providers', user.provider, true);
+                                });
+                                $localForage.setItem('authorizationToken', res.token);
+                                $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
+                                $rootScope.$broadcast('event:auth-loginConfirmed');
+                                $state.go('tabs.dashboard');
+                            })
+                            .error(function (res) {
+                                console.log('Auth Error');
+                                console.log(res);
+                            });
                     });
                 }
             };
