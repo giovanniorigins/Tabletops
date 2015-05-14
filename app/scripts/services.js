@@ -147,7 +147,6 @@ angular.module('tabletops.services', [])
                     }
 
                     $localForage.getItem('usedProvider').then(function (provider) {
-                        provider = false;
                         switch (provider) {
                             case 'facebook':
                                 return service.FbCheckLogin();
