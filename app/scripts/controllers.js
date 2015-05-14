@@ -619,7 +619,7 @@ angular.module('tabletops.controllers', [])
             });
 
             $scope.toRestaurant = function (id, cid) {
-                var obj = _.findWhere($scope.faves, {slug: id});
+                var obj = _.findWhere($scope.cuisine.listings, {slug: id});
                 $localForage.setItem('currentListing', obj).then(function () {
                     $scope.$broadcast('loading:show');
                     $state.go('tabs.cuisine-restaurant', {id: id, cuisine_id: cid});
@@ -647,8 +647,8 @@ angular.module('tabletops.controllers', [])
                 type: undefined,
                 wifi: undefined,
                 live_music: undefined,
-                takeout: undefined,
-                delivery: undefined,
+                takeout: $stateParams.takeout || undefined,
+                delivery: $stateParams.delivery || undefined,
                 disability: undefined,
                 outdoor_seating: undefined,
                 reservations_preferred: undefined
@@ -752,8 +752,8 @@ angular.module('tabletops.controllers', [])
             ionic.material.ink.displayEffect();
 
         }])
-    .controller('RestaurantCtrl', ['$scope', 'Listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$localForage', 'HoursDays', 'StartHours', 'EndHours', 'UserActions',
-        function ($scope, Listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $localForage, HoursDays, StartHours, EndHours, UserActions) {
+    .controller('RestaurantCtrl', ['$scope', 'Listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$stateParams', '$localForage', 'HoursDays', 'StartHours', 'EndHours', 'UserActions',
+        function ($scope, Listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $stateParams, $localForage, HoursDays, StartHours, EndHours, UserActions) {
             'use strict';
 
             $localForage.getItem('currentListing').then(function (data) {
@@ -779,7 +779,17 @@ angular.module('tabletops.controllers', [])
 
                 $scope.toMap = function (id) {
                     $localForage.setItem('currentListing', $scope.listing).then(function () {
-                        $state.go('tabs.restaurant-map', {id: $scope.listing.id, target: id});
+                        switch ($state.current.name) {
+                            case 'tabs.favorite':
+                                $state.go('tabs.favorite-map', {id: $scope.listing.slug, target: id});
+                                break;
+                            case 'tabs.cuisine-restaurant':
+                                $state.go('tabs.cuisine-restaurant-map', {id: $scope.listing.slug, cuisine_id: $stateParams.cuisine_id, target: id});
+                                break;
+                            default:
+                                $state.go('tabs.restaurant-map', {id: $scope.listing.slug, target: id});
+                                break;
+                        }
                     });
                 };
                 $scope.addPhotos = function () {
@@ -1068,6 +1078,7 @@ angular.module('tabletops.controllers', [])
             };
 
             $localForage.getItem('user').then(function (user) {
+                console.log(user);
                 $scope.user = user;
             });
 

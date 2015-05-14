@@ -100,7 +100,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                     }
                 })
                 .state('tabs.results', {
-                    url: '/dashboard/search?search',
+                    url: '/dashboard/search/:cuisine?search&takeout&delivery',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/listings/restaurants.html',
@@ -135,6 +135,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                         }
                     }
                 })
+                // Cuisine Restaurant Pages
                 .state('tabs.cuisine-restaurant', {
                     url: '/dashboard/cuisines/:cuisine_id/restaurants/:id',
                     views: {
@@ -144,6 +145,19 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                         }
                     }
                 })
+                .state('tabs.cuisine-restaurant-map', {
+                    url: '/dashboard/cuisines/:cuisine_id/restaurants/:id/map',
+                    views: {
+                        'dashboard-tab': {
+                            templateUrl: 'views/common/restaurant-map.html',
+                            params: [
+                                'target'
+                            ],
+                            controller: 'RestaurantMapCtrl'
+                        }
+                    }
+                })
+                // Common Restaurant Pages
                 .state('tabs.restaurant', {
                     url: '/dashboard/restaurants/:id',
                     views: {
@@ -197,15 +211,23 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                     views: {
                         'favorites-tab': {
                             templateUrl: 'views/common/restaurant.html',
-                            controller: 'RestaurantCtrl'/*,
-                             resolve: {
-                             listing: function (Listing, $stateParams, $http) {
-                             return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
-                             }
-                             }*/
+                            controller: 'RestaurantCtrl'
                         }
                     }
                 })
+                .state('tabs.favorite-map', {
+                    url: '/favorites/:id/map',
+                    views: {
+                        'favorites-tab': {
+                            templateUrl: 'views/common/restaurant-map.html',
+                            params: [
+                                'target'
+                            ],
+                            controller: 'RestaurantMapCtrl'
+                        }
+                    }
+                })
+
                 .state('tabs.map', {
                     url: '/map',
                     views: {
