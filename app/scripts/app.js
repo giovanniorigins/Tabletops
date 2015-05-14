@@ -1,6 +1,6 @@
 var valById = function (arr, id) {
     'use strict';
-    return _.find(arr, function (a) {
+    return window._.find(arr, function (a) {
         return parseFloat(a.id) === parseFloat(id);
     });
 };

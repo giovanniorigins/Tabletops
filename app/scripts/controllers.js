@@ -31,7 +31,7 @@ var closestLocation = function (targetLocation, locationData) {
         return vectorDistance(dx, dy);
     }
 
-    return _.reduce(locationData, function (prev, curr) {
+    return window._.reduce(locationData, function (prev, curr) {
         var prevDistance = locationDistance(targetLocation, prev),
             currDistance = locationDistance(targetLocation, curr);
         return (prevDistance < currDistance) ? prev : curr;
