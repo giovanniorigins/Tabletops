@@ -1,12 +1,29 @@
-<ion-view view-title="Login" hide-nav-bar="false"
-          style="background-image: url('../../img/bgs/cs21.jpg'); background-position: center center; background-size: cover">
+<ion-view view-title="Login" hide-nav-bar="false" class="bg-food">
     <ion-content padding="true">
         <div class="col col-80 col-offset-10">
             <div style="padding-top: 60px; padding-bottom: 30px">
-                <img src="../../img/logo-white_red.png" alt="Tabletops" width="100%"/>
+                <img src="img/logo-white_red.png" alt="Tabletops" width="100%"/>
             </div>
 
-            <div class="padding" ng-init="showForm = false;showAccountForm = false">
+            <button class="button button-block button-dark button-flat" ui-sref="signin">GO BACK</button>
+
+            <div>
+                <form class="list list-inset" name="loginForm">
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Email</span>
+                        <input type="text" placeholder="Email" ng-model="user.email" required>
+                    </label>
+
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Password</span>
+                        <input type="password" placeholder="Password" ng-model="user.password" required>
+                    </label>
+                </form>
+                <button class="button icon-left ion-log-in button button-block button-balanced button-flat" ng-disabled="!loginForm.$valid" ng-click="login()">
+                    LOGIN
+                </button>
+                <button class="button button-block button-outline button-light button-flat" ui-sref="forgotpassword">FORGOT PASSWORD?</button>
+
             </div>
         </div>
     </ion-content>

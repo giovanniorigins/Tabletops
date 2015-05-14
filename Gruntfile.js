@@ -68,8 +68,12 @@ module.exports = function (grunt) {
                 files: ['<%= yeoman.app %>/**/*.html'],
                 tasks: ['newer:copy:app']
             },
+            views: {
+                files: ['<%= yeoman.app %>/<%= yeoman.views %>/**/*.html'],
+                tasks: ['newer:copy:app', 'newer:jshint:all']
+            },
             js: {
-                files: ['<%= yeoman.app %>/<%= yeoman.scripts %>/**/*.js'],
+                files: ['<%= yeoman.app %>/<%= yeoman.scripts %>/**/*.js', '<%= yeoman.app %>/controllers/*.js'],
                 tasks: ['newer:copy:app', 'newer:jshint:all']
             },
             styles: {
@@ -531,13 +535,13 @@ module.exports = function (grunt) {
 
                 // Android-only integer version to increase with each release.
                 // See http://developer.android.com/tools/publishing/versioning.html
-                versionCode: function(){ return(1) },
+                versionCode: function(){ return(1); },
 
                 // Android-only options that will override the defaults set by Phonegap in the
                 // generated AndroidManifest.xml
                 // See https://developer.android.com/guide/topics/manifest/uses-sdk-element.html
-                minSdkVersion: function(){ return(10) },
-                targetSdkVersion: function(){ return(19) },
+                minSdkVersion: function(){ return(10); },
+                targetSdkVersion: function(){ return(19); },
 
                 // iOS7-only options that will make the status bar white and transparent
                 iosStatusBar: 'WhiteAndTransparent',

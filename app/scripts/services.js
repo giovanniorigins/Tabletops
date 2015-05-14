@@ -170,35 +170,7 @@ angular.module('tabletops.services', [])
                             case 'google':
                                 return service.GoogleMe();
                             case 'email':
-                                $http.post(ApiEndpoint.api + '/me', {}, {
-                                    ignoreAuthModule: true,
-                                    headers: {
-                                        Authorization: 'Bearer ' + token
-                                    }
-                                })
-                                    .success(function (data) {
-                                        if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
-                                            $rootScope.user = data.user;
-                                            $localForage.setItem('user', data.user).then(function (user) {
-                                                // Set User Info
-
-
-                                                // Check if this is first run
-                                                $localForage.getItem('pastInitialStart').then(function (res) {
-                                                    if (!!res) {
-                                                        return $state.go('tabs.dashboard', null, {location: 'replace'});
-                                                    } else {
-                                                        return $state.go('tabs.dashboard', null, {location: 'replace'});
-                                                        //return $state.go('intro', null, {location: 'replace'});
-                                                    }
-                                                });
-                                                console.log(data);
-                                            });
-                                        } else {
-                                            return $state.go('signin');
-                                        }
-                                    });
-                                break;
+                                return service.Me();
                             default:
                                 return $state.go('signin');
                         }
@@ -262,7 +234,7 @@ angular.module('tabletops.services', [])
                                 $localForage.setItem('authorizationToken', res.token);
                                 $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
                                 $rootScope.$broadcast('event:auth-loginConfirmed');
-                                $state.go('tabs.dashboard');
+                                return service.Me();
                             })
                             .error(function (res) {
                                 console.log('Auth Error');
@@ -272,17 +244,10 @@ angular.module('tabletops.services', [])
                 },
                 // Google Auth
                 GoogleCheckLogin: function () {
-                    $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function(result) {
-                        // results
-                        console.log(result);
-                        $localForage.setItem('usedProvider', 'Google').then(function () {
-                            $localForage.setItem('providerToken', result.access_token).then(function () {
-                                return service.authHandler('google');
-                            });
-                        });
-                    }, function(error) {
-                        // error
-                        console.log(error);
+                    $localForage.getItem('usedProvider').then(function (provider) {
+                        if (provider === 'Google') {
+                            return service.authHandler('google');
+                        }
                     });
                 },
                 GoogleLogin: function () {
@@ -324,11 +289,43 @@ angular.module('tabletops.services', [])
                                 $localForage.setItem('authorizationToken', res.token);
                                 $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
                                 $rootScope.$broadcast('event:auth-loginConfirmed');
-                                $state.go('tabs.dashboard');
+                                return service.Me();
                             })
                             .error(function (res) {
                                 console.log('Auth Error');
                                 console.log(res);
+                            });
+                    });
+                },
+                Me: function () {
+                    $localForage.getItem('authorizationToken').then(function (token) {
+                        $http.post(ApiEndpoint.api + '/me', {}, {
+                            ignoreAuthModule: true,
+                            headers: {
+                                Authorization: 'Bearer ' + token
+                            }
+                        })
+                            .success(function (data) {
+                                if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
+                                    $rootScope.user = data.user;
+                                    $localForage.setItem('user', data.user).then(function (user) {
+                                        // Set User Info
+
+
+                                        // Check if this is first run
+                                        $localForage.getItem('pastInitialStart').then(function (res) {
+                                            if (!!res) {
+                                                return $state.go('tabs.dashboard', null, {location: 'replace'});
+                                            } else {
+                                                return $state.go('tabs.dashboard', null, {location: 'replace'});
+                                                //return $state.go('intro', null, {location: 'replace'});
+                                            }
+                                        });
+                                        console.log(data);
+                                    });
+                                } else {
+                                    return $state.go('signin');
+                                }
                             });
                     });
                 }

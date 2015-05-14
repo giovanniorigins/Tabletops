@@ -138,13 +138,23 @@ angular.module('tabletops.controllers', [])
             };
 
             $localForage.getItem('provinces').then(function (data) {
-                $scope.provinces = angular.isDefined(data) ? data : Province.query({}, function (res) {
+                if (angular.isDefined(data) && !!data.length) {
+                    $scope.provinces = data;
+                    $scope.settings.province = _.findWhere($scope.provinces, {slug: 'np-pi'});
+                } else {
+                    $scope.provinces = $scope.getProvinces().then(function () {
+                        $scope.settings.province = _.findWhere($scope.provinces, {slug: 'np-pi'});
+                    });
+                }
+            });
+
+            $scope.getProvinces = function () {
+                return Province.query({}, function (res) {
                     $scope.provinces = res;
                     $localForage.setItem('provinces', res);
+                    return res;
                 });
-
-                $scope.settings.province = _.findWhere($scope.provinces, {slug: 'np-pi'});
-            });
+            };
 
             $scope.setProvince = function (p) {
                 $scope.settings.province = p;
@@ -243,80 +253,6 @@ angular.module('tabletops.controllers', [])
                 }, 600);
             });
 
-        }])
-    .controller('SplashCtrl', ['$scope', 'AuthenticationService', '$state', '$localForage', '$ionicPlatform',
-        function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
-            'use strict';
-            $ionicPlatform.ready(function () {
-                AuthenticationService.authCheck();
-            });
-        }])
-    .controller('IntroCtrl', ['$scope', '$state', '$ionicSlideBoxDelegate',
-        function ($scope, $state, $ionicSlideBoxDelegate) {
-            'use strict';
-
-            // Called to navigate to the main app
-            $scope.startApp = function () {
-                $state.go('tabs.dashboard');
-            };
-            $scope.next = function () {
-                $ionicSlideBoxDelegate.next();
-            };
-            $scope.previous = function () {
-                $ionicSlideBoxDelegate.previous();
-            };
-
-            // Called each time the slide changes
-            $scope.slideChanged = function (index) {
-                $scope.slideIndex = index;
-            };
-        }])
-    .controller('SignInCtrl', ['$rootScope', '$scope', '$state', 'AuthenticationService', '$localForage',
-        function ($rootScope, $scope, $state, AuthenticationService, $localForage) {
-            'use strict';
-            $localForage.getItem('userCreds').then(function (data) {
-                console.log(data);
-                if (!angular.isUndefined(data) || data) {
-                    AuthenticationService.login(data);
-                }
-            });
-
-            $scope.message = '';
-
-            $scope.user = {
-                email: null,
-                password: null
-            };
-
-            $scope.login = function () {
-                AuthenticationService.login($scope.user);
-            };
-
-            $scope.signInFacebook = function () {
-                AuthenticationService.FbLogin();
-            };
-
-            $scope.signInGoogle = function () {
-                AuthenticationService.GoogleLogin();
-            };
-
-            $scope.$on('event:auth-loginRequired', function () {
-                console.log('handling login required');
-                $state.go('signin');
-            });
-
-            $scope.$on('event:auth-login-failed', function (e, status) {
-                var error = 'Login failed.';
-                if (parseInt(status) === 401) {
-                    error = 'Invalid Username or Password.';
-                }
-                $scope.message = error;
-            });
-
-            $scope.$on('event:auth-logout-complete', function () {
-                console.log('logout complete');
-                $state.go('signin', {}, {reload: true, inherit: false});
-            });
         }])
     .controller('LogoutCtrl', ['$scope', 'AuthenticationService',
         function ($scope, AuthenticationService) {

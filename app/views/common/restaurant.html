@@ -48,13 +48,15 @@
         </div>
 
         <div class="padding-bottom"></div>
-        <blockquote ng-if="::listing.summary" class="padding" ng-bind="::listing.summary"></blockquote>
+        <fieldset class="featured-header" ng-if="listing.summary">
+            <legend class="assertive">Summary</legend>
+        </fieldset>
+        <p ng-if="::listing.summary" class="padding-horizontal" ng-bind="::listing.summary"></p>
 
-        <!--<h4 class="padding-horizontal assertive">Cuisines</h4>-->
-        <fieldset class="featured-header">
+        <fieldset class="featured-header" ng-if="listing.restaurant.cuisines.length">
             <legend class="assertive">Cuisines</legend>
         </fieldset>
-        <p class="padding-horizontal">
+        <p class="padding-horizontal" ng-if="listing.restaurant.cuisines.length">
             <a class="badge badge-stable" ng-repeat="c in listing.restaurant.cuisines">{{::c.name}}</a>
         </p>
         <div ng-show="::listing.locations">
