@@ -57,12 +57,12 @@
 
     <!-- build:js js/cordova-exts.js -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
-    <!--<script src="lib/facebook-connect-plugin/index.js"></script>-->
+    <script src="lib/facebook-connect-plugin/index.js"></script>
     <!-- endbuild -->
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <!--<script>
+    <script>
         window.fbAsyncInit = function() {
             FB.init({
                 appId      : '646933472119700',
@@ -78,7 +78,7 @@
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-    </script>-->
+    </script>
 
     <!-- build:js js/app-tabletops.js -->
     <script src="scripts/app.js"></script>
@@ -98,7 +98,7 @@
     <script src="http://debug.build.phonegap.com/target/target-script-min.js#015884ee-edfa-11e4-9809-5eaf6f758ba7"></script>
 </head>
 <body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak>
-<!--<div id="fb-root"></div>-->
+<div id="fb-root"></div>
     <ion-nav-bar class="bar-assertive-900 no-border" ng-class="{expanded: isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
         <ion-nav-back-button class="no-text"></ion-nav-back-button>
     </ion-nav-bar>

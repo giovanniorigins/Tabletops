@@ -203,7 +203,14 @@ angular.module('tabletops.services', [])
                         .then(function (success) {
                             console.log('Login');
                             console.log(success);
-                            service.authHandler('facebook');
+                            if (success.status === 'connected') {
+                                var accessToken = success.authResponse.accessToken;
+                                $localForage.setItem('usedProvider', 'Facebook').then(function () {
+                                    $localForage.setItem('providerToken', accessToken).then(function () {
+                                        return service.authHandler('facebook');
+                                    });
+                                });
+                            }
                         }, function (error) {
                             // error
                             console.log(error);
