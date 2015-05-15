@@ -295,7 +295,8 @@ angular.module('tabletops.services', [])
                             ignoreAuthModule: true,
                             headers: {
                                 Authorization: 'Bearer ' + token
-                            }
+                            },
+                            withCredentials: true
                         })
                             .success(function (data) {
                                 if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
