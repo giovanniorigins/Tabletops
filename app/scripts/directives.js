@@ -8,11 +8,12 @@ angular.module('tabletops.directives', [])
                 lat: '=',
                 lng: '='
             },
-            template: '<a ng-click=\'getDirections({lat:lat, lng:lng})\' class=\'button button-raised button-block\'>Directions</a>',
-            controller: function ($scope) {
+            replace: true,
+            template: '<a ng-click=\'getDirections({lat:lat, lng:lng})\' class=\'button button-raised button-small ink-dark\'>Directions</a>',
+            controller: ['$scope', function ($scope) {
                 console.log($scope);
                 //this.shared = 'ok'; // add data to the controller instance
-            }
+            }]
         };
     }])
     .directive('ttDirectionsa', [function () {
@@ -24,11 +25,11 @@ angular.module('tabletops.directives', [])
                 lat: '=',
                 lng: '='
             },
-            template: '<a ng-click=\'getDirections({lat:lat, lng:lng})\' class=\'button button-raised button-block\'>Directions</a>',
-            controller: function ($scope) {
+            template: '<a ng-click=\'getDirections({lat:lat, lng:lng})\' class=\'button button-raised button-small ink-dark\'>Directions</a>',
+            controller: ['$scope', function ($scope) {
                 console.log($scope);
                 //this.shared = 'ok'; // add data to the controller instance
-            }
+            }]
         };
     }])
     .directive('ngEnter', ['$cordovaKeyboard', function($cordovaKeyboard) {

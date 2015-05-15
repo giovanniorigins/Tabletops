@@ -237,6 +237,15 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                         }
                     }
                 })
+                .state('tabs.map-restaurant', {
+                    url: '/map/:id',
+                    views: {
+                        'map-tab': {
+                            templateUrl: 'views/common/restaurant.html',
+                            controller: 'RestaurantCtrl'
+                        }
+                    }
+                })
 
                 // Account Tab
                 .state('tabs.account', {

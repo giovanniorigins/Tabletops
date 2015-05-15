@@ -451,7 +451,7 @@ angular.module('tabletops.controllers', [])
                             lng: loc.lng,
                             getMessageScope: returnScope,
                             compileMessage: true,
-                            message: '<div><h6 class=\'text-center\'>' + v.name + '</h6><div class=\'button-bar\'><button class=\'button button-raised\'>' + v.like_count + ' <span class=\'icon ion-heart calm\'></span></button><button class=\'button button-raised\'>' + v.rating_count + ' <span class=\'icon ion-chatbubbles energized\'></span></button><button class=\'button button-raised\'>' + $scope.showDollars(v.restaurant.price_range, true) + '</button></div><div class=\'row\'><div class=\'col col-50\'><a ui-sref=\'tabs.restaurant({id:"' + v.slug + '"})\' class=\'button button-clear button-small button-icon icon ion-eye\'></a></div><div class=\'col col-50\'><tt-directions get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directions></div></div></div>',
+                            message: '<div><h1 class=\'text-center assertive-900\'>' + v.name + '</h1><h3 class="outline padding energized img-rounded">' + v.rating_cache + ' rating <span class="pull-right">' + $scope.showDollars(v.restaurant.price_range, false) + '</span></h3><div class=\'button-bar\'><a ui-sref=\'tabs.map-restaurant({id:"' + v.slug + '"})\' class=\'button button-light button-small button-icon icon ion-eye ink-dark\'></a><tt-directions get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directions></div></div>',
                             icon: {
                                 prefix: 'ion',
                                 type: 'extraMarker',
@@ -1047,27 +1047,36 @@ angular.module('tabletops.controllers', [])
                 //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
             });
         }])
-    .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout',
-        function ($scope, $localForage, $cordovaFacebook, $timeout) {
+    .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout', '_',
+        function ($scope, $localForage, $cordovaFacebook, $timeout, _) {
             'use strict';
             $localForage.getItem('user').then(function (res) {
                 $scope.user = res;
-            });
-            $localForage.getItem('useFacebook').then(function (res) {
-                $scope.useFacebook = res;
-            });
+                $scope.facebookProfile = _.findWhere(res.profiles, {provider: 'Facebook'});
+                $scope.liveProfile = _.findWhere(res.profiles, {provider: 'Live'});
 
-            $cordovaFacebook.api('me/friends?fields=name,id,picture.width(200)')
-                .then(function (res) {
-                    $scope.friends = res.data;
-                });
+                if (angular.isObject($scope.facebookProfile)) {
+                    $scope.useFacebook = true;
+                    // Get Friends Using App
+                    $cordovaFacebook.api('me/friends?fields=name,id,picture.width(200)')
+                        .then(function (res) {
+                            $scope.friends = res.data;
+                        });
+
+                    // Get Cover Photo
+                    $http.get($scope.facebookProfile.coverInfoURL)
+                        .success(function (res) {
+                            console.log(res);
+                        })
+                }
+            });
 
             // Set Motion
             $timeout(function () {
                 ionic.material.motion.slideUp({
                     selector: '.slide-up'
                 });
-            }, 900);
+            }, 0);
 
         }])
     .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_', 'AuthenticationService',

@@ -248,6 +248,8 @@ module.exports = function (grunt) {
                         //'views/**/*.html',
                         'vendor/**/*',
                         'lib/**/*.{css,js,png,gif,jpg,jpeg,svg}',
+                        //'lib/**/**/*.{css,js,png,gif,jpg,jpeg,svg}',
+                        //'lib/**/**/**/*.{css,js,png,gif,jpg,jpeg,svg}',
                         'fonts/*'
                     ]
                 }, {
@@ -255,12 +257,14 @@ module.exports = function (grunt) {
                     cwd: '.temp/<%= yeoman.images %>',
                     dest: '<%= yeoman.dist %>/<%= yeoman.images %>',
                     src: ['generated/*']
-                }, {
+                },
+                    {
                     expand: true,
                     cwd: '<%= yeoman.app %>/vendor/',
-                    dest: '<%= yeoman.dist %>/js/',
+                    dest: '<%= yeoman.dist %>/css/',
                     src: 'images/*.{png,jpg,jpeg,gif,webp}'
-                }, {
+                },
+                    {
                     expand: true,
                     cwd: '<%= yeoman.app %>/',
                     dest: '<%= yeoman.dist %>/css/',
@@ -273,17 +277,17 @@ module.exports = function (grunt) {
                 dest: '.temp/<%= yeoman.styles %>/',
                 src: '{,*/}*.css'
             },
-            libImages: {
-                expand: true,
-                cwd: '<%= yeoman.app %>/vendor/',
-                dest: '<%= yeoman.dist %>/js/',
-                src: '**/**/*.{png,jpg,jpeg,gif,webp,svg}'
-            },
+            //libImages: {
+            //    expand: true,
+            //    cwd: '<%= yeoman.app %>/vendor/',
+            //    dest: '<%= yeoman.dist %>/js/',
+            //    src: '**/**/*.{png,jpg,jpeg,gif,webp,svg}'
+            //},
             resources: {
                 expand: true,
                 cwd: 'resources/',
                 dest: '<%= yeoman.dist %>/resources/',
-                src: '**/**/*.png'
+                src: ['**/**/*.png', '*.png']
             },
             config: {
                 expand: true,

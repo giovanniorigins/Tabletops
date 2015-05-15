@@ -147,12 +147,13 @@ angular.module('tabletops.services', [])
                     }
 
                     $localForage.getItem('usedProvider').then(function (provider) {
+                        console.log('UsedProvider: ', provider);
                         switch (provider) {
-                            case 'facebook':
+                            case 'Facebook':
                                 return service.FbCheckLogin();
-                            case 'google':
+                            case 'Google':
                                 return service.GoogleCheckLogin();
-                            case 'email':
+                            case 'Email':
                                 $localForage.getItem('userCreds').then(function (user) {
                                     return service.login(user);
                                 });
