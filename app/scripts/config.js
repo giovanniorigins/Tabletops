@@ -31,7 +31,8 @@ angular.module('tabletops.config', [])
     .config(['$httpProvider', function ($httpProvider) {
         'use strict';
         //$httpProvider.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8';
-        $httpProvider.defaults.withCredentials = true;
+        //$httpProvider.defaults.headers['Access-Control-Allow-Origin'] = 'http://localhost:8100';
+        //$httpProvider.defaults.withCredentials = true;
         $httpProvider.interceptors.push('timeoutHttpIntercept');
         $httpProvider.interceptors.push(['$rootScope', function ($rootScope) {
             return {

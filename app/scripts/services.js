@@ -68,8 +68,8 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaOauth', '$cordovaDevice', '$ionicUser', '$ionicPush', '$window',
-        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaOauth, $cordovaDevice, $ionicUser, $ionicPush, $window) {
+    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaOauth', '$cordovaDevice', '$ionicUser', '$ionicPush', '$window', '_',
+        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaOauth, $cordovaDevice, $ionicUser, $ionicPush, $window, _) {
             'use strict';
             var service = {
                 login: function (user) {
@@ -278,15 +278,6 @@ angular.module('tabletops.services', [])
                                 console.log(res);
 
                                 $rootScope.isLoggedin = true;
-
-                                $localForage.setItem('user', res.profile).then(function (user) {
-                                    $ionicUser.set('user_id', user.user.id);
-                                    $ionicUser.set('name', user.user.full_name);
-                                    $ionicUser.set('created_at', user.user.created_at);
-                                    $ionicUser.set('language', user.language);
-                                    $ionicUser.set('gender', user.gender);
-                                    $ionicUser.push('providers', user.provider, true);
-                                });
                                 $localForage.setItem('authorizationToken', res.token);
                                 $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
                                 $rootScope.$broadcast('event:auth-loginConfirmed');
@@ -311,7 +302,16 @@ angular.module('tabletops.services', [])
                                     $rootScope.user = data.user;
                                     $localForage.setItem('user', data.user).then(function (user) {
                                         // Set User Info
+                                        $ionicUser.set('tt_id', user.id);
+                                        $ionicUser.set('name', user.full_name);
+                                        $ionicUser.set('created_at', user.created_at);
+                                        $ionicUser.set('language', user.language);
+                                        $ionicUser.set('gender', user.gender);
 
+                                        var provs = _.pluck(user.profiles, 'provider');
+                                        _.each(provs, function (a) {
+                                            $ionicUser.push('providers', a, true);
+                                        });
 
                                         // Check if this is first run
                                         $localForage.getItem('pastInitialStart').then(function (res) {

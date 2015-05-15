@@ -1047,27 +1047,46 @@ angular.module('tabletops.controllers', [])
                 //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
             });
         }])
-    .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout', '_',
-        function ($scope, $localForage, $cordovaFacebook, $timeout, _) {
+    .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout', '_', '$http',
+        function ($scope, $localForage, $cordovaFacebook, $timeout, _, $http) {
             'use strict';
             $localForage.getItem('user').then(function (res) {
                 $scope.user = res;
                 $scope.facebookProfile = _.findWhere(res.profiles, {provider: 'Facebook'});
                 $scope.liveProfile = _.findWhere(res.profiles, {provider: 'Live'});
+                $scope.GoogleProfile = _.findWhere(res.profiles, {provider: 'Google'});
 
+                $scope.friends = _.union(res.followers, res.following);
+                console.log($scope.friends);
+
+
+                // Has Facebook capabilities
                 if (angular.isObject($scope.facebookProfile)) {
                     $scope.useFacebook = true;
-                    // Get Friends Using App
-                    $cordovaFacebook.api('me/friends?fields=name,id,picture.width(200)')
-                        .then(function (res) {
-                            $scope.friends = res.data;
-                        });
 
-                    // Get Cover Photo
-                    $http.get($scope.facebookProfile.coverInfoURL)
-                        .success(function (res) {
-                            console.log(res);
-                        })
+                    $localForage.getItem('providerToken').then(function (token) {
+                        // Get Friends Using App
+                        //$cordovaFacebook.api('me/friends?fields=name,id,picture.width(200)&access_token=' + token)
+                        $cordovaFacebook.api('me/friends?fields=name,id&access_token=' + token)
+                            .then(function (res) {
+                                $scope.FBfriends = res.data;
+                                $scope.FBfriendIds = _.pluck($scope.FBfriends, 'id');
+                                _.each(_.filter($scope.friends, function(a) { return !!a.target.avatar; }), function (a, b) {
+                                    if (_.contains($scope.FBfriendIds, a.target.avatar.split('/')[3])) {
+                                        a.facebook = true;
+                                    }
+                                });
+                            });
+
+                        // Get Cover Photo
+                        $http.get($scope.facebookProfile.coverInfoURL.split('access_token=')[0] + 'access_token=' + token)
+                            .success(function (res) {
+                                $scope.coverPhoto = res.cover.source;
+                                console.log(res);
+                            });
+                    });
+                } else {
+                    $scope.coverPhoto = 'img/bgs/cs21.jpg';
                 }
             });
 
@@ -1089,13 +1108,10 @@ angular.module('tabletops.controllers', [])
             $localForage.getItem('user').then(function (user) {
                 console.log(user);
                 $scope.user = user;
-            });
+                $scope.facebookProfile = _.findWhere(user.profiles, {provider: 'Facebook'});
+                $scope.liveProfile = _.findWhere(user.profiles, {provider: 'Live'});
+                $scope.googleProfile = _.findWhere(user.profiles, {provider: 'Google'});
 
-            $localForage.getItem('usedProvider').then(function (provider) {
-                $scope.connectedProviders = [provider];
-                $scope.isProviderConnected = function (a) {
-                    return _.contains($scope.connectedProviders, a);
-                };
             });
 
             $scope.rateApp = function () {

@@ -9,30 +9,34 @@
                     <span ng-if="::user.avatar" class="avatar"
                           style="background-image: url('{{::user.avatar}}');"></span>
 
-                    <h2 ng-if="::user.user.full_name">
-                        <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>&nbsp;
-                        {{::user.user.full_name}}
-                    </h2>
 
                     <h2 ng-if="::user.full_name">
-                        <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive'}[user.provider]"></i>&nbsp;
+                        <!--<i class="icon ion-social-facebook positive" ng-if="!!facebookProfile"></i>
+                        <i class="icon ion-social-googleplus energized-900" ng-if="!!googleProfile"></i>
+                        <i class="icon ion-social-windows balanced" ng-if="!!liveProfile"></i>
+                        &nbsp;-->
                         {{::user.full_name}}
                     </h2>
 
-                    <p class="">@ {{::user.user.username}}</p>
+                    <p class="">@ {{::user.username}}</p>
 
                 </div>
 
                 <a class="item item-icon-left item-icon-right" ng-click="signInFacebook()">
                     <i class="icon ion-social-facebook calm calm"></i>
-                    Facebook <span ng-if="::connectedProviders" ng-bind="isProviderConnected('Facebook') ? 'Connected' : 'Connect'"></span>
-                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[isProviderConnected('Facebook')]"></i>
+                    Facebook <span ng-if="::user" ng-bind="!!facebookProfile ? 'Connected' : 'Connect'"></span>
+                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[!!facebookProfile]"></i>
                 </a>
                 <a class="item item-icon-left item-icon-right" ng-click="signInGoogle()">
                     <i class="icon ion-social-google energized-900"></i>
-                    Google <span ng-if="::connectedProviders" ng-bind="isProviderConnected('Google') ? 'Connected' : 'Connect'"></span>
-                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[isProviderConnected('Google')]"></i>
+                    Google <span ng-if="::user" ng-bind="!!googleProfile ? 'Connected' : 'Connect'"></span>
+                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[!!googleProfile]"></i>
                 </a>
+                <!--<a class="item item-icon-left item-icon-right" ng-click="signInLive()">
+                    <i class="icon ion-social-google energized-900"></i>
+                    Windows Live <span ng-if="::user" ng-bind="!!liveProfile ? 'Connected' : 'Connect'"></span>
+                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[!!liveProfile]"></i>
+                </a>-->
             </div>
 
             <div class="card">

@@ -16,6 +16,24 @@
     text-rendering: optimizeLegibility;
 }
 
+.hero ~ .image-loader-container {
+    z-index: -1;
+    max-height: 200px;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    /*background-color: #e5e5e5;*/
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-content: stretch;
+    align-items: center;
+}
+
 .ionic-body, body, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
     font-family: 'Gentleman', 'Helvetica Neue', 'Helvetica', Arial, sans-serif !important;
     //font-family: 'Lato', 'Helvetica Neue', 'Helvetica', Arial, sans-serif !important;
