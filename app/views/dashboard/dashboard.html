@@ -25,7 +25,7 @@
 
                             <div ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></div>
                             <div class="padding-bottom" ng-bind-html="::showDollars(res.restaurant.price_range)"></div>
-                            <p class="" style="font-size: 80%;padding: 2px">
+                            <p ng-if="res.distance" style="font-size: 80%;padding: 2px">
                                 <span class="distance-badge badge badge-energized">{{::res.distance|number:2}} miles away</span>
                             </p>
                         </div>

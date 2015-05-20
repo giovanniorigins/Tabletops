@@ -40,7 +40,7 @@ angular.module('tabletops.services', [])
     .factory('Listing', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
         'use strict';
         return $resource(ApiEndpoint.api + '/listings/:id', {}, {
-            query: {url: ApiEndpoint.api + '/listings/:cuisine', method: 'GET', isArray: true, cache: true},
+            query: {url: ApiEndpoint.api + '/listings/:cuisine', method: 'GET', isArray: true, cache: false},
             update: {method: 'PUT'}
         });
     }])
@@ -221,28 +221,32 @@ angular.module('tabletops.services', [])
                     $localForage.getItem('providerToken').then(function (token) {
                         $http.post(ApiEndpoint.auth + '/Facebook?token=' + token)
                             .success(function (res) {
-                                if (res.error) {
-                                    console.log('Auth Error');
-                                    console.log(res.error);
-                                    return res.error;
+                                if ( angular.isDefined(res) && res !== null ) {
+                                    if (angular.isDefined(res.error)) {
+                                        console.log('Auth Error');
+                                        console.log(res.error);
+                                        return res.error;
+                                    }
+                                    console.log('Auth Success');
+                                    console.log(res);
+
+                                    $rootScope.isLoggedin = true;
+
+                                    $localForage.setItem('user', res.profile).then(function (user) {
+                                        $ionicUser.set('user_id', user.user.id);
+                                        $ionicUser.set('name', user.user.full_name);
+                                        $ionicUser.set('created_at', user.user.created_at);
+                                        $ionicUser.set('language', user.language);
+                                        $ionicUser.set('gender', user.gender);
+                                        $ionicUser.push('providers', user.provider, true);
+                                    });
+                                    $localForage.setItem('authorizationToken', res.token);
+                                    $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
+                                    $rootScope.$broadcast('event:auth-loginConfirmed');
+                                    return service.Me();
+                                } else {
+                                    return $state.go('signin');
                                 }
-                                console.log('Auth Success');
-                                console.log(res);
-
-                                $rootScope.isLoggedin = true;
-
-                                $localForage.setItem('user', res.profile).then(function (user) {
-                                    $ionicUser.set('user_id', user.user.id);
-                                    $ionicUser.set('name', user.user.full_name);
-                                    $ionicUser.set('created_at', user.user.created_at);
-                                    $ionicUser.set('language', user.language);
-                                    $ionicUser.set('gender', user.gender);
-                                    $ionicUser.push('providers', user.provider, true);
-                                });
-                                $localForage.setItem('authorizationToken', res.token);
-                                $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
-                                $rootScope.$broadcast('event:auth-loginConfirmed');
-                                return service.Me();
                             })
                             .error(function (res) {
                                 console.log('Auth Error');

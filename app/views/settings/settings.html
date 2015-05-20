@@ -2,13 +2,10 @@
     <ion-content>
         <div class="list">
 
-            <div class="card">
+            <div class="card" ng-if="::user">
                 <div class="item item-avatar item-text-wrap stable-bg waves-effect waves-block waves-dark">
-                    <span ng-if="::user.user.avatar" class="avatar"
-                          style="background-image: url('{{::user.user.avatar}}');"></span>
-                    <span ng-if="::user.avatar" class="avatar"
-                          style="background-image: url('{{::user.avatar}}');"></span>
-
+                    <span ng-if="::user.avatar" class="avatar" image-lazy-src="{{ user.avatar }}"
+                          image-lazy-background-image="true"></span>
 
                     <h2 ng-if="::user.full_name">
                         <!--<i class="icon ion-social-facebook positive" ng-if="!!facebookProfile"></i>
@@ -18,7 +15,7 @@
                         {{::user.full_name}}
                     </h2>
 
-                    <p class="">@ {{::user.username}}</p>
+                    <p class="">@&nbsp;{{::user.username}}</p>
 
                 </div>
 

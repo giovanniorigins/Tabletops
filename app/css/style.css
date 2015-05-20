@@ -450,3 +450,29 @@ ion-nav-view {
     line-height: 1.2;
 
 }
+
+/* Animations */
+
+@media (min-width: 680px) {
+    .zoomInOut.ng-enter:not('active'),
+    .zoomInOut.ng-leave-active {
+        bottom: 20%;
+    }
+    .zoomInOut {
+    }
+    .zoomInOut.ng-enter {
+        -webkit-animation:400ms zoomIn;
+        animation:400ms zoomIn;
+    }
+    .zoomInOut.ng-enter-active {
+    }
+
+    .zoomInOut.modal.ng-enter-active {
+        /*bottom:inherit;*/
+    }
+
+    .zoomInOut.ng-leave {
+        -webkit-animation:400ms zoomOut;
+        animation:400ms zoomOut;
+    }
+}

@@ -68,7 +68,7 @@
     <!--<gap:plugin name="org.apache.cordova.vibration"/>-->
     <gap:plugin name="com.phonegap.plugins.pushplugin"/>
 
-    <gap:plugin name="jfaris.com.phonegap.plugins.facebookconnect" version="0.11.0-jfaris.0" source="plugins.cordova.io">
+    <gap:plugin name="nickreed.com.phonegap.plugins.facebookconnect" version="0.11.1" source="plugins.cordova.io">
         <param name="APP_ID" value="646933472119700"/>
         <param name="APP_NAME" value="Tabletops"/>
     </gap:plugin>

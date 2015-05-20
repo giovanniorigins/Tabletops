@@ -1,6 +1,6 @@
 {
   "name": "ionic-service-deploy",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "http://ionic.io",
   "authors": [
     "Joel Weirauch <joel@drifty.com>",
@@ -20,11 +20,11 @@
     "test",
     "tests"
   ],
-  "_release": "0.0.2",
+  "_release": "0.0.3",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.2",
-    "commit": "c65555ec5af9a9a302137a01c0b4ea31f8591ddb"
+    "tag": "0.0.3",
+    "commit": "5839ae77cb9c2ddeb1e75b1f5361b330753786dc"
   },
   "_source": "git://github.com/driftyco/ionic-service-deploy.git",
   "_target": "*",

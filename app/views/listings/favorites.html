@@ -16,7 +16,7 @@
                         <span ng-if="::res.locations.length==1">{{::res.locations[0].address_1}}, {{::res.locations[0].locality}}</span>
                         <span ng-if="::res.locations.length>1">{{::res.locations[0].address_1}}, {{::res.locations[0].locality}} <br/><span style="font-size: 80%" class="subdued">+ {{::res.locations.length-1}} more</span>  </span>
                         <br/>
-                        <span style="font-size: 80%" class="distance-badge badge badge-calm">{{::res.distance|number:2}} miles away</span>
+                        <span ng-if="res.distance" style="font-size: 80%" class="distance-badge badge badge-calm">{{::res.distance|number:2}} miles away</span>
                    </span>
                     <span class="col col-25 text-right">
                         <span ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></span>

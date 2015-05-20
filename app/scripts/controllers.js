@@ -322,7 +322,8 @@ angular.module('tabletops.controllers', [])
             // Search Modal
             $ionicModal.fromTemplateUrl('views/dashboard/SearchModal.html', {
                 scope: $scope,
-                focusFirstInput: true
+                focusFirstInput: true,
+                animation: 'am-fade-and-scale'
             }).then(function (modal) {
                 $scope.SearchModal = modal;
             });

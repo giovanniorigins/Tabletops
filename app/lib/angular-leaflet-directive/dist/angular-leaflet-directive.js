@@ -1,5 +1,5 @@
 /*!
-*  angular-leaflet-directive 0.8.0 2015-05-13
+*  angular-leaflet-directive 0.8.1 2015-05-13
 *  angular-leaflet-directive - An AngularJS directive to easily interact with Leaflet maps
 *  git: https://github.com/tombatossals/angular-leaflet-directive
 */
@@ -1117,7 +1117,6 @@ angular.module('leaflet-directive').service('leafletIterators', ["$log", "leafle
   var _hasErrors = function(collection, cb, ignoreCollection, cbName){
     if(!ignoreCollection) {
       if (!lHlp.isDefined(collection) || !lHlp.isDefined(cb)) {
-        $log.error(errorHeader + 'collection or cb undefined');
         return true;
       }
     }
