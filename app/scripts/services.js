@@ -219,7 +219,9 @@ angular.module('tabletops.services', [])
                 },
                 FbMe: function () {
                     $localForage.getItem('providerToken').then(function (token) {
-                        $http.post(ApiEndpoint.auth + '/Facebook?token=' + token)
+                        $http.post(ApiEndpoint.auth + '/Facebook?token=' + token, {
+                            withCredentials: true
+                        })
                             .success(function (res) {
                                 if ( angular.isDefined(res) && res !== null ) {
                                     if (angular.isDefined(res.error)) {
