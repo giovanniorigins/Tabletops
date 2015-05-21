@@ -12,6 +12,7 @@ angular.module('tabletops.controllers')
         function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
             'use strict';
             $ionicPlatform.ready(function () {
+                console.log('Beginning AuthCheck');
                 AuthenticationService.authCheck();
             });
         }

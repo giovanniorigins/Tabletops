@@ -15,12 +15,14 @@ angular.module('tabletops.config', [])
         // Tabs
         $ionicConfigProvider.tabs.position('bottom');
         // Native Scrolling: false, JS Scrolling: true
-        $ionicConfigProvider.platform.android.scrolling.jsScrolling(false);
+        if( !ionic.Platform.isIOS() ) {
+            $ionicConfigProvider.scrolling.jsScrolling(false);
+        }
     }])
 
-    /*.config(['$cordovaFacebookProvider', function($cordovaFacebookProvider) {
+    /*.config(['$cordovaFacebookProvider', 'CIDs', function($cordovaFacebookProvider, CIDs) {
         'use strict';
-        var appID = 646933472119700;
+        var appID = CIDs.facebook;
         var version = 'v2.0'; // or leave blank and default is v2.0
         ionic.Platform.ready(function () {
             $cordovaFacebookProvider.browserInit(appID, version);

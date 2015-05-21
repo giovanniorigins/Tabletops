@@ -120,6 +120,7 @@ angular.module('tabletops.services', [])
                     authService.loginCancelled();
                 },
                 authCheck: function () {
+                    console.log('Auth Checking');
                     var IoUser = $ionicUser.get();
                     if(!IoUser.user_id) {
                         // Set your user_id here, or generate a random one.
