@@ -68,15 +68,14 @@
     <!--<gap:plugin name="org.apache.cordova.vibration"/>-->
     <gap:plugin name="com.phonegap.plugins.pushplugin"/>
 
-    <!--<gap:plugin name="jfaris.com.phonegap.plugins.facebookconnect" version="0.11.0-jfaris.0" source="plugins.cordova.io">-->
-    <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0">
+    <gap:plugin name="jfaris.com.phonegap.plugins.facebookconnect" version="0.11.0-jfaris.0" source="plugins.cordova.io">
         <param name="APP_ID" value="646933472119700"/>
         <param name="APP_NAME" value="Tabletops"/>
     </gap:plugin>
     <gap:plugin name="com.ohh2ahh.plugins.appavailability"/>
     <gap:plugin name="org.pushandplay.cordova.apprate"/>
     <gap:plugin name="nl.x-services.plugins.socialsharing" source="plugins.cordova.io"/>
-    <gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1"/>
+    <!--<gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1"/>-->
     <gap:plugin name="nl.x-services.plugins.toast"/>
     <!--<gap:plugin name="com.google.cordova.admob" source="plugins.cordova.io"/>-->
 
