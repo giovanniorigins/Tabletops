@@ -39,8 +39,8 @@ var closestLocation = function (targetLocation, locationData) {
 };
 
 angular.module('tabletops.controllers', [])
-    .controller('MainCtrl', ['$rootScope', '$scope', '$ionicPlatform', '$ionicScrollDelegate', '$cordovaNetwork', '$cordovaGeolocation', '$cordovaToast', '$state', '$localForage', 'Province', 'ListingRepository', '$ionicModal', '$timeout', '$log', '_',
-        function ($rootScope, $scope, $ionicPlatform, $ionicScrollDelegate, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal, $timeout, $log, _) {
+    .controller('MainCtrl', ['$rootScope', '$scope', '$ionicPlatform', '$ionicScrollDelegate', '$cordovaNetwork', '$cordovaGeolocation', '$cordovaToast', '$state', '$localForage', 'Province', 'ListingRepository', '$ionicModal', '$timeout', '$log', '_', 'ionicMaterialInk',
+        function ($rootScope, $scope, $ionicPlatform, $ionicScrollDelegate, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal, $timeout, $log, _, ionicMaterialInk) {
             'use strict';
             $scope.settings = {
                 geolocation: false,
@@ -160,7 +160,8 @@ angular.module('tabletops.controllers', [])
                 $scope.settings.province = p;
                 $localForage.setItem('province', p);
                 $scope.closeProvinceModal();
-                $cordovaToast.showShortBottom(p.name + ' is now your default province.');
+                //$cordovaToast.showShortBottom(p.name + ' is now your default province.');
+                $scope.$broadcast('province:set', p);
             };
 
             $scope.findClosest = function (targetLocation, locations) {
@@ -234,23 +235,43 @@ angular.module('tabletops.controllers', [])
                 $scope.provModal.show($event)
                     .then(function () {
                         // Set Ink
-                        ionic.material.ink.displayEffect();
+                        ionicMaterialInk.displayEffect();
                     });
             };
             $scope.closeProvinceModal = function () {
                 $scope.provModal.hide();
             };
+
+            // Report Modal
+            $ionicModal.fromTemplateUrl('views/common/ReportModal.html', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.reportModal = modal;
+            });
+
+            $scope.openReportModal = function ($event) {
+                $scope.reportModal.show($event)
+                    .then(function () {
+                        // Set Ink
+                        ionicMaterialInk.displayEffect();
+                    });
+            };
+            $scope.closeReportModal = function () {
+                $scope.reportModal.hide();
+            };
+
             //Cleanup the popover when we're done with it!
             $scope.$on('$destroy', function () {
                 $scope.provModal.remove();
+                $scope.reportModal.remove();
             });
 
             $scope.$on('$ionicView.enter', function () {
                 $timeout(function () {
                     $log.log('Set Ink');
                     // Set Ink
-                    ionic.material.ink.displayEffect();
-                }, 600);
+                    ionicMaterialInk.displayEffect();
+                }, 300);
             });
 
         }])
@@ -261,8 +282,8 @@ angular.module('tabletops.controllers', [])
                 AuthenticationService.logout();
             });
         }])
-    .controller('DashboardCtrl', ['$rootScope', '$scope', 'Province', 'Listing', 'Cuisine', '$state', '$interval', '$ionicModal', '$timeout', '$localForage', '_',
-        function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout, $localForage, _) {
+    .controller('DashboardCtrl', ['$rootScope', '$scope', 'Province', 'Listing', 'Cuisine', '$state', '$interval', '$ionicModal', '$timeout', '$localForage', '_', 'ionicMaterialInk',
+        function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout, $localForage, _, ionicMaterialInk) {
             'use strict';
             $scope.getNearby = function () {
                 $scope.qData = {app_search: true, range: 5, limit: 5};
@@ -332,7 +353,7 @@ angular.module('tabletops.controllers', [])
                 $scope.SearchModal.show($event)
                     .then(function () {
                         // Set Ink
-                        ionic.material.ink.displayEffect();
+                        ionicMaterialInk.displayEffect();
                     });
             };
             $scope.closeSearchModal = function () {
@@ -355,7 +376,7 @@ angular.module('tabletops.controllers', [])
             });
 
             // Set Ink
-            ionic.material.ink.displayEffect();
+            ionicMaterialInk.displayEffect();
         }])
     .controller('FavoritesCtrl', ['$scope', '$localForage', 'Listing', '$ionicModal', '$state', '_',
         function ($scope, $localForage, Listing, $ionicModal, $state, _) {
@@ -567,19 +588,25 @@ angular.module('tabletops.controllers', [])
         function ($rootScope, $scope, $localForage, Cuisine) {
             'use strict';
             $scope.refresh = function () {
-                $localForage.getItem('cuisines').then(function (data) {
-                    if (!!data && data.length) {
-                        $scope.$broadcast('scroll.refreshComplete');
-                        $scope.cuisines = data;
-                    } else {
-                        Cuisine.query({}, function (res) {
-                            $localForage.setItem('cuisines', res);
-                            $scope.$broadcast('scroll.refreshComplete');
-                            $scope.cuisines = res;
-                        });
+                console.log('refresh');
+                $localForage.getItem('province').then(function (province) {
+                    if (!angular.isObject(province)) {
+                        $scope.openProvinceModal();
+                        return false;
                     }
+
+                    Cuisine.query({restaurants:true, province_id: province.id}, function (res) {
+                        $localForage.setItem('cuisines', res);
+                        $scope.$broadcast('scroll.refreshComplete');
+                        $scope.cuisines = res;
+                    });
                 });
             };
+
+            $scope.$on('province:set', function (event, p) {
+                console.log(p);
+                $scope.refresh();
+            });
             $scope.refresh();
         }])
     .controller('CuisineCtrl', ['$rootScope', '$scope', '$localForage', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$state', '_',
@@ -628,8 +655,8 @@ angular.module('tabletops.controllers', [])
             };
 
         }])
-    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state', '_',
-        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state, _) {
+    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state', '_', 'ionicMaterialInk', 'ionicMaterialMotion',
+        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state, _, ionicMaterialInk, ionicMaterialMotion) {
             'use strict';
             Cuisine.query({}, function (res) {
                 $scope.cuisines = res;
@@ -675,28 +702,40 @@ angular.module('tabletops.controllers', [])
              });*/
 
             $scope.refresh = _.throttle(function () {
-                if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
-                    angular.extend($scope.filters, {
-                        lat: $scope.myLocation.coords.latitude,
-                        lng: $scope.myLocation.coords.longitude
+                $localForage.getItem('province').then(function (province) {
+                    if (!angular.isObject(province)) {
+                        $scope.openProvinceModal();
+                        return false;
+                    }
+
+                    if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
+                        angular.extend($scope.filters, {
+                            lat: $scope.myLocation.coords.latitude,
+                            lng: $scope.myLocation.coords.longitude
+                        });
+                    }
+
+                    $scope.restaurants = Listing.query($scope.filters);
+
+                    $scope.restaurants.$promise.finally(function () {
+                        $timeout(function () {
+                            // Set Ink
+                            ionicMaterialMotion.blinds();
+
+                            ionicMaterialInk.displayEffect();
+                        }, 300);
+                        $scope.$broadcast('scroll.refreshComplete');
+                        /*$scope.$watchCollection('filters', function (newValue, oldValue) {
+
+                         });*/
                     });
-                }
-
-                $scope.restaurants = Listing.query($scope.filters);
-
-                $scope.restaurants.$promise.finally(function () {
-                    $timeout(function () {
-                        // Set Ink
-                        ionic.material.motion.blinds();
-
-                        ionic.material.ink.displayEffect();
-                    }, 300);
-                    $scope.$broadcast('scroll.refreshComplete');
-                    /*$scope.$watchCollection('filters', function (newValue, oldValue) {
-
-                     });*/
                 });
             }, 5000);
+
+            $scope.$on('province:set', function (event, p) {
+                console.log(p);
+                $scope.refresh();
+            });
 
             $scope.refresh();
 
@@ -750,7 +789,7 @@ angular.module('tabletops.controllers', [])
             });
 
             // Set Ink
-            ionic.material.ink.displayEffect();
+            ionicMaterialInk.displayEffect();
 
         }])
     .controller('RestaurantCtrl', ['$scope', 'Listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$stateParams', '$localForage', 'HoursDays', 'StartHours', 'EndHours', 'UserActions',
@@ -862,7 +901,7 @@ angular.module('tabletops.controllers', [])
             };
 
             $localForage.getItem('user').then(function (res) {
-                $scope.myReview.user_id = res.user_id;
+                $scope.myReview.user_id = $scope.myReport.user_id = res.user_id;
             });
 
             $scope.submitReview = function () {
@@ -881,6 +920,34 @@ angular.module('tabletops.controllers', [])
             $scope.$on('$ionicView.leave', function () {
                 //$localForage.removeItem('currentListing');
             });
+
+            $scope.myReport = {
+                spelling: 0,
+                number: 0,
+                address: 0,
+                is_closed: 0,
+                services: 0,
+                inappropriate: 0,
+                other: 0,
+                body: '',
+                error:0
+            };
+
+            $scope.submitReport = function () {
+                // Minor Validation
+                if(!!$scope.myReport.spelling || !!$scope.myReport.number || !!$scope.myReport.address ||
+                !!$scope.myReport.is_closed || !!$scope.myReport.services || !!$scope.myReport.inappropriate) {
+                    $scope.myReport.error = true;
+                    return false;
+                }
+                delete $scope.myReport.error;
+
+                var promise = UserActions.report($scope.listing, $scope.myReport);
+                promise.$promise.then(function (data) {
+                    console.log(data);
+                    $scope.closeReportModal();
+                });
+            };
         }])
     .controller('RestaurantMapCtrl', ['$scope', '$localForage', 'leafletData', 'leafletBoundsHelpers',
         function ($scope, $localForage, leafletData, leafletBoundsHelpers) {
@@ -1048,8 +1115,8 @@ angular.module('tabletops.controllers', [])
                 //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
             });
         }])
-    .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout', '_', '$http',
-        function ($scope, $localForage, $cordovaFacebook, $timeout, _, $http) {
+    .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout', '_', '$http', 'ionicMaterialMotion',
+        function ($scope, $localForage, $cordovaFacebook, $timeout, _, $http, ionicMaterialMotion) {
             'use strict';
             $localForage.getItem('user').then(function (res) {
                 $scope.user = res;
@@ -1093,7 +1160,7 @@ angular.module('tabletops.controllers', [])
 
             // Set Motion
             $timeout(function () {
-                ionic.material.motion.slideUp({
+                ionicMaterialMotion.slideUp({
                     selector: '.slide-up'
                 });
             }, 0);

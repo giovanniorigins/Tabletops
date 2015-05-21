@@ -5,10 +5,10 @@ var valById = function (arr, id) {
     });
 };
 
-angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'ionicLazyLoad', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
+angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'ionicLazyLoad', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
-    .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$localForage',
-        function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage) {
+    .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$localForage', 'ionicMaterialInk',
+        function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage, ionicMaterialInk) {
             'use strict';
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -46,7 +46,7 @@ angular.module('tabletops', ['ionic', 'ionic.service.core'/*, 'ionic.service.ana
                 //console.log('To: ', toState);
                 //console.log('Params: ', fromParams);
                 $rootScope.filtersMenu = toState.name === 'restaurants';
-                ionic.material.ink.displayEffect();
+                ionicMaterialInk.displayEffect();
             });
 
             $rootScope.valById = function (arr, id) {

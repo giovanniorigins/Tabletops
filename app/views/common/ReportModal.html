@@ -1,0 +1,41 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-dark" align-title="center">
+        <div class="buttons buttons-left header-item">
+            <span class="left-buttons">
+                <button class="button button-clear light button-icon icon ion-ios-arrow-back" ng-click="closeReportModal()"></button>
+            </span>
+        </div>
+        <h1 class="title title-center">Report Error</h1>
+        <div class="buttons buttons-right header-item">
+            <span class="right-buttons">
+                <button class="button button-clear light" form="ReportForm" type="submit">
+                    Send
+                </button>
+            </span>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <form class="item border-top" ng-submit="submitReport()" name="ReportForm" id="ReportForm">
+            <div class="list">
+                <div class="item item-divider">What did we miss?</div>
+                <h4 ng-if="myReport.error" class="content padding double-padding-x assertive-100-bg ">Select what is wrong.</h4>
+                <ion-checkbox ng-model="myReport.spelling">Spelling</ion-checkbox>
+                <ion-checkbox ng-model="myReport.number">Phone Number</ion-checkbox>
+                <ion-checkbox ng-model="myReport.address">Address(es)</ion-checkbox>
+                <ion-checkbox ng-model="myReport.is_closed">Place Closed</ion-checkbox>
+                <ion-checkbox ng-model="myReport.services">Services Incorrect/Missing</ion-checkbox>
+                <ion-checkbox ng-model="myReport.inappropriate">Inappropriate Content</ion-checkbox>
+                <ion-checkbox ng-model="myReport.other">Other</ion-checkbox>
+                <label class="item item-input">
+                        <textarea ng-model="myReview.body" ng-enter placeholder="Any details? (optional)" ng-keyup="expandText()"
+                                  ng-keydown="expandText()"></textarea>
+                </label>
+            </div>
+            <!--<div class="padding">
+                <button class="button button-block button-positive" type="submit" ng-disabled="!ReportForm.$valid">
+                    Submit Review
+                </button>
+            </div>-->
+        </form>
+    </ion-content>
+</ion-modal-view>

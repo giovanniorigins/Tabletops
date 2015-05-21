@@ -622,6 +622,22 @@ angular.module('tabletops.services', [])
                             //Dialogs.promptToLogin('write a review.');
                         }
                     });
+                },
+                report: function (listing, report) {
+                    $localForage.get('user').then(function (res) {
+                        if (res && res.id) {
+                            return Listing.update({id: listing.id}, {
+                                action: 'report',
+                                report: report
+                            }, function (response) {
+                                console.log(response);
+                            }, function (err) {
+                                console.log(err);
+                            });
+                        } else {
+                            //Dialogs.promptToLogin('write a review.');
+                        }
+                    });
 
                 }
             };

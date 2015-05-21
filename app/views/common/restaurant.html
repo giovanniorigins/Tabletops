@@ -215,27 +215,15 @@
                     </div>
                 </div>
             </div>
+            <h4 class="content padding double-padding-x" ng-if="listing.accepted_reviews.length>5" ui-sref="tabs.restaurant-reviews({id:listing.slug})">View All Reviews</h4>
             <div class="padding">
                 <button class="button button-positive button-block" ng-click="openReviewModal()">Write a Review</button>
             </div>
 
-            <!-- Review Form-->
-            <!--<form class="item border-top" ng-submit="submitReview()">
-                <div class="list">
-                    <label class="item item-input" data-tap-disabled="true">
-                        <rating ng-model="myReview.rate" max="myReview.max"></rating>
-                    </label>
-                    <label class="item item-input">
-                        <textarea ng-model="myReview.body" ng-minlength="4" ng-enter placeholder="Write a review" ng-keyup="expandText()"
-                        ng-keydown="expandText()"></textarea>
-                    </label>
-                </div>
-                <div class="padding">
-                    <button class="button button-block button-positive" ng-disabled="myReview.body.length<4" type="submit">Submit Review</button>
-                </div>
-            </form>-->
+            <div class="padding">
+                <button class="button button-assertive button-outline button-block button-flat ink-dark" ng-click="openReportModal(listing)">Report an Error</button>
+            </div>
 
-            <h4 class="content padding double-padding-x" ng-if="listing.accepted_reviews.length>5" ui-sref="tabs.restaurant-reviews({id:listing.slug})">View All Reviews</h4>
         </div>
     </ion-content>
 </ion-view>

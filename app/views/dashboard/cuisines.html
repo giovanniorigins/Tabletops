@@ -13,7 +13,7 @@
         <ion-list>
             <a ng-repeat="c in cuisines|filter:filters.search|orderBy:'name'" ng-show="::c.restaurants_count.length" class="item ink" data-ink-color="#B71C1C" ui-sref="tabs.cuisine({id: c.slug})">
                 <h2>{{::c.name}}</h2>
-                <span class="badge badge-dark" ng-bind="::c.restaurants_count.length"></span>
+                <span class="badge badge-dark" ng-bind="::c.restaurants_count[0].aggregate"></span>
             </a>
         </ion-list>
     </ion-content>
