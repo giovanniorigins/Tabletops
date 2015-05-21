@@ -8,12 +8,12 @@
  * @requires $scope
  * */
 angular.module('tabletops.controllers')
-    .controller('SplashCtrl', ['$scope', 'AuthenticationService', '$state', '$localForage', '$ionicPlatform',
-        function ($scope, AuthenticationService, $state, $localForage, $ionicPlatform) {
+    .controller('SplashCtrl', ['$scope', 'AuthenticationService', '$ionicPlatform',
+        function ($scope, AuthenticationService, $ionicPlatform) {
             'use strict';
+            console.log('Beginning AuthCheck');
             $ionicPlatform.ready(function () {
-                console.log('Beginning AuthCheck');
-                AuthenticationService.authCheck();
+                return AuthenticationService.authCheck();
             });
         }
     ]);

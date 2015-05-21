@@ -19,7 +19,7 @@ angular.module('tabletops.controllers')
             };
 
             $scope.login = function () {
-                AuthenticationService.login($scope.user);
+                return AuthenticationService.login($scope.user);
             };
         }
     ]);

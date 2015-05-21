@@ -8,15 +8,9 @@
  * @requires $scope
  * */
 angular.module('tabletops.controllers')
-    .controller('SignInCtrl', ['$rootScope', '$scope', '$state', 'AuthenticationService', '$localForage',
-        function ($rootScope, $scope, $state, AuthenticationService, $localForage) {
+    .controller('SignInCtrl', ['$rootScope', '$scope', '$state', 'AuthenticationService',
+        function ($rootScope, $scope, $state, AuthenticationService) {
             'use strict';
-            /*$localForage.getItem('userCreds').then(function (data) {
-                console.log(data);
-                if (!angular.isUndefined(data) || data) {
-                    AuthenticationService.login(data);
-                }
-            });*/
 
             $scope.message = '';
 

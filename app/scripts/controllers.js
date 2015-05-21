@@ -1,23 +1,3 @@
-var updateById = function (arr, attr1, value1, newRecord, addAnyway) {
-    'use strict';
-    if (!arr) {
-        return false;
-    }
-    var i = arr.length,
-        added = false;
-    while (i--) {
-        if (arr[i] && arr[i][attr1] && (arguments.length > 2 && parseInt(arr[i][attr1]) === parseInt(value1) )) {
-            arr[i] = newRecord;
-            added = true;
-        }
-    }
-    if (addAnyway && !added) {
-        arr.push(newRecord);
-    }
-
-    return arr;
-};
-
 var closestLocation = function (targetLocation, locationData) {
     'use strict';
     function vectorDistance(dx, dy) {
@@ -56,7 +36,7 @@ angular.module('tabletops.controllers', [])
                 }
             });
 
-            var isOnline = function () {
+            /*var isOnline = function () {
                 var isConnected = false;
 
                 if (angular.isDefined(navigator.connection)) {
@@ -86,12 +66,12 @@ angular.module('tabletops.controllers', [])
 
                 $log.log('isOnline? ' + isConnected);
                 return isConnected;
-            };
+            };*/
 
             // Handle Network Status
             $ionicPlatform.ready(function () {
 
-                $rootScope.connectionState = isOnline();
+                $rootScope.connectionState = true;/*isOnline();*/
 
                 // listen for Online event
                 $rootScope.$on('$cordovaNetwork:online', function () {
