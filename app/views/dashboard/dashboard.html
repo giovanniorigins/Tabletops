@@ -3,7 +3,7 @@
         <img class="title-image" src="img/logo2.png" style="width: auto;display: block; height: 40px"/>
     </ion-nav-title>
     <ion-nav-buttons side="right">
-        <button class="button button-energized-900 button-fab drop hide" id="fab-search" ng-click="openSearchModal()">
+        <button class="button button-energized-900 button-fab hide" id="fab-search" ng-click="openSearchModal()">
             <i class="icon ion-ios-search"></i>
         </button>
         <!--<button class="button button-dark button-fab" ng-click="openProvinceModal($event)">
@@ -18,6 +18,7 @@
                 </fieldset>
 
                 <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                    <div class="loader" ng-hide="restaurants && restaurants.length"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>
                     <ion-item class="nearby-card card text-center" ng-repeat="res in restaurants|orderBy:'distance'">
                         <div class="item ink" ng-click="toRestaurant(res.slug, restaurants)">
                             <!--<img ng-src="{{::res.logo.path}}">-->
@@ -42,6 +43,7 @@
                 </fieldset>
 
                 <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                    <div class="loader" ng-hide="cuisines && cuisines.length"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>
                     <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines">
                         <img ng-src="{{::c.img}}">
                     </a>
@@ -56,14 +58,14 @@
                     <legend class="assertive">EVENTS</legend>
                 </fieldset>
 
-                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                <!--<ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
                     <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines">
                         <img ng-src="{{::c.img}}">
                     </a>
                     <a class="nearby-card more-card" ui-sref="tabs.cuisines">
                         <div><i class="icon ion-plus-circled"></i> <br>View All</div>
                     </a>
-                </ion-scroll>
+                </ion-scroll>-->
             </div>
 
         </div>

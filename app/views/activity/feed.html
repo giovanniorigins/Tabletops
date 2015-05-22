@@ -1,0 +1,24 @@
+<ion-view view-title="Activity">
+    <ion-nav-buttons side="right">
+        <button class="button button-clear button-icon" ui-sref="tabs.account">
+            <i class="icon ion-person"></i>
+        </button>
+    </ion-nav-buttons>
+    <ion-content class="has-header">
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
+        <ion-list class="animate-blinds">
+            <!--<li ng-repeat="activity in feed.activities" class="item">
+                <h2 ng-bind="activity.actor"></h2>
+            </li>-->
+            <li class="ionic item">
+                <div class="hero no-header flat">
+                    <div class="content">
+                        <i class="ion-flag icon hero-icon stable-bg"></i>
+                        <h2 class="dark padding-top">No Activity here yet.</h2>
+                    </div>
+                </div>
+            </li>
+        </ion-list>
+
+    </ion-content>
+</ion-view>

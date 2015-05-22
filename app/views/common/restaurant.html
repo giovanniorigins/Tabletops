@@ -79,7 +79,7 @@
                                             <i class="icon ion-map"></i>
                                         </button>-->
                                     </div>
-                                    <div ng-if="::loc.opening_hours.length" ng-repeat="openHour in loc.opening_hours" class="item no-padding padding-left condensed-space">
+                                    <div ng-if="::loc.opening_hours.length" ng-repeat="openHour in loc.opening_hours" class="dark padding-left condensed-space">
                                         <b>{{::valById(hoursDays, openHour.day).name}}</b>: {{::valById(startHours,
                                         openHour.open).name}} - {{::valById(endHours, openHour.close).name}}
                                     </div>

@@ -248,11 +248,20 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                 })
 
                 // Account Tab
+                .state('tabs.activity', {
+                    url: '/activity',
+                    views: {
+                        'activity-tab': {
+                            templateUrl: 'views/activity/feed.html',
+                            controller: 'ActivityCtrl'
+                        }
+                    }
+                })
                 .state('tabs.account', {
                     url: '/account',
                     views: {
-                        'account-tab': {
-                            templateUrl: 'views/account/account.html',
+                        'activity-tab': {
+                            templateUrl: 'views/activity/account.html',
                             controller: 'AccountCtrl'
                         }
                     }

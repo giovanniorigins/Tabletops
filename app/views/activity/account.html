@@ -1,4 +1,4 @@
-<ion-view view-title="My Account">
+<ion-view view-title="My Profile">
     <ion-content class="has-header">
         <div class="hero" image-lazy-src="{{ coverPhoto }}" image-lazy-background-image="true" image-lazy-loader="bubbles">
             <div ng-if="user" class="content">
@@ -18,8 +18,8 @@
             </div>
         </div>
         <div class="button-bar">
-            <a class="button button-raised ink-dark" ng-click="">
-                <i class="ion-person-add"></i> Invite Friends
+            <a class="button button-raised ink-dark" ng-click="inviteFbFriends()">
+                <i class="ion-person-add"></i> Invite
             </a>
             <a class="button button-raised ink-dark">
                 <span class="energized-900">{{::user.followers.length}}</span> Followers

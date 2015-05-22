@@ -69,7 +69,12 @@ ion-nav-view {
     background-color: white;
 }
 /* Dashboard */
-/*.nearby-scroller .collection-repeat-container,*/
+.nearby-scroller {
+    min-height: 130px;
+}
+.nearby-scroller .loader{
+    zoom: 1.3;
+}
 .gallery-prev-scroller .collection-repeat-container {
     height: 105px;
 }

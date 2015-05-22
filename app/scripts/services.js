@@ -35,7 +35,8 @@ angular.module('tabletops.services', [])
     .constant('ApiEndpoint', {
         api: 'http://flamingo.gorigins.com/api/v1',
         url: 'http://flamingo.gorigins.com/api/v1',
-        auth: 'http://flamingo.gorigins.com/api/v1/auth'
+        auth: 'http://flamingo.gorigins.com/api/v1/auth',
+        feed: 'http://flamingo.gorigins.com/api/v1/feed'
     })
     .factory('Listing', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
         'use strict';
@@ -200,7 +201,8 @@ angular.module('tabletops.services', [])
                         });
                 },
                 FbLogin: function () {
-                    $cordovaFacebook.login(['public_profile', 'email', 'user_friends'])
+                    $cordovaFacebook
+                        .login(['public_profile', 'email', 'user_friends'])
                         .then(function (success) {
                             console.log('Login');
                             console.log(success);
@@ -216,7 +218,20 @@ angular.module('tabletops.services', [])
                             // error
                             console.log(error);
                         });
-
+                },
+                FbLogout: function () {
+                    $localForage.getItem('user').then(function (user) {
+                        $cordovaFacebook.logout()
+                            .then(function(success) {
+                                // success
+                                console.log(success);
+                                return success;
+                            }, function (error) {
+                                // error
+                                console.log(error);
+                                return error;
+                            });
+                    });
                 },
                 FbMe: function () {
                     $localForage.getItem('providerToken').then(function (token) {
@@ -553,8 +568,8 @@ angular.module('tabletops.services', [])
             return repo;
         }
     ])
-    .factory('UserActions', ['$rootScope', 'Listing', '$http', '$cordovaCamera', '$localForage', '$cordovaFacebook',
-        function ($rootScope, Listing, $http, $cordovaCamera, $localForage, $cordovaFacebook) {
+    .factory('UserActions', ['$rootScope', 'Listing', '$http', '$cordovaCamera', '$localForage', '$cordovaFacebook', 'ApiEndpoint', '$q',
+        function ($rootScope, Listing, $http, $cordovaCamera, $localForage, $cordovaFacebook, ApiEndpoint, $q) {
             'use strict';
             var repo = {
                 takePicture: function (obj) {
@@ -632,14 +647,53 @@ angular.module('tabletops.services', [])
                                 report: report
                             }, function (response) {
                                 console.log(response);
+                                return response;
                             }, function (err) {
                                 console.log(err);
+                                return err;
                             });
                         } else {
+                            return false;
                             //Dialogs.promptToLogin('write a review.');
                         }
                     });
 
+                },
+                feed: function () {
+                    var deferred = $q.defer();
+                    $localForage.getItem('authorizationToken').then(function (token) {
+                        if (token) {
+                            $http.get(ApiEndpoint.feed + '?token=' + token)
+                                .success(function (data) {
+                                    console.log('My Feed');
+                                    console.log(data);
+                                    deferred.resolve(data);
+                                })
+                                .error(function (err) {
+                                    console.log(err);
+                                    deferred.reject(err);
+                                });
+                        } else {
+                            return false;
+                        }
+                    });
+
+                    return deferred.promise;
+                },
+                inviteFb: function () {
+                    var options = {
+                        method: "apprequests",
+                        message: "Come on man, check out my application."
+                    };
+                    console.log('Inviting via FB');
+                    $cordovaFacebook.showDialog(options)
+                        .then(function(success) {
+                            // success
+                            console.log(success);
+                        }, function (error) {
+                            // error
+                            console.log(error);
+                        });
                 }
             };
             return repo;

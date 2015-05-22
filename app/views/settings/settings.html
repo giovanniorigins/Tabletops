@@ -2,8 +2,8 @@
     <ion-content>
         <div class="list">
 
-            <div class="card" ng-if="::user">
-                <div class="item item-avatar item-text-wrap stable-bg waves-effect waves-block waves-dark">
+            <div class="card">
+                <div ng-if="user" class="item item-avatar item-text-wrap stable-bg waves-effect waves-block waves-dark">
                     <span ng-if="::user.avatar" class="avatar" image-lazy-src="{{ user.avatar }}"
                           image-lazy-background-image="true"></span>
 
@@ -16,24 +16,43 @@
                     </h2>
 
                     <p class="">@&nbsp;{{::user.username}}</p>
-
                 </div>
 
-                <a class="item item-icon-left item-icon-right" ng-click="signInFacebook()">
+                <a class="item item-icon-left item-button-right" ng-show="!!facebookProfile">
                     <i class="icon ion-social-facebook calm calm"></i>
-                    Facebook <span ng-if="::user" ng-bind="!!facebookProfile ? 'Connected' : 'Connect'"></span>
-                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[!!facebookProfile]"></i>
+                    Facebook Connected
+                    <button class="button button-stable button-icon flat" ng-click="signOutFacebook()">
+                        <i class="icon ion-log-out"></i>
+                    </button>
                 </a>
-                <a class="item item-icon-left item-icon-right" ng-click="signInGoogle()">
+
+                <a class="item item-icon-left item-icon-right" ng-hide="!!facebookProfile" ng-click="signInFacebook()">
+                    <i class="icon ion-social-facebook calm calm"></i>
+                    Connect Facebook account
+                    <i class="icon ion-log-in stable"></i>
+                </a>
+
+                <a class="item item-icon-left item-button-right" ng-show="!!googleProfile">
                     <i class="icon ion-social-google energized-900"></i>
-                    Google <span ng-if="::user" ng-bind="!!googleProfile ? 'Connected' : 'Connect'"></span>
-                    <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[!!googleProfile]"></i>
+                    Google Connected
+                    <button class="button button-stable button-icon flat" ng-click="signOutGoogle()">
+                        <i class="icon ion-log-out"></i>
+                    </button>
                 </a>
-                <!--<a class="item item-icon-left item-icon-right" ng-click="signInLive()">
+
+                <a class="item item-icon-left item-icon-right" ng-hide="!!googleProfile" ng-click="signInGoogle()">
+                    <i class="icon ion-social-google energized-900"></i>
+                    Connect Google account
+                    <i class="icon ion-log-in stable"></i>
+                </a>
+                <!--<a class="item item-icon-left item-button-right" ng-click="signInLive()">
                     <i class="icon ion-social-google energized-900"></i>
                     Windows Live <span ng-if="::user" ng-bind="!!liveProfile ? 'Connected' : 'Connect'"></span>
                     <i class="icon" ng-class="{true:'ion-checkmark-circled balanced',false:'ion-ios-arrow-right stable'}[!!liveProfile]"></i>
                 </a>-->
+            </div>
+            <div class="card" ng-if="::!user">
+
             </div>
 
             <div class="card">
@@ -42,10 +61,10 @@
                     Set Province
                     <i class="icon ion-ios-arrow-right stable"></i>
                 </a>
-                <a class="item item-icon-right" ng-click="openProvinceModal($event)">
+                <!--<a class="item item-icon-right" ng-click="openProvinceModal($event)">
                     Profile Settings
                     <i class="icon ion-ios-arrow-right stable"></i>
-                </a>
+                </a>-->
                 <a class="item item-icon-right" ng-click="openProvinceModal($event)">
                     Notification Settings
                     <i class="icon ion-ios-arrow-right stable"></i>

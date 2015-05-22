@@ -15,7 +15,7 @@ angular.module('tabletops.config', [])
         // Tabs
         $ionicConfigProvider.tabs.position('bottom');
         // Native Scrolling: false, JS Scrolling: true
-        if( !ionic.Platform.isIOS() ) {
+        if( ionic.Platform.isAndroid() ) {
             $ionicConfigProvider.scrolling.jsScrolling(false);
         }
     }])

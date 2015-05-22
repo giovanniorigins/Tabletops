@@ -273,10 +273,10 @@ angular.module('tabletops.controllers', [])
                         lng: $scope.myLocation.coords.longitude
                     });
                 }
-                $scope.restaurants = Listing.query($scope.qData);
-                $scope.restaurants.$promise.finally(function () {
-                    $scope.$broadcast('scroll.refreshComplete');
-                });
+                //$scope.restaurants = Listing.query($scope.qData);
+                //$scope.restaurants.$promise.finally(function () {
+                //    $scope.$broadcast('scroll.refreshComplete');
+                //});
             };
 
             $scope.$watch('myLocation', function (newValue, oldValue) {
@@ -361,7 +361,7 @@ angular.module('tabletops.controllers', [])
     .controller('FavoritesCtrl', ['$scope', '$localForage', 'Listing', '$ionicModal', '$state', '_',
         function ($scope, $localForage, Listing, $ionicModal, $state, _) {
             'use strict';
-            $scope.faves = [];
+            //$scope.faves = [];
             $scope.refresh = function () {
                 $localForage.getItem('favorites').then(function (data) {
                     if (data && data.length > 0) {
@@ -372,6 +372,8 @@ angular.module('tabletops.controllers', [])
                             console.log(res);
                             $scope.$broadcast('scroll.refreshComplete');
                         });
+                    } else {
+                        $scope.$broadcast('scroll.refreshComplete');
                     }
                 });
             };
@@ -413,11 +415,19 @@ angular.module('tabletops.controllers', [])
             });
 
         }])
-    .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage',
-        function ($scope, leafletData, leafletBoundsHelpers, $cordovaGeolocation, Listing, $ionicModal, $localForage) {
+    .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage', '$state', '_',
+        function ($scope, leafletData, leafletBoundsHelpers, $cordovaGeolocation, Listing, $ionicModal, $localForage, $state, _) {
             'use strict';
             $scope.directionsSet = false;
             $scope.showDirections = false;
+
+            $scope.toRestaurant = function (slug) {
+                var obj = _.findWhere($scope.listings, {slug: slug});
+                $localForage.setItem('currentListing', obj).then(function () {
+                    $scope.$broadcast('loading:show');
+                    $state.go('tabs.map-restaurant', {id: slug});
+                });
+            };
 
             Listing.query({}, function (res) {
                 if ($scope.myLocation.coords) {
@@ -453,7 +463,7 @@ angular.module('tabletops.controllers', [])
                             lng: loc.lng,
                             getMessageScope: returnScope,
                             compileMessage: true,
-                            message: '<div><h1 class=\'text-center assertive-900\'>' + v.name + '</h1><h3 class="outline padding energized img-rounded">' + v.rating_cache + ' rating <span class="pull-right">' + $scope.showDollars(v.restaurant.price_range, false) + '</span></h3><div class=\'button-bar\'><a ui-sref=\'tabs.map-restaurant({id:"' + v.slug + '"})\' class=\'button button-light button-small button-icon icon ion-eye ink-dark\'></a><tt-directions get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directions></div></div>',
+                            message: '<div><h1 class=\'text-center assertive-900\'>' + v.name + '</h1><h3 class="outline padding energized img-rounded">' + v.rating_cache + ' rating <span class="pull-right">' + $scope.showDollars(v.restaurant.price_range, false) + '</span></h3><div class=\'button-bar\'><a ng-click=\'toRestaurant("' + v.slug + '")\' class=\'button button-light button-small button-icon icon ion-eye ink-dark\'></a><tt-directions get-directions=\'startDirections(lat, lng)\' lat=\'' + loc.lat + '\' lng=\'' + loc.lng + '\' ></tt-directions></div></div>',
                             icon: {
                                 prefix: 'ion',
                                 type: 'extraMarker',
@@ -1095,8 +1105,8 @@ angular.module('tabletops.controllers', [])
                 //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
             });
         }])
-    .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout', '_', '$http', 'ionicMaterialMotion',
-        function ($scope, $localForage, $cordovaFacebook, $timeout, _, $http, ionicMaterialMotion) {
+    .controller('AccountCtrl', ['$scope', '$localForage', '$cordovaFacebook', '$timeout', '_', '$http', 'ionicMaterialMotion', 'UserActions',
+        function ($scope, $localForage, $cordovaFacebook, $timeout, _, $http, ionicMaterialMotion, UserActions) {
             'use strict';
             $localForage.getItem('user').then(function (res) {
                 $scope.user = res;
@@ -1138,6 +1148,10 @@ angular.module('tabletops.controllers', [])
                 }
             });
 
+            $scope.inviteFbFriends = function () {
+                return UserActions.inviteFb();
+            };
+
             // Set Motion
             $timeout(function () {
                 ionicMaterialMotion.slideUp({
@@ -1146,8 +1160,8 @@ angular.module('tabletops.controllers', [])
             }, 0);
 
         }])
-    .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_', 'AuthenticationService',
-        function ($scope, $localForage, $cordovaAppRate, $log, _, AuthenticationService) {
+    .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_', 'AuthenticationService', 'UserActions',
+        function ($scope, $localForage, $cordovaAppRate, $log, _, AuthenticationService, UserActions) {
             'use strict';
             $scope.settings = {
                 enableFriends: true
@@ -1187,6 +1201,5 @@ angular.module('tabletops.controllers', [])
             $scope.isGroupShown = function (group) {
                 return $scope.shownGroup === group;
             };
-
         }]);
 
