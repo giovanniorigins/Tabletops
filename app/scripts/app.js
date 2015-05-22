@@ -330,7 +330,7 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                     views: {
                         'settings-tab': {
                             templateUrl: 'views/settings/privacy.html',
-                            controller: 'SettingsCtrl'
+                            controller: 'SettingsCte updaterl'
                         }
                     }
                 })
