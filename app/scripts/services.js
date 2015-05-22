@@ -606,58 +606,65 @@ angular.module('tabletops.services', [])
 
                 },
                 review: function (listing, review) {
-                    $localForage.get('user').then(function (res) {
-                        if (res && res.id) {
-                            return Listing.update({id: listing.id}, {
-                                action: 'review',
-                                comment: review.body,
-                                user_id: review.user_id,
-                                rating: review.rate
-                            }, function (response) {
-                                console.log(response);
-                                return $localForage.getItem('user').then(function (user) {
-                                    if (user.provider === 'Facebook' && review.facebook) {
-                                        var message = angular.toJson(review.body);
-                                        return $cordovaFacebook.api('/me/bahamastabletops:review?method=post&message=' + message + '&restaurant=http://flamingo.gorigins.com/np-pi/' + listing.slug, ['publish_actions'])
-                                            .then(function (success) {
-                                                // success
-                                                console.log(success);
-                                                return success;
-                                            }, function (error) {
-                                                // error
-                                                console.log(error);
-                                                return error;
-                                            });
-                                    }
-                                });
-                            }, function (err) {
-                                console.log(err);
+                    $localForage.getItem('authorizationToken').then(function (token) {
+                        $localForage.getItem('user').then(function (res) {
+                            if (res && res.id) {
+                                return Listing.update({id: listing.id, token: token}, {
+                                    action: 'review',
+                                    comment: review.body,
+                                    user_id: review.user_id,
+                                    rating: review.rate
+                                }, function (response) {
+                                    console.log(response);
+                                    return $localForage.getItem('user').then(function (user) {
+                                        if (user.provider === 'Facebook' && review.facebook) {
+                                            var message = angular.toJson(review.body);
+                                            return $cordovaFacebook.api('/me/bahamastabletops:review?method=post&message=' + message + '&restaurant=http://flamingo.gorigins.com/np-pi/' + listing.slug, ['publish_actions'])
+                                                .then(function (success) {
+                                                    // success
+                                                    console.log(success);
+                                                    return success;
+                                                }, function (error) {
+                                                    // error
+                                                    console.log(error);
+                                                    return error;
+                                                });
+                                        }
+                                    });
+                                }, function (err) {
+                                    console.log(err);
 
-                            });
-                        } else {
-                            //Dialogs.promptToLogin('write a review.');
-                        }
+                                });
+                            } else {
+                                //Dialogs.promptToLogin('write a review.');
+                            }
+                        });
                     });
                 },
                 report: function (listing, report) {
-                    $localForage.get('user').then(function (res) {
-                        if (res && res.id) {
-                            return Listing.update({id: listing.id}, {
-                                action: 'report',
-                                report: report
-                            }, function (response) {
-                                console.log(response);
-                                return response;
-                            }, function (err) {
-                                console.log(err);
-                                return err;
-                            });
-                        } else {
-                            return false;
-                            //Dialogs.promptToLogin('write a review.');
-                        }
+                    var deferred = $q.defer();
+                    $localForage.getItem('authorizationToken').then(function (token) {
+                        $localForage.getItem('user').then(function (user) {
+                            if (user && user.id) {
+                                return Listing.update({id: listing.id, token: token}, {
+                                    action: 'report',
+                                    report: report,
+                                    user_id: user.id
+                                }, function (response) {
+                                    console.log(response);
+                                    deferred.resolve(response);
+                                }, function (err) {
+                                    console.log(err);
+                                    deferred.reject(err);
+                                });
+                            } else {
+                                return false;
+                                //Dialogs.promptToLogin('write a review.');
+                            }
+                        });
                     });
 
+                    return deferred.promise;
                 },
                 feed: function () {
                     var deferred = $q.defer();
@@ -683,7 +690,7 @@ angular.module('tabletops.services', [])
                 inviteFb: function () {
                     var options = {
                         method: "apprequests",
-                        message: "Come on man, check out my application."
+                        message: "Check out this app that makes it easy to find great food in The Bahamas!"
                     };
                     console.log('Inviting via FB');
                     $cordovaFacebook.showDialog(options)

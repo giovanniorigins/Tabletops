@@ -222,24 +222,6 @@ angular.module('tabletops.controllers', [])
                 $scope.provModal.hide();
             };
 
-            // Report Modal
-            $ionicModal.fromTemplateUrl('views/common/ReportModal.html', {
-                scope: $scope
-            }).then(function (modal) {
-                $scope.reportModal = modal;
-            });
-
-            $scope.openReportModal = function ($event) {
-                $scope.reportModal.show($event)
-                    .then(function () {
-                        // Set Ink
-                        ionicMaterialInk.displayEffect();
-                    });
-            };
-            $scope.closeReportModal = function () {
-                $scope.reportModal.hide();
-            };
-
             //Cleanup the popover when we're done with it!
             $scope.$on('$destroy', function () {
                 $scope.provModal.remove();
@@ -273,10 +255,10 @@ angular.module('tabletops.controllers', [])
                         lng: $scope.myLocation.coords.longitude
                     });
                 }
-                //$scope.restaurants = Listing.query($scope.qData);
-                //$scope.restaurants.$promise.finally(function () {
-                //    $scope.$broadcast('scroll.refreshComplete');
-                //});
+                $scope.restaurants = Listing.query($scope.qData);
+                $scope.restaurants.$promise.finally(function () {
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
             };
 
             $scope.$watch('myLocation', function (newValue, oldValue) {
@@ -782,8 +764,8 @@ angular.module('tabletops.controllers', [])
             ionicMaterialInk.displayEffect();
 
         }])
-    .controller('RestaurantCtrl', ['$scope', 'Listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$stateParams', '$localForage', 'HoursDays', 'StartHours', 'EndHours', 'UserActions',
-        function ($scope, Listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $stateParams, $localForage, HoursDays, StartHours, EndHours, UserActions) {
+    .controller('RestaurantCtrl', ['$scope', 'Listing', '$ionicPopover', '$ionicTabsDelegate', '$ionicModal', '$state', '$stateParams', '$localForage', 'HoursDays', 'StartHours', 'EndHours', 'UserActions', 'ionicMaterialInk',
+        function ($scope, Listing, $ionicPopover, $ionicTabsDelegate, $ionicModal, $state, $stateParams, $localForage, HoursDays, StartHours, EndHours, UserActions, ionicMaterialInk) {
             'use strict';
 
             $localForage.getItem('currentListing').then(function (data) {
@@ -830,7 +812,7 @@ angular.module('tabletops.controllers', [])
                 // Review Modal
                 $ionicModal.fromTemplateUrl('views/restaurants/review-modal.html', {
                     scope: $scope,
-                    animation: 'slide-in-up'
+                    animation: 'am-fade-and-scale'
                 }).then(function (modal) {
                     $scope.reviewModal = modal;
                 });
@@ -845,10 +827,11 @@ angular.module('tabletops.controllers', [])
                 // Image View Modal
                 $ionicModal.fromTemplateUrl('views/restaurants/image-modal.html', {
                     scope: $scope,
-                    animation: 'slide-in-up'
+                    animation: 'am-fade-and-scale'
                 }).then(function (modal) {
                     $scope.imageModal = modal;
                 });
+
 
                 $scope.openModal = function () {
                     $scope.imageModal.show();
@@ -856,6 +839,26 @@ angular.module('tabletops.controllers', [])
                 $scope.closeModal = function () {
                     $scope.imageModal.hide();
                 };
+
+                // Report Modal
+                $ionicModal.fromTemplateUrl('views/common/ReportModal.html', {
+                    scope: $scope,
+                    animation: 'am-fade-and-scale'
+                }).then(function (modal) {
+                    $scope.reportModal = modal;
+                });
+
+                $scope.openReportModal = function ($event) {
+                    $scope.reportModal.show($event)
+                        .then(function () {
+                            // Set Ink
+                            ionicMaterialInk.displayEffect();
+                        });
+                };
+                $scope.closeReportModal = function () {
+                    $scope.reportModal.hide();
+                };
+
 
                 //Cleanup the modal when we're done with it!
                 $scope.$on('$destroy', function () {
@@ -924,19 +927,33 @@ angular.module('tabletops.controllers', [])
             };
 
             $scope.submitReport = function () {
+                console.log('submiting');
                 // Minor Validation
-                if(!!$scope.myReport.spelling || !!$scope.myReport.number || !!$scope.myReport.address ||
-                !!$scope.myReport.is_closed || !!$scope.myReport.services || !!$scope.myReport.inappropriate) {
+                if (!!$scope.myReport.spelling || !!$scope.myReport.number || !!$scope.myReport.address || !!$scope.myReport.is_closed || !!$scope.myReport.services || !!$scope.myReport.inappropriate) {
+                    delete $scope.myReport.error;
+
+                    var promise = UserActions.report($scope.listing, $scope.myReport);
+                    promise.then(function (data) {
+                        console.log(data);
+                        if (data.status === 'success') {
+                            $scope.closeReportModal();
+                            $scope.myReport = {
+                                spelling: 0,
+                                number: 0,
+                                address: 0,
+                                is_closed: 0,
+                                services: 0,
+                                inappropriate: 0,
+                                other: 0,
+                                body: '',
+                                error:0
+                            };
+                        }
+                    });
+                } else {
                     $scope.myReport.error = true;
                     return false;
                 }
-                delete $scope.myReport.error;
-
-                var promise = UserActions.report($scope.listing, $scope.myReport);
-                promise.$promise.then(function (data) {
-                    console.log(data);
-                    $scope.closeReportModal();
-                });
             };
         }])
     .controller('RestaurantMapCtrl', ['$scope', '$localForage', 'leafletData', 'leafletBoundsHelpers',
@@ -1160,8 +1177,8 @@ angular.module('tabletops.controllers', [])
             }, 0);
 
         }])
-    .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_', 'AuthenticationService', 'UserActions',
-        function ($scope, $localForage, $cordovaAppRate, $log, _, AuthenticationService, UserActions) {
+    .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_', 'AuthenticationService', 'UserActions', '$http', '$sce',
+        function ($scope, $localForage, $cordovaAppRate, $log, _, AuthenticationService, UserActions, $http, $sce) {
             'use strict';
             $scope.settings = {
                 enableFriends: true
@@ -1201,5 +1218,17 @@ angular.module('tabletops.controllers', [])
             $scope.isGroupShown = function (group) {
                 return $scope.shownGroup === group;
             };
+
+            $localForage.getItem('PrivacyPolicy').then(function (pp) {
+                if (!pp) {
+                    $http.get('http://www.iubenda.com/api/privacy-policy/977997')
+                        .success(function (res) {
+                            $localForage.setItem('pp', res.content);
+                            $scope.pp = $sce.trustAsHtml(res.content);
+                        });
+                } else {
+                    $scope.pp = $sce.trustAsHtml(pp);
+                }
+            });
         }]);
 

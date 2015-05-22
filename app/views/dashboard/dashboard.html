@@ -11,6 +11,8 @@
         </button>-->
     </ion-nav-buttons>
     <ion-content class="has-header padding-top" id="dashboard">
+        <ion-refresher pulling-text="Pull to refresh nearby" on-refresh="getNearby()"></ion-refresher>
+
         <div class="">
             <div class="">
                 <fieldset class="featured-header">

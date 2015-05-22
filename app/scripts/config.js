@@ -20,14 +20,14 @@ angular.module('tabletops.config', [])
         }
     }])
 
-    /*.config(['$cordovaFacebookProvider', 'CIDs', function($cordovaFacebookProvider, CIDs) {
+    .config(['$cordovaFacebookProvider', 'CIDs', function($cordovaFacebookProvider, CIDs) {
         'use strict';
         var appID = CIDs.facebook;
         var version = 'v2.0'; // or leave blank and default is v2.0
         ionic.Platform.ready(function () {
             $cordovaFacebookProvider.browserInit(appID, version);
         });
-    }])*/
+    }])
 
     // HTTP Defaults
     .config(['$httpProvider', function ($httpProvider) {
@@ -39,7 +39,7 @@ angular.module('tabletops.config', [])
         $httpProvider.interceptors.push(['$rootScope', function ($rootScope) {
             return {
                 request: function (config) {
-                    if (config.url.indexOf('https://analytics.ionic.io') === -1) {
+                    if (config.url.indexOf('https://analytics.ionic.io') === -1 || config.url.indexOf('https://apps.ionic.io') === -1) {
                         $rootScope.$broadcast('loading:show');
                     }
                     return config;
