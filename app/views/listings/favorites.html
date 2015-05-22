@@ -3,7 +3,7 @@
         <label class="item-input-wrapper">
             <i class="icon ion-ios7-search placeholder-icon"></i>
             <input type="search" placeholder="Search" ng-model="filters.search" ng-keyup="scrollTop()" reset-field>
-        </label>
+        </label>s
     </div>
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
@@ -27,13 +27,15 @@
                 <p>
                     <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{::c.name}}</a>
                 </p>
-                <!--<ion-option-button class="button-stable" ng-click="favoriteThis(res)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.id)]"></i></ion-option-button>-->
-                <!--<ion-option-button class="button-balanced" ng-click="initCaller(res)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>-->
             </li>
-            <!--<ion-item ng-hide="faves.length" class="card card-item text-center">
-                <i class="icon ion-ios-heart-outline lovely" style="font-size: 2em"></i>
-                <p>You don't have any favorites yet. <a ui-sref="tabs.results">Browse</a> around for places that you love!</p>
-            </ion-item>-->
+            <li ng-hide="faves.length" class="ionic item">
+                <div class="hero no-header flat">
+                    <div class="content">
+                        <i class="ion-heart icon hero-icon stable-bg"></i>
+                        <h2 class="dark padding-top">No favorites here.</h2>
+                    </div>
+                </div>
+            </li>
         </ion-list>
 
 
