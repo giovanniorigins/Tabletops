@@ -302,6 +302,10 @@ ion-nav-view {
 .loc-slider .slider-pager {
     bottom: auto;
 }
+
+.services-list p.padding {
+    padding: 4px 8px !important;
+}
 /* Accordion */
 .list .item.item-accordion {
     line-height: 38px;

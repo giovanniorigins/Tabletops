@@ -171,7 +171,8 @@ angular.module('tabletops.services', [])
                             case 'facebook':
                                 return service.FbMe();
                             case 'google':
-                                return service.GoogleMe();
+                                return service.Me();
+                                //return service.GoogleMe();
                             case 'email':
                                 return service.Me();
                             default:
@@ -251,7 +252,7 @@ angular.module('tabletops.services', [])
                                     $rootScope.isLoggedin = true;
 
                                     $localForage.setItem('user', res.profile).then(function (user) {
-                                        $ionicUser.set('user_id', user.user.id);
+                                        //$ionicUser.set('user_id', user.user.id);
                                         $ionicUser.set('name', user.user.full_name);
                                         $ionicUser.set('created_at', user.user.created_at);
                                         $ionicUser.set('language', user.language);
@@ -292,6 +293,13 @@ angular.module('tabletops.services', [])
                     }, function(error) {
                         // error
                         console.log(error);
+                    });
+                },
+                GoogleLogout: function () {
+                    $localForage.getItem('user').then(function (user) {
+                        $localForage.removeItem('usedProvider').then(function () {
+
+                        });
                     });
                 },
                 GoogleMe: function () {

@@ -56,10 +56,10 @@
             </div>
 
             <div class="card">
-                <a class="item item-icon-left item-icon-right" ng-click="openProvinceModal($event)">
+                <a class="item item-icon-left" ng-click="openProvinceModal($event)">
                     <i class="icon ion-ios-navigate"></i>
                     Set Province
-                    <i class="icon ion-ios-arrow-right stable"></i>
+                    <span class="item-note" ng-bind="$parent.settings.province.name"></span>
                 </a>
                 <!--<a class="item item-icon-right" ng-click="openProvinceModal($event)">
                     Profile Settings

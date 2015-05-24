@@ -120,13 +120,20 @@ angular.module('tabletops.controllers', [])
             $localForage.getItem('provinces').then(function (data) {
                 if (angular.isDefined(data) && !!data.length) {
                     $scope.provinces = data;
-                    $scope.settings.province = _.findWhere($scope.provinces, {slug: 'np-pi'});
+                    $scope.presetProvince();
                 } else {
                     $scope.provinces = $scope.getProvinces().then(function () {
-                        $scope.settings.province = _.findWhere($scope.provinces, {slug: 'np-pi'});
+                        $scope.presetProvince();
                     });
                 }
             });
+
+            $scope.presetProvince = function () {
+                $localForage.getItem('province').then(function (province) {
+                    console.log('Province: ', province);
+                    $scope.settings.province = province;
+                });
+            };
 
             $scope.getProvinces = function () {
                 return Province.query({}, function (res) {
@@ -214,6 +221,7 @@ angular.module('tabletops.controllers', [])
             $scope.openProvinceModal = function ($event) {
                 $scope.provModal.show($event)
                     .then(function () {
+                        $scope.presetProvince();
                         // Set Ink
                         ionicMaterialInk.displayEffect();
                     });
@@ -1230,5 +1238,6 @@ angular.module('tabletops.controllers', [])
                     $scope.pp = $sce.trustAsHtml(pp);
                 }
             });
+            console.log($scope);
         }]);
 

@@ -6,11 +6,35 @@
     </ion-nav-buttons>
     <ion-content class="has-header">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
-        <ion-list class="animate-blinds">
-            <!--<li ng-repeat="activity in feed.activities" class="item">
-                <h2 ng-bind="activity.actor"></h2>
-            </li>-->
-            <li class="ionic item">
+        <ion-list class="">
+            <div class="item card-item" ng-repeat="activity in feed | orderBy:'time'">
+                <div class="card stable-bg ink ink-dark">
+                    <div class="item item-avatar item-text-wrap">
+                        <span class="avatar" style="background-image: url('{{::activity.actor.avatar}}');"></span>
+                        <strong ng-bind="::activity.actor.full_name"></strong>&nbsp;
+                        <span ng-switch="::activity.verb">
+                            <span ng-switch-when="like">
+                                liked {{::activity.object.name}}
+                            </span>
+                            <span ng-switch-when="follow">
+                                started following {{::activity.object.full_name}}
+                            </span>
+                            <span ng-switch-when="visit">
+                                visited {{::activity.object.name}}
+                            </span>
+
+                        </span>.
+                        <div class="card-footer text-right">
+                            <!--<i class="icon ion-chatbubbles positive"></i> 6-->
+                            <!--<i class="icon ion-heart assertive"></i> 23-->
+                            <div class="pull-left">
+                                <i class="icon ion-clock"></i> <span am-time-ago="::activity.time"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <li ng-hide="feed.length" class="ionic item">
                 <div class="hero no-header flat">
                     <div class="content">
                         <i class="ion-flag icon hero-icon stable-bg"></i>
