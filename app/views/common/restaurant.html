@@ -50,12 +50,12 @@
         <fieldset class="featured-header" ng-if="listing.summary">
             <legend class="assertive">Summary</legend>
         </fieldset>
-        <p ng-if="::listing.summary" class="padding-horizontal" ng-bind="::listing.summary"></p>
+        <p ng-if="::listing.summary" class="padding-horizontal text-center" ng-bind="::listing.summary"></p>
 
         <fieldset class="featured-header" ng-if="listing.restaurant.cuisines.length">
             <legend class="assertive">Cuisines</legend>
         </fieldset>
-        <p class="padding-horizontal" ng-if="listing.restaurant.cuisines.length">
+        <p class="padding-horizontal text-center" ng-if="listing.restaurant.cuisines.length">
             <a class="badge badge-stable" ng-repeat="c in listing.restaurant.cuisines">{{::c.name}}</a>
         </p>
         <div ng-show="::listing.locations">
@@ -106,24 +106,34 @@
             <fieldset class="featured-header">
                 <legend class="assertive">Services Available</legend>
             </fieldset>
-            <div class="padding-horizontal services-list">
-                <p class="" ng-if="::listing.restaurant.reservations"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;
+            <div class="padding-horizontal services-list text-center" ng-if="listing">
+                <p class="outline padding inline img-rounded" ng-if="::listing.restaurant.reservations == 1" ng-class="{0:'balanced-bg',1:'energized-bg', 2:'assertive-bg'}[listing.restaurant.reservations_preferred]">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->
                     <span ng-if="::listing.restaurant.reservations_preferred == 0">Accepts Reservations</span>
                     <span ng-if="::listing.restaurant.reservations_preferred == 1">Reservations Preferred</span>
                     <span ng-if="::listing.restaurant.reservations_preferred == 2"><i class="icon ion-alert"></i> Reservations Only</span>
                 </p>
-                <p class="" ng-if="::listing.restaurant.parking"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;Parking Available</p>
-                <p class="" ng-if="::listing.restaurant.tv"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;TV(s)</p>
-                <p class="" ng-if="::listing.restaurant.credit_cards"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;Credit Cards Accepted</p>
-                <p class="" ng-if="::listing.restaurant.wifi"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;Free Wi-Fi</p>
-                <p class="" ng-if="::listing.restaurant.outdoor_seating"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;Outdoor Seating</p>
-                <p class="" ng-if="::listing.restaurant.delivery"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;Delivery</p>
-                <p class="" ng-if="::listing.restaurant.takeout"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.parking == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->Parking Available</p>
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.tv == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->TV(s)</p>
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.credit_cards == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->Credit Cards Accepted</p>
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.wifi == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->Free Wi-Fi</p>
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.outdoor_seating == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->Outdoor Seating</p>
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.delivery == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->Delivery</p>
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.takeout == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->
                     <span ng-if="::listing.restaurant.takeout_only == 0">Takeout</span>
                     <span ng-if="::listing.restaurant.takeout_only == 1"><i class="icon ion-alert"></i> Takeout Only</span>
                 </p>
-                <p class="" ng-if="listing.restaurant.valet"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;Valet</p>
-                <p class="" ng-if="listing.restaurant.disability"><i class="icon ion-checkmark-circled balanced"></i>&nbsp;Handicap Accessible</p>
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.valet == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->Valet</p>
+                <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.disability == 1">
+                    <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->Handicap Accessible</p>
             </div>
         </div>
 
@@ -139,7 +149,7 @@
                     <!--<a class="button button-icon icon ion-camera button-clear button padding-left padding-right" ng-click="addPhotos()"></a>-->
                 </legend>
             </fieldset>
-            <h4 class="content padding double-padding-x" ng-if="listing.gallery.length==0">No photos are currently available</h4>
+            <h4 class="content padding double-padding-x text-center" ng-if="listing.gallery.length==0">No photos yet</h4>
             <ion-scroll ng-if="::listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller wide-as-needed">
                 <div class="nearby-card" collection-repeat="photo in listing.gallery|limitTo:6" item-height="100" item-width="110">
                     <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{::photo.path}});min-height: 100px" ></div>
@@ -197,7 +207,7 @@
                 <legend class="assertive">Most Recent Reviews</legend>
             </fieldset>
 
-            <h4 class="content padding double-padding-x" ng-if="listing.accepted_reviews.length==0">No reviews yet</h4>
+            <h4 class="content padding double-padding-x text-center" ng-if="listing.accepted_reviews.length==0">No reviews yet</h4>
             <div class="item card-item" ng-repeat="review in listing.accepted_reviews|limitTo:5">
                 <div class="card stable-bg ink ink-dark">
                     <div class="item item-avatar item-text-wrap in">
