@@ -171,8 +171,8 @@ angular.module('tabletops.services', [])
                             case 'facebook':
                                 return service.FbMe();
                             case 'google':
-                                return service.Me();
-                                //return service.GoogleMe();
+                                //return service.Me();
+                                return service.GoogleMe();
                             case 'email':
                                 return service.Me();
                             default:
