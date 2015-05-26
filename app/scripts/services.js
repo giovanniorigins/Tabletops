@@ -244,7 +244,7 @@ angular.module('tabletops.services', [])
                                     if (angular.isDefined(res.error)) {
                                         console.log('Auth Error');
                                         console.log(res.error);
-                                        return res.error;
+                                        return $state.go('signin');
                                     }
                                     console.log('Auth Success');
                                     console.log(res);
@@ -310,7 +310,7 @@ angular.module('tabletops.services', [])
                                 if (res.error) {
                                     console.log('Auth Error');
                                     console.log(res.error);
-                                    return res.error;
+                                    return $state.go('signin');
                                 }
                                 console.log('Auth Success');
                                 console.log(res);
