@@ -86,6 +86,7 @@ angular.module('tabletops.services', [])
                                 return $rootScope.$broadcast('event:auth-login-failed', status);
                             }
 
+                            $localForage.setItem('usedProvider', 'Email');
                             $localForage.setItem('authorizationToken', data.token);
                             $localForage.setItem('providerToken', data.token);
                             $http.defaults.headers.common.Authorization = 'Bearer ' + data.token;
@@ -171,7 +172,6 @@ angular.module('tabletops.services', [])
                             case 'facebook':
                                 return service.FbMe();
                             case 'google':
-                                //return service.Me();
                                 return service.GoogleMe();
                             case 'email':
                                 return service.Me();
@@ -316,6 +316,7 @@ angular.module('tabletops.services', [])
 
                                 $rootScope.isLoggedin = true;
                                 $localForage.setItem('authorizationToken', res.token);
+                                $localForage.setItem('refreshToken', res.refresh_token);
                                 $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
                                 $rootScope.$broadcast('event:auth-loginConfirmed');
                                 return service.Me();
@@ -326,6 +327,7 @@ angular.module('tabletops.services', [])
                             });
                     });
                 },
+                // API Auth
                 Me: function () {
                     $localForage.getItem('authorizationToken').then(function (token) {
                         $http.post(ApiEndpoint.api + '/me', {}, {
@@ -335,36 +337,57 @@ angular.module('tabletops.services', [])
                             },
                             withCredentials: true
                         })
-                            .success(function (data) {
-                                if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
-                                    $rootScope.user = data.user;
-                                    $localForage.setItem('user', data.user).then(function (user) {
-                                        // Set User Info
-                                        $ionicUser.set('tt_id', user.id);
-                                        $ionicUser.set('name', user.full_name);
-                                        $ionicUser.set('created_at', user.created_at);
-                                        $ionicUser.set('language', user.language);
-                                        $ionicUser.set('gender', user.gender);
+                        .success(function (data) {
+                            if (!!data && angular.isNumber(parseInt(data.id)) && angular.isUndefined(data.error)) {
+                                $rootScope.user = data.user;
+                                $localForage.setItem('user', data.user).then(function (user) {
+                                    // Set User Info
+                                    $ionicUser.set('tt_id', user.id);
+                                    $ionicUser.set('name', user.full_name);
+                                    $ionicUser.set('created_at', user.created_at);
+                                    $ionicUser.set('language', user.language);
+                                    $ionicUser.set('gender', user.gender);
 
-                                        var provs = _.pluck(user.profiles, 'provider');
-                                        _.each(provs, function (a) {
-                                            $ionicUser.push('providers', a, true);
-                                        });
-
-                                        // Check if this is first run
-                                        $localForage.getItem('pastInitialStart').then(function (res) {
-                                            if (!!res) {
-                                                return $state.go('tabs.dashboard', null, {location: 'replace'});
-                                            } else {
-                                                return $state.go('tabs.dashboard', null, {location: 'replace'});
-                                                //return $state.go('intro', null, {location: 'replace'});
-                                            }
-                                        });
-                                        console.log(data);
+                                    var provs = _.pluck(user.profiles, 'provider');
+                                    _.each(provs, function (a) {
+                                        $ionicUser.push('providers', a, true);
                                     });
-                                } else {
-                                    return $state.go('signin');
-                                }
+
+                                    $localForage.setItem('been', user.visited);
+                                    $localForage.setItem('favorites', user.likedPlaces);
+
+                                    // Check if this is first run
+                                    $localForage.getItem('pastInitialStart').then(function (res) {
+                                        if (!!res) {
+                                            return $state.go('tabs.dashboard', null, {location: 'replace'});
+                                        } else {
+                                            return $state.go('tabs.dashboard', null, {location: 'replace'});
+                                            //return $state.go('intro', null, {location: 'replace'});
+                                        }
+                                    });
+                                });
+                            } else {
+                                return $state.go('signin');
+                            }
+                        });
+                    });
+                },
+                refreshToken: function () {
+                    $localForage.getItem('authorizationToken').then(function (token) {
+                        $http.post(ApiEndpoint.auth + '/refreshToken', {}, {
+                            ignoreAuthModule: true,
+                            headers: {
+                                Authorization: 'Bearer ' + token
+                            },
+                            withCredentials: true
+                        })
+                            .success(function (res) {
+                                console.log(res);
+                                //debugger;
+                            })
+                            .error(function (res) {
+                                console.log(res);
+                                //debugger;
                             });
                     });
                 }
@@ -576,8 +599,8 @@ angular.module('tabletops.services', [])
             return repo;
         }
     ])
-    .factory('UserActions', ['$rootScope', 'Listing', '$http', '$cordovaCamera', '$localForage', '$cordovaFacebook', 'ApiEndpoint', '$q',
-        function ($rootScope, Listing, $http, $cordovaCamera, $localForage, $cordovaFacebook, ApiEndpoint, $q) {
+    .factory('UserActions', ['$rootScope', 'Listing', '$http', '$cordovaCamera', '$localForage', '$cordovaFacebook', 'ApiEndpoint', '$q', 'AuthenticationService',
+        function ($rootScope, Listing, $http, $cordovaCamera, $localForage, $cordovaFacebook, ApiEndpoint, $q, AuthenticationService) {
             'use strict';
             var repo = {
                 takePicture: function (obj) {
@@ -679,12 +702,15 @@ angular.module('tabletops.services', [])
                     $localForage.getItem('authorizationToken').then(function (token) {
                         if (token) {
                             $http.get(ApiEndpoint.feed + '?token=' + token)
-                                .success(function (data) {
+                                .success(function (data, status) {
                                     console.log('My Feed');
+                                    if (status === 401) {
+                                        AuthenticationService.refreshToken();
+                                    }
                                     console.log(data);
                                     deferred.resolve(data);
                                 })
-                                .error(function (err) {
+                                .error(function (err, status) {
                                     console.log(err);
                                     deferred.reject(err);
                                 });

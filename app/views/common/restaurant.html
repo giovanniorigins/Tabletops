@@ -150,7 +150,7 @@
                 </legend>
             </fieldset>
             <h4 class="content padding double-padding-x text-center" ng-if="listing.gallery.length==0">No photos yet</h4>
-            <ion-scroll ng-if="::listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller wide-as-needed">
+            <ion-scroll ng-if="listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller wide-as-needed">
                 <div class="nearby-card" collection-repeat="photo in listing.gallery|limitTo:6" item-height="100" item-width="110">
                     <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{::photo.path}});min-height: 100px" ></div>
                 </div>

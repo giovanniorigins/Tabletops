@@ -3,12 +3,12 @@
         <label class="item-input-wrapper">
             <i class="icon ion-ios7-search placeholder-icon"></i>
             <input type="search" placeholder="Search" ng-model="filters.search" ng-keyup="scrollTop()" reset-field>
-        </label>s
+        </label>
     </div>
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list class="">
-            <li ng-show="faves.length" ng-repeat="res in faves|filter:filters.search|orderBy:filters.sort" class="item ink" data-ink-color="#B71C1C" ng-click="toFavorite(res.slug)">
+            <li ng-repeat="res in faves|orderBy:filters.sort" ng-show="([res] | filter:filters.search).length > 0" class="item ink" data-ink-color="#B71C1C" ng-click="toFavorite(res.slug)">
                 <!--<span class="avatar" style="background-image: url('{{::res.logo.path}}');"></span>-->
                 <h2 class="assertive-900" ng-bind="::res.name"></h2>
                 <p class="row row-no-padding">

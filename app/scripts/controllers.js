@@ -1185,13 +1185,9 @@ angular.module('tabletops.controllers', [])
             }, 0);
 
         }])
-    .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_', 'AuthenticationService', 'UserActions', '$http', '$sce',
-        function ($scope, $localForage, $cordovaAppRate, $log, _, AuthenticationService, UserActions, $http, $sce) {
+    .controller('SettingsCtrl', ['$scope', '$localForage', '$cordovaAppRate', '$log', '_', 'AuthenticationService', 'UserActions', '$http', '$sce', '$ionicModal',
+        function ($scope, $localForage, $cordovaAppRate, $log, _, AuthenticationService, UserActions, $http, $sce, $ionicModal) {
             'use strict';
-            $scope.settings = {
-                enableFriends: true
-            };
-
             $localForage.getItem('user').then(function (user) {
                 console.log(user);
                 $scope.user = user;
@@ -1238,6 +1234,18 @@ angular.module('tabletops.controllers', [])
                     $scope.pp = $sce.trustAsHtml(pp);
                 }
             });
-            console.log($scope);
+
+            $ionicModal.fromTemplateUrl('views/common/FeedbackModal.html', {
+                scope: $scope
+            }).then(function (modal) {
+                $scope.feedbackModal = modal;
+            });
+
+            $scope.openFeedbackModal = function ($event) {
+                $scope.feedbackModal.show($event);
+            };
+            $scope.closeFeedbackModal = function () {
+                $scope.feedbackModal.hide();
+            };
         }]);
 

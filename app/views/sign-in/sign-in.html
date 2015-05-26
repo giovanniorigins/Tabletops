@@ -4,7 +4,7 @@
                 <img src="img/logo-white_red.png" alt="Tabletops" width="100%"/>
             </div>
 
-            <div class="ionic login" ng-init="showForm = false;showAccountForm = false">
+            <div class="ionic login">
                 <button class="button button-block button-positive button-flat" ng-click="signInFacebook()" ng-hide="showAccountForm||showForm">
                     <i class="icon ion-social-facebook"></i>
                     LOGIN WITH FACEBOOK
@@ -18,65 +18,13 @@
                     <legend class="light">Or login with email</legend>
                 </fieldset>
 
-                <button class="button button-block button-dark button-flat" ng-click="showForm = !showForm" ng-hide="showAccountForm">
+                <button class="button button-block button-dark button-flat" nav-direction="swap" ui-sref="login">
                     <span ng-hide="showForm">LOGIN</span>
-                    <span ng-show="showForm">GO BACK</span>
                 </button>
 
-                <div class="" ng-show="showForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showForm]">
-                    <form class="list" name="loginForm">
-                        <label class="item item-input item-md-label">
-                            <input type="email" ng-model="user.email" required>
-                            <span class="input-label">Email</span>
-                            <div class="highlight highlight-balanced"></div>
-                        </label>
-
-                        <label class="item item-input item-md-label">
-                            <input type="password" ng-model="user.password" required>
-                            <span class="input-label">Password</span>
-                            <div class="highlight highlight-balanced"></div>
-                        </label>
-                    </form>
-                    <button class="button icon-left ion-log-in button button-block button-balanced button-flat" ng-disabled="!loginForm.$valid" ng-click="login()">
-                        LOGIN
-                    </button>
-                    <button class="button button-block button-outline button-light button-flat" ui-sref="forgotpassword">FORGOT PASSWORD?</button>
-
-                </div>
-
-                <button class="button button-block button-stable button-flat" ng-click="showAccountForm = !showAccountForm" ng-hide="showForm">
+                <button class="button button-block button-stable button-flat" nav-direction="swap" ui-sref="createaccount">
                     <span class="dark" ng-hide="showAccountForm">CREATE AN ACCOUNT</span>
-                    <span class="dark" ng-show="showAccountForm">GO BACK</span>
                 </button>
-
-                <div class="" ng-show="showAccountForm" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showAccountForm]">
-                    <form class="list" name="accountForm">
-                        <label class="item item-input item-md-label">
-                            <input type="text" ng-model="user.first" required>
-                            <span class="input-label">First Name</span>
-                            <div class="highlight highlight-balanced"></div>
-                        </label>
-                        <label class="item item-input item-md-label">
-                            <input type="text" ng-model="user.last" required>
-                            <span class="input-label">Last Name</span>
-                            <div class="highlight highlight-balanced"></div>
-                        </label>
-                        <label class="item item-input item-md-label">
-                            <input type="email" ng-model="user.email" required>
-                            <span class="input-label">Email</span>
-                            <div class="highlight highlight-balanced"></div>
-                        </label>
-                        <label class="item item-input item-md-label">
-                            <input type="password" ng-model="user.password" required>
-                            <span class="input-label">Password</span>
-                            <div class="highlight highlight-balanced"></div>
-                        </label>
-                    </form>
-                    <button class="button button-block button-balanced button-flat" ng-disabled="!accountForm.$valid" ng-click="submitAccount(user)">
-                        <i class="icon ion-log-in"></i>
-                        JOIN US
-                    </button>
-                </div>
             </div>
     </ion-content>
     <!--<div class="button-bar" style="position: fixed;bottom: 0;">

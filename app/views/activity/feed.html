@@ -7,23 +7,22 @@
     <ion-content class="has-header">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list class="">
-            <div class="item card-item" ng-repeat="activity in feed | orderBy:'time'">
+            <div class="item card-item" ng-repeat="activity in feed | orderBy:'-time'">
                 <div class="card stable-bg ink ink-dark">
                     <div class="item item-avatar item-text-wrap">
                         <span class="avatar" style="background-image: url('{{::activity.actor.avatar}}');"></span>
-                        <strong ng-bind="::activity.actor.full_name"></strong>&nbsp;
+                        <strong ng-bind="::activity.actor.full_name"></strong>
                         <span ng-switch="::activity.verb">
                             <span ng-switch-when="like">
-                                liked {{::activity.object.name}}
+                                liked {{::activity.object.name}}.
                             </span>
                             <span ng-switch-when="follow">
-                                started following {{::activity.object.full_name}}
+                                started following {{::activity.object.full_name}}.
                             </span>
                             <span ng-switch-when="visit">
-                                visited {{::activity.object.name}}
+                                visited {{::activity.object.name}}.
                             </span>
-
-                        </span>.
+                        </span>
                         <div class="card-footer text-right">
                             <!--<i class="icon ion-chatbubbles positive"></i> 6-->
                             <!--<i class="icon ion-heart assertive"></i> 23-->

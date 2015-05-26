@@ -1,36 +1,38 @@
-<ion-view view-title="Create Account" hide-nav-bar="false" class="transparent">
-    <ion-content padding="true">
-        <div class="col col-80 col-offset-10">
-            <div style="padding-top: 60px; padding-bottom: 30px">
-                <img src="img/logo-white_red.png" alt="Tabletops" width="100%"/>
-            </div>
+<ion-view view-title="Create Account" hide-nav-bar="true" class="transparent">
+    <ion-content class="padding">
+        <div style="padding-top: 60px; padding-bottom: 30px">
+            <img src="img/logo-white_red.png" alt="Tabletops" width="100%"/>
+        </div>
 
-            <button class="button button-block button-stable button-flat" ui-sref="signin">GO BACK</button>
+        <button class="button button-block button-dark flat" nav-direction="enter" ui-sref="signin">GO BACK</button>
 
-            <div >
-                <form class="list list-inset" name="accountForm">
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">First Name</span>
-                        <input type="text" placeholder="First Name" ng-model="user.first" required>
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Last Name</span>
-                        <input type="text" placeholder="Last Name" ng-model="user.last" required>
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Email</span>
-                        <input type="text" placeholder="Email" ng-model="user.email" required>
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Password</span>
-                        <input type="password" placeholder="Password" ng-model="user.password" required>
-                    </label>
-                </form>
-                <button class="button button-block button-balanced button-flat" ng-disabled="!accountForm.$valid" ng-click="submitAccount(user)">
-                    <i class="icon ion-log-in"></i>
-                    JOIN US
-                </button>
-            </div>
+        <div class="ionic login">
+            <form class="list" name="accountForm">
+                <label class="item item-input item-md-label">
+                    <input type="text" ng-model="user.fname" required>
+                    <span class="input-label">First Name</span>
+                    <div class="highlight highlight-balanced"></div>
+                </label>
+                <label class="item item-input item-md-label">
+                    <input type="text" ng-model="user.lname" required>
+                    <span class="input-label">Last Name</span>
+                    <div class="highlight highlight-balanced"></div>
+                </label>
+                <label class="item item-input item-md-label">
+                    <input type="email" ng-model="user.email" required>
+                    <span class="input-label">Email</span>
+                    <div class="highlight highlight-balanced"></div>
+                </label>
+                <label class="item item-input item-md-label">
+                    <input type="password" ng-model="user.password" required>
+                    <span class="input-label">Password</span>
+                    <div class="highlight highlight-balanced"></div>
+                </label>
+            </form>
+            <button class="button button-block button-balanced button-flat" ng-disabled="!accountForm.$valid" ng-click="submitAccount(user)">
+                <i class="icon ion-log-in"></i>
+                JOIN US
+            </button>
         </div>
     </ion-content>
 </ion-view>
