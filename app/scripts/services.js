@@ -270,6 +270,7 @@ angular.module('tabletops.services', [])
                             .error(function (res) {
                                 console.log('Auth Error');
                                 console.log(res);
+                                return $state.go('signin');
                             });
                     });
                 },
@@ -324,6 +325,7 @@ angular.module('tabletops.services', [])
                             .error(function (res) {
                                 console.log('Auth Error');
                                 console.log(res);
+                                return $state.go('signin');
                             });
                     });
                 },
