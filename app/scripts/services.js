@@ -69,8 +69,8 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaOauth', '$cordovaDevice', '$ionicUser', '$ionicPush', '$window', '_',
-        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaOauth, $cordovaDevice, $ionicUser, $ionicPush, $window, _) {
+    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaGooglePlus', '$cordovaOauth', '$cordovaDevice', '$ionicUser', '$ionicPush', '$window', '_',
+        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaGooglePlus, $cordovaOauth, $cordovaDevice, $ionicUser, $ionicPush, $window, _) {
             'use strict';
             var service = {
                 login: function (user) {
@@ -150,7 +150,10 @@ angular.module('tabletops.services', [])
                     }
 
                     $localForage.getItem('usedProvider').then(function (provider) {
-                        console.log('UsedProvider: ', provider);
+                        /*$localForage.getItem('user').then(function (user) {
+                            return service.refreshToken(provider, user.id);
+                        });*/
+                                console.log('UsedProvider: ', provider);
                         switch (provider) {
                             case 'Facebook':
                                 return service.FbCheckLogin();
@@ -260,6 +263,7 @@ angular.module('tabletops.services', [])
                                         $ionicUser.push('providers', user.provider, true);
                                     });
                                     $localForage.setItem('authorizationToken', res.token);
+                                    $localForage.setItem('providerLongToken', res.tokens.access_token);
                                     $http.defaults.headers.common.Authorization = 'Bearer ' + res.token;
                                     $rootScope.$broadcast('event:auth-loginConfirmed');
                                     return service.Me();
@@ -276,31 +280,54 @@ angular.module('tabletops.services', [])
                 },
                 // Google Auth
                 GoogleCheckLogin: function () {
-                    $localForage.getItem('usedProvider').then(function (provider) {
-                        if (provider === 'Google') {
+                    $cordovaGooglePlus.silentLogin('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
+                        .then(function (obj) {
+                            console.log(obj); // do something useful instead of alerting
                             return service.authHandler('google');
-                        }
-                    });
+                        }, function (msg) {
+                            console.log('error: ',  msg);
+                            return service.authHandler();
+                        });
                 },
                 GoogleLogin: function () {
-                    $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function(result) {
-                        // results
-                        console.log(result);
-                        $localForage.setItem('usedProvider', 'Google').then(function () {
-                            $localForage.setItem('providerToken', result.access_token).then(function () {
-                                return service.authHandler('google');
-                            });
-                        });
-                    }, function(error) {
-                        // error
-                        console.log(error);
-                    });
+                    window.plugins.googleplus.isAvailable(
+                        function (available) {
+                            if (available) {
+                                // show the Google+ sign-in button
+                                $cordovaGooglePlus.login('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
+                                    .then(function (obj) {
+                                        console.log(obj); // do something useful instead of alerting
+                                        return service.authHandler('google');
+                                    }, function (msg) {
+                                        console.log('error: ',  msg);
+                                        return service.authHandler();
+                                    });
+                            } else {
+                                $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function(result) {
+                                    // results
+                                    console.log(result);
+                                    $localForage.setItem('usedProvider', 'Google').then(function () {
+                                        $localForage.setItem('providerToken', result.access_token).then(function () {
+                                            return service.authHandler('google');
+                                        });
+                                    });
+                                }, function(error) {
+                                    // error
+                                    console.log(error);
+                                });
+                            }
+                        }
+                    );
                 },
                 GoogleLogout: function () {
                     $localForage.getItem('user').then(function (user) {
-                        $localForage.removeItem('usedProvider').then(function () {
-
-                        });
+                        $cordovaGooglePlus.logout()
+                            .then(function (msg) {
+                                console.log(msg);
+                                $localForage.removeItem('usedProvider').then(function () {
+                                    return $state.go('signin');
+                                });
+                            });
                     });
                 },
                 GoogleMe: function () {
@@ -374,23 +401,29 @@ angular.module('tabletops.services', [])
                         });
                     });
                 },
-                refreshToken: function () {
+                refreshToken: function (provider, id) {
                     $localForage.getItem('authorizationToken').then(function (token) {
-                        $http.post(ApiEndpoint.auth + '/refreshToken', {}, {
-                            ignoreAuthModule: true,
-                            headers: {
-                                Authorization: 'Bearer ' + token
-                            },
-                            withCredentials: true
-                        })
-                            .success(function (res) {
-                                console.log(res);
-                                //debugger;
+
+                        $localForage.getItem('providerLongToken').then(function (longToken) {
+
+                            $http.post(ApiEndpoint.auth + '/refreshToken', {provider: provider, user_id: id, providerToken: longToken}, {
+                                ignoreAuthModule: true,
+                                headers: {
+                                    Authorization: 'Bearer ' + token
+                                },
+                                withCredentials: true
                             })
-                            .error(function (res) {
-                                console.log(res);
-                                //debugger;
-                            });
+                                .success(function (res) {
+                                    console.log('Refresh Success');
+                                    console.log(res);
+                                    //debugger;
+                                })
+                                .error(function (res) {
+                                    console.log('Refresh Error');
+                                    console.log(res);
+                                    //debugger;
+                                });
+                        });
                     });
                 }
             };

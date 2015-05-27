@@ -1194,7 +1194,6 @@ angular.module('tabletops.controllers', [])
                 $scope.facebookProfile = _.findWhere(user.profiles, {provider: 'Facebook'});
                 $scope.liveProfile = _.findWhere(user.profiles, {provider: 'Live'});
                 $scope.googleProfile = _.findWhere(user.profiles, {provider: 'Google'});
-
             });
 
             $scope.rateApp = function () {
@@ -1247,5 +1246,15 @@ angular.module('tabletops.controllers', [])
             $scope.closeFeedbackModal = function () {
                 $scope.feedbackModal.hide();
             };
+
+            $scope.expandText = function () {
+                var element = document.getElementsByTagName('textarea')[0];
+                element.style.height = element.scrollHeight + 'px';
+            };
+
+            $scope.refreshTokens = function () {
+                return AuthenticationService.refreshToken();
+            };
+
         }]);
 

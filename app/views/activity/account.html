@@ -1,4 +1,7 @@
 <ion-view view-title="My Profile">
+    <ion-nav-buttons side="right">
+        <button class="button button-clear button-icon ion-person-add" ng-click="inviteFbFriends()"></button>
+    </ion-nav-buttons>
     <ion-content class="has-header">
         <div class="hero" image-lazy-src="{{ coverPhoto }}" image-lazy-background-image="true" image-lazy-loader="bubbles">
             <div ng-if="user" class="content">
@@ -6,7 +9,7 @@
                 <h3>
                     <i class="icon" ng-class="{'Facebook': 'ion-social-facebook positive-100'}[user.provider]"></i>
                     &nbsp;
-                    <a class="light" ng-bind="::user.full_name"></a>
+                    <a class="light" ng-bind="::user.full_name ? user.full_name : (user.fname + ' ' + user.lname)"></a>
                 </h3>
                 <h4 class="light" ng-bind="'Foodie'"></h4>
             </div>
@@ -18,9 +21,6 @@
             </div>
         </div>
         <div class="button-bar">
-            <a class="button button-raised ink-dark" ng-click="inviteFbFriends()">
-                <i class="ion-person-add"></i> Invite
-            </a>
             <a class="button button-raised ink-dark">
                 <span class="energized-900">{{::user.followers.length}}</span> Followers
             </a>

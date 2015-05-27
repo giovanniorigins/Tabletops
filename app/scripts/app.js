@@ -5,7 +5,7 @@ var valById = function (arr, id) {
     });
 };
 
-angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'angularMoment', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'ionicLazyLoad', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
+angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'angularMoment', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'ngCordova.plugins.googleplus', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'ionicLazyLoad', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
     .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$localForage', 'ionicMaterialInk',
         function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage, ionicMaterialInk) {
@@ -14,11 +14,19 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
                 if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+                    //Lets hide the accessory bar fo the keyboard (ios)
                     cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                    // also, lets disable the native overflow scroll
+                    cordova.plugins.Keyboard.disableScroll(true);
                 }
+
                 if (window.StatusBar) {
-                    // org.apache.cordova.statusbar required
-                    StatusBar.styleLightContent();
+                    if (ionic.Platform.isAndroid()) {
+                        StatusBar.backgroundColorByHexString("#608628");
+                    } else {
+                        // org.apache.cordova.statusbar required
+                        StatusBar.styleLightContent();
+                    }
                 }
             });
 
@@ -258,7 +266,7 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                     }
                 })
                 .state('tabs.account', {
-                    url: '/account',
+                    url: '/activity/account',
                     views: {
                         'activity-tab': {
                             templateUrl: 'views/activity/account.html',
@@ -295,6 +303,15 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                         'settings-tab': {
                             templateUrl: 'views/settings/settings.html',
                             controller: 'SettingsCtrl'
+                        }
+                    }
+                })
+                .state('tabs.settings-account', {
+                    url: '/settings/account',
+                    views: {
+                        'settings-tab': {
+                            templateUrl: 'views/activity/account.html',
+                            controller: 'AccountCtrl'
                         }
                     }
                 })
