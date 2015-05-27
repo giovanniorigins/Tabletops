@@ -20,14 +20,14 @@ angular.module('tabletops.config', [])
         }
     }])
 
-    .config(['$cordovaFacebookProvider', 'CIDs', function($cordovaFacebookProvider, CIDs) {
+    /*.config(['$cordovaFacebookProvider', 'CIDs', function($cordovaFacebookProvider, CIDs) {
         'use strict';
         var appID = CIDs.facebook;
         var version = 'v2.0'; // or leave blank and default is v2.0
         ionic.Platform.ready(function () {
             $cordovaFacebookProvider.browserInit(appID, version);
         });
-    }])
+    }])*/
 
     // HTTP Defaults
     .config(['$httpProvider', function ($httpProvider) {
