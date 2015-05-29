@@ -22,7 +22,7 @@ angular.module('tabletops.controllers', [])
     .controller('MainCtrl', ['$rootScope', '$scope', '$ionicPlatform', '$ionicScrollDelegate', '$cordovaNetwork', '$cordovaGeolocation', '$cordovaToast', '$state', '$localForage', 'Province', 'ListingRepository', '$ionicModal', '$timeout', '$log', '_', 'ionicMaterialInk',
         function ($rootScope, $scope, $ionicPlatform, $ionicScrollDelegate, $cordovaNetwork, $cordovaGeolocation, $cordovaToast, $state, $localForage, Province, ListingRepository, $ionicModal, $timeout, $log, _, ionicMaterialInk) {
             'use strict';
-            $scope.settings = {
+            $rootScope.settings = {
                 geolocation: false,
                 province: {}
             };
@@ -204,6 +204,10 @@ angular.module('tabletops.controllers', [])
 
             $scope.scrollTop = function () {
                 $ionicScrollDelegate.scrollTop();
+            };
+
+            $scope.scrollHandleTop = function (handle) {
+                $ionicScrollDelegate.$getByHandle(handle).scrollTop();
             };
 
             $scope.$on('event:auth-loginConfirmed', function () {
@@ -635,8 +639,8 @@ angular.module('tabletops.controllers', [])
             };
 
         }])
-    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state', '_', 'ionicMaterialInk', 'ionicMaterialMotion',
-        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state, _, ionicMaterialInk, ionicMaterialMotion) {
+    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state', '_', 'ionicMaterialInk', 'ionicMaterialMotion', '$ionicSlideBoxDelegate',
+        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state, _, ionicMaterialInk, ionicMaterialMotion, $ionicSlideBoxDelegate) {
             'use strict';
             Cuisine.query({}, function (res) {
                 $scope.cuisines = res;
@@ -663,19 +667,27 @@ angular.module('tabletops.controllers', [])
             };
 
             $scope.toggles = [
-                {icon: 'icon ion-wifi', name: 'Wi-fi', slug: 'wifi', value: undefined},
-                {icon: 'icon ion-music-note', name: 'Live Music', slug: 'live_music', value: undefined},
-                {icon: 'icon ion-ios-telephone', name: 'Takeout', slug: 'takeout', value: undefined},
-                {icon: 'icon ion-model-s', name: 'Delivery', slug: 'delivery', value: undefined},
-                {icon: 'icon ion-help-buoy', name: 'Handicap Accessible', slug: 'disability', value: undefined},
-                {icon: 'icon ion-ios-sunny', name: 'Outdoor Seating', slug: 'outdoor_seating', value: undefined},
+                {icon: 'ion-wifi', name: 'Wi-fi', slug: 'wifi', value: undefined},
+                {icon: 'ion-music-note', name: 'Live Music', slug: 'live_music', value: undefined},
+                {icon: 'ion-ios-telephone', name: 'Takeout', slug: 'takeout', value: undefined},
+                {icon: 'ion-model-s', name: 'Delivery', slug: 'delivery', value: undefined},
+                {icon: 'ion-help-buoy', name: 'Handicap Accessible', slug: 'disability', value: undefined},
+                {icon: 'ion-ios-sunny', name: 'Outdoor Seating', slug: 'outdoor_seating', value: undefined},
                 {
-                    icon: 'icon ion-checkmark ',
+                    icon: 'ion-checkmark ',
                     name: 'Reservations Pref/Only',
                     slug: 'reservations_preferred',
                     value: undefined
                 }
             ];
+
+            $scope.togglePriceRange = function (newValue) {
+                if (parseInt($scope.filters.price_range) !== parseInt(newValue)) {
+                    $scope.filters.price_range = newValue;
+                } else {
+                    $scope.filters.price_range = undefined;
+                }
+            };
 
             /*$scope.$watchCollection('filters', function (newValue, oldValue) {
              console.log(newValue);
@@ -712,10 +724,10 @@ angular.module('tabletops.controllers', [])
                 });
             }, 5000);
 
-            $scope.$on('province:set', function (event, p) {
+            /*$scope.$on('province:set', function (event, p) {
                 console.log(p);
                 $scope.refresh();
-            });
+            });*/
 
             $scope.refresh();
 
@@ -738,17 +750,38 @@ angular.module('tabletops.controllers', [])
                 animation: 'slide-in-up'
             }).then(function (modal) {
                 $scope.modal = modal;
+                $scope.filerModalSlider = $ionicSlideBoxDelegate.$getByHandle('modalSlider');
+                $scope.filerModalSlider.enableSlide(false);
             });
             $scope.openFiltersModal = function () {
+                $scope.filerModalSlider.slide(0);
                 $scope.modal.show();
             };
             $scope.closeFiltersModal = function () {
-                $scope.modal.hide();
+                if ($scope.filerModalSlider.currentIndex() === 0) {
+                    $scope.modal.hide();
+                } else {
+                    $scope.filerModalSlider.previous();
+                    $scope.scrollHandleTop('modalSlider');
+                }
             };
+
+            $scope.toProvinceSelect = function () {
+                $scope.filerModalSlider.slide(1);
+            };
+
+            $scope.$on('province:set', function (event, p) {
+                console.log(p);
+                $scope.filters.province = p.slug;
+                $scope.filters.province_id = p.id;
+            });
+
             //Cleanup the modal when we're done with it!
             $scope.$on('$destroy', function () {
                 $scope.modal.remove();
             });
+
+            $ionicSlideBoxDelegate.$getByHandle('modalSlider').next();
 
             $scope.toRestaurant = function (id) {
                 var obj = _.findWhere($scope.restaurants, {slug: id});

@@ -132,7 +132,7 @@ angular.module('ionic.service.core', [])
  *   });
  * }]);
  */
-.provider('$ionicApp', function($httpProvider) {
+.provider('$ionicApp', ['$httpProvider', function($httpProvider) {
   var app = {};
 
   var settings = {
@@ -236,29 +236,14 @@ angular.module('ionic.service.core', [])
               break;
 
             case 'ipad':
-              try {
-                var resource = window.localStorage.getItem('_ionic_cordova_js_resource');
-                console.log(resource);
-                var web_location = window.localStorage.getItem('_ionic_web_start');
-                var location = "file://" + window.location.pathname;
-                if (location === web_location) {
-                  cordova_src = resource;
-                }
-              } catch(e) {
-                console.log(e);
-              }
-              break;
-
             case 'iphone':
               try {
-                var resource = window.localStorage.getItem('_ionic_cordova_js_resource');
-                console.log(resource);
-                var web_location = window.localStorage.getItem('_ionic_web_start');
-                var location = "file://" + window.location.pathname;
-                if (location === web_location) {
-                  cordova_src = resource;
+                var resource = window.location.search.match(/cordova_js_bootstrap_resource=(.*?)(&|#|$)/i);
+                if (resource) {
+                  cordova_src = decodeURI(resource[1]);
                 }
               } catch(e) {
+                console.log('Could not find cordova_js_bootstrap_resource query param');
                 console.log(e);
               }
               break;
@@ -280,7 +265,7 @@ angular.module('ionic.service.core', [])
       }
     }
   }];
-})
+}])
 
 /**
 * @ngdoc service
@@ -416,6 +401,19 @@ function($q, $timeout, $http, persistentStorage, $ionicApp) {
         var msg = 'You must supply a unique user_id field.';
         throw new Error(msg)
       }
+
+      // Copy all the data into our user object
+      angular.extend(user, userData);
+
+      // Write the user object to our local storage
+      persistentStorage.storeObject(storageKeyName, user);
+
+      return $http.post($ionicApp.getApiUrl() + '/api/v1/app/' + $ionicApp.getId() + '/users/identify', userData);
+    },
+    identifyAnonymous: function() {
+      userData = {};
+      userData['user_id'] = generateGuid();
+      userData['isAnonymous'] = true;
 
       // Copy all the data into our user object
       angular.extend(user, userData);
