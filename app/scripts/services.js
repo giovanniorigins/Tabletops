@@ -283,8 +283,11 @@ angular.module('tabletops.services', [])
                     $cordovaGooglePlus.silentLogin('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
                         .then(function (obj) {
                             console.log(obj); // do something useful instead of alerting
-                            return service.authHandler('google');
-                        }, function (msg) {
+                            $localForage.setItem('usedProvider', 'Google').then(function () {
+                                $localForage.setItem('providerToken', oauthToken).then(function () {
+                                    return service.authHandler('google');
+                                });
+                            });                        }, function (msg) {
                             console.log('error: ',  msg);
                             return service.authHandler();
                         });
@@ -297,7 +300,11 @@ angular.module('tabletops.services', [])
                                 $cordovaGooglePlus.login('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
                                     .then(function (obj) {
                                         console.log(obj); // do something useful instead of alerting
-                                        return service.authHandler('google');
+                                        $localForage.setItem('usedProvider', 'Google').then(function () {
+                                            $localForage.setItem('providerToken', oauthToken).then(function () {
+                                                return service.authHandler('google');
+                                            });
+                                        });
                                     }, function (msg) {
                                         console.log('error: ',  msg);
                                         return service.authHandler();
