@@ -425,7 +425,7 @@ angular.module('tabletops.controllers', [])
                 MBX.setCenter(384, (512+7));
                 MBX.show();
 
-                MBX.registerAnnotationType('marker', {
+                /*MBX.registerAnnotationType('marker', {
                     remote:     false,
                     image:      'marker-icon.png',
                     directory:  'css/images/'
@@ -455,7 +455,7 @@ angular.module('tabletops.controllers', [])
                         latitude: 25.033965,
                         longitude: -77.350000
                     }
-                });
+                });*/
 
                 $scope.MBXMap = true;
             }
