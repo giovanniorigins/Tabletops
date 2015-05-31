@@ -5,7 +5,7 @@ var valById = function (arr, id) {
     });
 };
 
-angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'angularMoment', 'ion-affix', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'ngCordova.plugins.googleplus', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'ionicLazyLoad', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
+angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'mbxMapKit', 'angularMoment', 'ion-affix', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'ngCordova.plugins.googleplus', 'LocalForageModule', 'leaflet-directive', 'http-auth-interceptor', 'ionicLazyLoad', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
     .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$localForage', 'ionicMaterialInk',
         function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage, ionicMaterialInk) {

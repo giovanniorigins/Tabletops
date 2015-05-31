@@ -31,6 +31,12 @@ angular.module('underscore', [])
         return window._;
     });
 
+angular.module('mbxMapKit', [])
+    .factory('MBX', function () {
+        'use strict';
+        return window.mbxmapkit;
+    });
+
 angular.module('tabletops.services', [])
     .constant('ApiEndpoint', {
         api: 'http://flamingo.gorigins.com/api/v1',

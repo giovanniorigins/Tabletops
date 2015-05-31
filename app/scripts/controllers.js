@@ -409,11 +409,26 @@ angular.module('tabletops.controllers', [])
             });
 
         }])
-    .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage', '$state', '_',
-        function ($scope, leafletData, leafletBoundsHelpers, $cordovaGeolocation, Listing, $ionicModal, $localForage, $state, _) {
+    .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage', '$state', '_', 'MBX',
+        function ($scope, leafletData, leafletBoundsHelpers, $cordovaGeolocation, Listing, $ionicModal, $localForage, $state, _, MBX) {
             'use strict';
             $scope.directionsSet = false;
             $scope.showDirections = false;
+            $scope.mbxMarkers = [];
+
+            if (MBX) {
+
+                MBX.create();
+                MBX.setSize( 768, (1024-115));
+                MBX.setCenter(384, (512+7));
+                MBX.show();
+
+                MBX.registerAnnotationType('marker', {
+                    remote:false,
+                    image: 'marker-icon.png',
+                    directory: 'css/images/'
+                })
+            }
 
             $scope.toRestaurant = function (slug) {
                 var obj = _.findWhere($scope.listings, {slug: slug});
@@ -473,9 +488,20 @@ angular.module('tabletops.controllers', [])
                                 shape: 'penta'
                             }
                         });
+
+                        MBX.addAnnotation({
+                            id: v.id+'|'+loc.id,
+                            title:v.name,
+                            type: '',
+                            coordinates: {
+                                latitude: loc.lat,
+                                longitude: loc.lng
+                            }
+                        });
+
+
                     }
                 }
-
             });
             // Default Center
             $scope.center = {
@@ -513,12 +539,12 @@ angular.module('tabletops.controllers', [])
             });
             $scope.markers = [];
 
-            leafletData.getMap().then(function (map) {
+            /*leafletData.getMap().then(function (map) {
                 $localForage.getItem('province').then(function (res) {
                     map.panTo(new L.LatLng(res.lat, res.lng));
                 });
 
-                /*var provWatch = */
+                *//*var provWatch = *//*
                 $scope.$watch('settings.province', function (newValue) {
                     map.panTo(new L.LatLng(newValue.lat, newValue.lng));
                 });
@@ -527,23 +553,22 @@ angular.module('tabletops.controllers', [])
                 $scope.directions = L.mapbox.directions();
                 $scope.directions.setOrigin(L.latLng($scope.myLocation.coords.latitude, $scope.myLocation.coords.longitude));
 
-                /*var directionsLayer = */
+                *//*var directionsLayer = *//*
                 L.mapbox.directions.layer($scope.directions, {readonly: true})
                     .addTo(map);
 
-                /*var directionsErrorsControl = */
+                *//*var directionsErrorsControl = *//*
                 L.mapbox.directions.errorsControl('errors', $scope.directions)
                     .addTo(map);
 
-                /*var directionsRoutesControl = */
+                *//*var directionsRoutesControl = *//*
                 L.mapbox.directions.routesControl('routes', $scope.directions)
                     .addTo(map);
 
-                /*var directionsInstructionsControl = */
+                *//*var directionsInstructionsControl = *//*
                 L.mapbox.directions.instructionsControl('instructions', $scope.directions)
                     .addTo(map);
-            });
-
+            });*/
 
             $scope.startDirections = function (lat, lng) {
                 $scope.directions.setDestination(L.latLng(lat, lng));
