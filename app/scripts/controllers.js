@@ -36,6 +36,8 @@ angular.module('tabletops.controllers', [])
                 }
             });
 
+            $rootScope.isIOS = ionic.Platform.isIOS();
+
             /*var isOnline = function () {
                 var isConnected = false;
 
@@ -416,7 +418,7 @@ angular.module('tabletops.controllers', [])
             $scope.showDirections = false;
             $scope.mbxMarkers = [];
 
-            if (MBX) {
+            if ($scope.isIOS && MBX) {
 
                 MBX.create();
                 MBX.setSize( 768, (1024-115));
@@ -424,10 +426,38 @@ angular.module('tabletops.controllers', [])
                 MBX.show();
 
                 MBX.registerAnnotationType('marker', {
-                    remote:false,
-                    image: 'marker-icon.png',
-                    directory: 'css/images/'
-                })
+                    remote:     false,
+                    image:      'marker-icon.png',
+                    directory:  'css/images/'
+                });
+
+                MBX.registerAnnotationType('marker2', {
+                    remote:     false,
+                    image:      'marker-icon.png',
+                    directory:  '/css/images/'
+                });
+
+                MBX.addAnnotation({
+                    id: 'lol1',
+                    title: 'test1',
+                    type: 'marker',
+                    coordinates: {
+                        latitude: 25.033965,
+                        longitude: -77.35176
+                    }
+                });
+
+                MBX.addAnnotation({
+                    id: 'lol2',
+                    title: 'test2',
+                    type: 'marker2',
+                    coordinates: {
+                        latitude: 25.033965,
+                        longitude: -77.350000
+                    }
+                });
+
+                $scope.MBXMap = true;
             }
 
             $scope.toRestaurant = function (slug) {
@@ -489,15 +519,17 @@ angular.module('tabletops.controllers', [])
                             }
                         });
 
-                        MBX.addAnnotation({
-                            id: v.id+'|'+loc.id,
-                            title:v.name,
-                            type: '',
-                            coordinates: {
-                                latitude: loc.lat,
-                                longitude: loc.lng
-                            }
-                        });
+                        if ($scope.isIOS && MBX) {
+                            MBX.addAnnotation({
+                                id: v.id + '|' + loc.id,
+                                title: v.name,
+                                type: '',
+                                coordinates: {
+                                    latitude: loc.lat,
+                                    longitude: loc.lng
+                                }
+                            });
+                        }
 
 
                     }
@@ -591,6 +623,17 @@ angular.module('tabletops.controllers', [])
 
             //Handling Route Steps
             //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
+
+            $scope.$on('$ionicView.enter', function (event) {
+                if (!!$scope.MBXMap && $scope.isIOS && MBX) {
+                    MBX.show();
+                }
+            });
+            $scope.$on('$ionicView.beforeLeave', function (event) {
+                if ($scope.isIOS && MBX) {
+                    MBX.hide();
+                }
+            });
         }
     ])
     .controller('CuisinesCtrl', ['$rootScope', '$scope', '$localForage', 'Cuisine',
