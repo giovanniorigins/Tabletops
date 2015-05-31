@@ -414,6 +414,8 @@ angular.module('tabletops.controllers', [])
     .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage', '$state', '_', 'MBX',
         function ($scope, leafletData, leafletBoundsHelpers, $cordovaGeolocation, Listing, $ionicModal, $localForage, $state, _, MBX) {
             'use strict';
+
+            $scope.isIOS = ionic.Platform.isIOS();
             $scope.directionsSet = false;
             $scope.showDirections = false;
             $scope.mbxMarkers = [];
@@ -421,7 +423,7 @@ angular.module('tabletops.controllers', [])
             if ($scope.isIOS && MBX) {
 
                 MBX.create();
-                MBX.setSize( 768, (1024-115));
+                MBX.setSize(768, (1024-115));
                 MBX.setCenter(384, (512+7));
                 MBX.show();
 
