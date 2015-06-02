@@ -31,11 +31,11 @@ angular.module('underscore', [])
         return window._;
     });
 
-angular.module('mbxMapKit', [])
-    .factory('MBX', function () {
+angular.module('GoogleMaps', [])
+    .factory('GoogleMaps', [function () {
         'use strict';
-        return window.mbxmapkit;
-    });
+        return window.plugin.google.maps;
+    }]);
 
 angular.module('tabletops.services', [])
     .constant('ApiEndpoint', {
@@ -290,7 +290,7 @@ angular.module('tabletops.services', [])
                         .then(function (obj) {
                             console.log(obj); // do something useful instead of alerting
                             $localForage.setItem('usedProvider', 'Google').then(function () {
-                                $localForage.setItem('providerToken', oauthToken).then(function () {
+                                $localForage.setItem('providerToken', obj.oauthToken).then(function () {
                                     return service.authHandler('google');
                                 });
                             });                        }, function (msg) {
@@ -307,7 +307,7 @@ angular.module('tabletops.services', [])
                                     .then(function (obj) {
                                         console.log(obj); // do something useful instead of alerting
                                         $localForage.setItem('usedProvider', 'Google').then(function () {
-                                            $localForage.setItem('providerToken', oauthToken).then(function () {
+                                            $localForage.setItem('providerToken', obj.oauthToken).then(function () {
                                                 return service.authHandler('google');
                                             });
                                         });

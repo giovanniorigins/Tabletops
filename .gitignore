@@ -1,15 +1,12 @@
-node_modules
-www
-.idea
-.temp
-.sass-cache
-app/bower_components
-coverage
-platforms
-plugins
-*.swp
-*.swo
-*.log
-*.DS_Store
-
-app/scripts/configuration.js
+# ignore "excess" files and directories
+# in essence, ignore everything but *.xdk file and www and docs directories
+/*
+!/www
+!/docs
+!/config.xml
+!/README.md
+!/LICENSE.md
+!/intelxdk.config.additions.xml
+!/*.xdk
+!/.gitignore
+!/*.png

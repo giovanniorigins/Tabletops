@@ -411,56 +411,46 @@ angular.module('tabletops.controllers', [])
             });
 
         }])
-    .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage', '$state', '_', 'MBX',
-        function ($scope, leafletData, leafletBoundsHelpers, $cordovaGeolocation, Listing, $ionicModal, $localForage, $state, _, MBX) {
+    .controller('MapCtrl', ['$scope', 'leafletData', 'leafletBoundsHelpers', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage', '$state', '_', 'GoogleMaps',
+        function ($scope, leafletData, leafletBoundsHelpers, $cordovaGeolocation, Listing, $ionicModal, $localForage, $state, _, GoogleMaps) {
             'use strict';
 
+            var MBX = false;
             $scope.isIOS = ionic.Platform.isIOS();
             $scope.directionsSet = false;
             $scope.showDirections = false;
             $scope.mbxMarkers = [];
 
-            if ($scope.isIOS && MBX) {
+            var mapDiv = document.getElementById('map');
+
+            // Initialize the map plugin
+            var gMap = GoogleMaps.Map.getMap(mapDiv, {
+                'mapType': plugin.google.maps.MapTypeId.HYBRID,
+                'controls': {
+                    'compass': false,
+                    'myLocationButton': true,
+                    'indoorPicker': true,
+                    'zoom': false
+                }
+            });
+
+            // You have to wait the MAP_READY event.
+            gMap.on(GoogleMaps.event.MAP_READY, $scope.onMapInit);
+
+            onMapInit = function () {
+                gMap.setDebuggable( true );
+            };
+            
+
+            /*if ($scope.isIOS && MBX) {
 
                 MBX.create();
                 MBX.setSize(768, (1024-115));
                 MBX.setCenter(384, (512+7));
                 MBX.show();
 
-                /*MBX.registerAnnotationType('marker', {
-                    remote:     false,
-                    image:      'marker-icon.png',
-                    directory:  'css/images/'
-                });
-
-                MBX.registerAnnotationType('marker2', {
-                    remote:     false,
-                    image:      'marker-icon.png',
-                    directory:  '/css/images/'
-                });
-
-                MBX.addAnnotation({
-                    id: 'lol1',
-                    title: 'test1',
-                    type: 'marker',
-                    coordinates: {
-                        latitude: 25.033965,
-                        longitude: -77.35176
-                    }
-                });
-
-                MBX.addAnnotation({
-                    id: 'lol2',
-                    title: 'test2',
-                    type: 'marker2',
-                    coordinates: {
-                        latitude: 25.033965,
-                        longitude: -77.350000
-                    }
-                });*/
-
                 $scope.MBXMap = true;
-            }
+            }*/
 
             $scope.toRestaurant = function (slug) {
                 var obj = _.findWhere($scope.listings, {slug: slug});
@@ -470,13 +460,15 @@ angular.module('tabletops.controllers', [])
                 });
             };
 
-            Listing.query({}, function (res) {
+            $scope.listings = Listing.query({}, function (res) {
                 if ($scope.myLocation.coords) {
                     $scope.center = {
                         lat: $scope.myLocation.coords.latitude,
                         lng: $scope.myLocation.coords.longitude,
                         zoom: 12
                     };
+
+                    // Add custom me marker
                     $scope.markers.push({
                         lat: $scope.myLocation.coords.latitude,
                         lng: $scope.myLocation.coords.longitude,
@@ -490,7 +482,7 @@ angular.module('tabletops.controllers', [])
                     });
                 }
 
-                $scope.listings = res;
+                //$scope.listings = res;
                 var returnScope = function () {
                     return $scope;
                 };
@@ -498,7 +490,7 @@ angular.module('tabletops.controllers', [])
                     var v = res[a];
                     for (var i = 0, len = v.locations.length; i < len; i++) {
                         var loc = v.locations[i];
-                        $scope.markers.push({
+                        /*$scope.markers.push({
                             //layer: 'listings',
                             lat: loc.lat,
                             lng: loc.lng,
@@ -510,18 +502,31 @@ angular.module('tabletops.controllers', [])
                                 type: 'extraMarker',
                                 icon: 'ion-pizza',
                                 markerColor: 'red',
-                                /*v.rating_count != 0
+                                /!*v.rating_count != 0
                                  ? v.rating_cache > 2
                                  ? v.rating_cache > 4
                                  ? 'green'
                                  :'orange'
                                  :'red'
-                                 : 'white'*/
+                                 : 'white'*!/
                                 shape: 'penta'
                             }
+                        });*/
+
+                        gMap.addMarker({
+                            icon: 'darkred',
+                            'title': v.name,
+                            'snippet': loc.address_1
+                        }, function( marker ) {
+                            //marker.showInfoWindow();
+
+                            marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function() {
+                                $scope.toRestaurant(v.slug);
+                                //alert("InfoWindow is clicked");
+                            });
                         });
 
-                        if ($scope.isIOS && MBX) {
+                        /*if ($scope.isIOS && MBX) {
                             MBX.addAnnotation({
                                 id: v.id + '|' + loc.id,
                                 title: v.name,
@@ -531,7 +536,7 @@ angular.module('tabletops.controllers', [])
                                     longitude: loc.lng
                                 }
                             });
-                        }
+                        }*/
 
 
                     }
@@ -544,13 +549,13 @@ angular.module('tabletops.controllers', [])
                 zoom: 11
             };
 
-            var maxBounds = leafletBoundsHelpers.createBoundsFromArray([
+            /*var maxBounds = leafletBoundsHelpers.createBoundsFromArray([
                 [27.293689, -79.541016],
                 [20.797522, -71.015968]
-            ]);
+            ]);*/
 
             $scope.height = window.screen.height;
-            angular.extend($scope, {
+            /*angular.extend($scope, {
                 defaults: {
                     tileLayer: 'http://api.tiles.mapbox.com/v4/jgiovanni.lonlneon/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ',
                     //maxZoom: 16,
@@ -570,7 +575,7 @@ angular.module('tabletops.controllers', [])
                     //scrollWheelZoom: false
                 },
                 maxBounds: maxBounds
-            });
+            });*/
             $scope.markers = [];
 
             /*leafletData.getMap().then(function (map) {
@@ -627,14 +632,10 @@ angular.module('tabletops.controllers', [])
             //$scope.currentStep = $scope.directions.routes[0].steps[0].manever.instruction;
 
             $scope.$on('$ionicView.enter', function (event) {
-                if (!!$scope.MBXMap && $scope.isIOS && MBX) {
-                    MBX.show();
-                }
+                if (gMap) gMap.getMap();
             });
             $scope.$on('$ionicView.beforeLeave', function (event) {
-                if ($scope.isIOS && MBX) {
-                    MBX.hide();
-                }
+                gMap.remove();
             });
         }
     ])
