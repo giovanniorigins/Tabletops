@@ -3,18 +3,9 @@
         <img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}} Map</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
-        <button class="button button-clear button-icon" ng-class="{ true:'ion-ios-navigate', false:'ion-ios-navigate-outline' }[showDirections]"
-                ng-if="directionsSet" ng-click="toggleDirections()"></button>
+
     </ion-nav-buttons>
-    <ion-content class="has-header" ng-class="{'a':'has-footer'}[directionsSet && !showDirections]" scroll="false" data-tap-disabled="true">
-        <div ng-if="listing" id="map">
-            <leaflet defaults="defaults" maxbounds="maxBounds" markers="markers" center="center" event-broadcast="events" height="100%" width="100%"></leaflet>
-            <!--<div id='inputs'></div>-->
-            <div id='errors'></div>
-            <ion-scroll id='directions' class="animated fast" ng-class="{true: 'fadeIn', false: 'fadeOut'}[showDirections && directionsSet]" ng-show="showDirections && directionsSet">
-                <div id='routes'></div>
-                <div id='instructions'></div>
-            </ion-scroll>
-        </div>
+    <ion-content class="has-header has-tabs" scroll="false" data-tap-disabled="true">
+        <div ng-if="listing" id="map"></div>
     </ion-content>
 </ion-view>

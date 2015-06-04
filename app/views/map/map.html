@@ -3,7 +3,7 @@
         <button class="button button-clear button-icon" ng-class="{ true:'ion-ios-navigate', false:'ion-ios-navigate-outline' }[showDirections]"
                 ng-if="directionsSet" ng-click="toggleDirections()"></button>
     </ion-nav-buttons>
-    <ion-content class="has-header has-tabs" ng-class="{'a':'has-footer'}[directionsSet && !showDirections]" scroll="false" data-tap-disabled="true">
+    <ion-content class="has-header has-tabs" scroll="false" data-tap-disabled="true">
         <div id="map"></div>
     </ion-content>
 </ion-view>
