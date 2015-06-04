@@ -20,6 +20,18 @@ angular.module('tabletops.config', [])
         }
     }])
 
+    .config(['$provide', function ($provide) {
+        $provide.decorator('$exceptionHandler', ['$delegate', function ($delegate) {
+            return function (exception, cause) {
+                //exception.message = '';
+
+                $delegate(exception, cause);
+                console.log('Exception: ', exception);
+                console.log('Cause: ', cause);
+            }
+        }])
+    }])
+
     /*.config(['$cordovaFacebookProvider', 'CIDs', function($cordovaFacebookProvider, CIDs) {
         'use strict';
         var appID = CIDs.facebook;

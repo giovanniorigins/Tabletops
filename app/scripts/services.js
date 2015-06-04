@@ -26,15 +26,15 @@ function serializeData(data) {
 }
 
 angular.module('underscore', [])
-    .factory('_', function () {
+    .factory('_', ['$window',function ($window) {
         'use strict';
-        return window._;
-    });
+        return $window._;
+    }]);
 
 angular.module('GoogleMaps', [])
-    .factory('GoogleMaps', [function () {
+    .factory('GoogleMaps', ['$window', function ($window) {
         'use strict';
-        return window.plugin.google.maps;
+        return $window.plugin.google.maps;
     }]);
 
 angular.module('tabletops.services', [])

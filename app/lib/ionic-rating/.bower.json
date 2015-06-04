@@ -28,7 +28,6 @@
     "commit": "bfb3d5581bc3c75fb2a665a81692e63664d8fd88"
   },
   "_source": "git://github.com/fraserxu/ionic-rating.git",
-  "_target": "~0.1.0",
-  "_originalSource": "ionic-rating",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "ionic-rating"
 }
