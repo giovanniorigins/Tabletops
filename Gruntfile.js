@@ -293,7 +293,7 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: 'resources/',
                 dest: '<%= yeoman.dist %>/resources/',
-                src: ['**/**/*.png', '*.png']
+                src: ['**/**/*.png', '*.png', '*.mobileprovision']
             },
             config: {
                 expand: true,

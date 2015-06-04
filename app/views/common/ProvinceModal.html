@@ -11,7 +11,7 @@
     </ion-header-bar>
     <ion-content class="">
         <ion-list>
-            <ion-radio ng-repeat="p in provinces" ng-model="settings.province" ng-value="p" ng-change="setProvince(p)">{{::p.name}}</ion-radio>
+            <ion-radio ng-repeat="p in provinces" ng-model="selectedProvince" ng-value="p" ng-change="setProvince(p)">{{::p.name}}</ion-radio>
         </ion-list>
     </ion-content>
 </ion-modal-view>

@@ -1,7 +1,10 @@
-<ion-view view-title="Explore">
+<ion-view>
+    <ion-nav-title>
+        Explore {{settings.province.name}}
+    </ion-nav-title>
+
     <ion-nav-buttons side="right">
-        <button class="button button-clear button-icon" ng-class="{ true:'ion-ios-navigate', false:'ion-ios-navigate-outline' }[showDirections]"
-                ng-if="directionsSet" ng-click="toggleDirections()"></button>
+        <button class="button button-clear button-icon icon ion-ios-location" ng-click="openMapProvinceModal($event)"></button>
     </ion-nav-buttons>
     <ion-content class="has-header has-tabs" scroll="false" data-tap-disabled="true">
         <div id="map"></div>

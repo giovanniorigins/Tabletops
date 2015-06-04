@@ -27,12 +27,12 @@ angular.module('tabletops.controllers', [])
                 province: {}
             };
 
-            $scope.hasHeaderFabRight = false;
+            $rootScope.hasHeaderFabRight = false;
 
             // Handle Settings
             $localForage.getItem('province').then(function (data) {
                 if (angular.isObject(data)) {
-                    $scope.settings.province = data;
+                    $rootScope.settings.province = data;
                 }
             });
 
@@ -44,7 +44,7 @@ angular.module('tabletops.controllers', [])
                 if (angular.isDefined(navigator.connection)) {
                     var networkConnection = navigator.connection;
                     if (!networkConnection || !networkConnection.type) {
-                        $log.error('networkConnection.type is not defined');
+                        console.error('networkConnection.type is not defined');
                         return false;
                     }
 
@@ -66,7 +66,7 @@ angular.module('tabletops.controllers', [])
                     isConnected = true;
                 }
 
-                $log.log('isOnline? ' + isConnected);
+                console.log('isOnline? ' + isConnected);
                 return isConnected;
             };*/
 
@@ -77,13 +77,13 @@ angular.module('tabletops.controllers', [])
 
                 // listen for Online event
                 $rootScope.$on('$cordovaNetwork:online', function () {
-                    $log.log('App Online');
+                    console.log('App Online');
                     $rootScope.connectionState = true;
                 });
 
                 // listen for Offline event
                 $rootScope.$on('$cordovaNetwork:offline', function () {
-                    $log.log('App Offline');
+                    console.log('App Offline');
                     $rootScope.connectionState = false;
                 });
             });
@@ -96,18 +96,19 @@ angular.module('tabletops.controllers', [])
             };
 
             /*$scope.myLocation = $cordovaGeolocation.watchPosition($scope.geoOptions);*/
-
-            var watch = $cordovaGeolocation.watchPosition(geoOptions);
-            watch.then(
-                null,
-                function (err) {
-                    // error
-                    $log.log(err);
-                },
-                function (position) {
-                    //console.log(position);
-                    $scope.myLocation = position;
-                });
+            $ionicPlatform.ready(function () {
+                var watch = $cordovaGeolocation.watchPosition(geoOptions);
+                watch.then(
+                    null,
+                    function (err) {
+                        // error
+                        console.log(err);
+                    },
+                    function (position) {
+                        //console.log(position);
+                        $scope.myLocation = position;
+                    });
+            });
 
             $scope.selectProvinces = function () {
                 $localForage.getItem('provinces').then(function (data) {
@@ -116,6 +117,21 @@ angular.module('tabletops.controllers', [])
                         $localForage.setItem('provinces', res);
                         return $scope.toggleRight();
                     });
+                });
+            };
+
+            $scope.presetProvince = function () {
+                $localForage.getItem('province').then(function (province) {
+                    console.log('Province: ', province);
+                    $scope.selectedProvince = province;
+                });
+            };
+
+            $scope.getProvinces = function () {
+                return Province.query({}, function (res) {
+                    $scope.provinces = res;
+                    $localForage.setItem('provinces', res);
+                    return res;
                 });
             };
 
@@ -130,23 +146,8 @@ angular.module('tabletops.controllers', [])
                 }
             });
 
-            $scope.presetProvince = function () {
-                $localForage.getItem('province').then(function (province) {
-                    console.log('Province: ', province);
-                    $scope.settings.province = province;
-                });
-            };
-
-            $scope.getProvinces = function () {
-                return Province.query({}, function (res) {
-                    $scope.provinces = res;
-                    $localForage.setItem('provinces', res);
-                    return res;
-                });
-            };
-
             $scope.setProvince = function (p) {
-                $scope.settings.province = p;
+                $rootScope.settings.province = p;
                 $localForage.setItem('province', p);
                 $scope.closeProvinceModal();
                 //$cordovaToast.showShortBottom(p.name + ' is now your default province.');
@@ -155,7 +156,7 @@ angular.module('tabletops.controllers', [])
 
             $scope.findClosest = function (targetLocation, locations) {
                 var closest = closestLocation(targetLocation, locations);
-                $log.log(closest);
+                console.log(closest);
                 return closest;
             };
 
@@ -244,7 +245,7 @@ angular.module('tabletops.controllers', [])
 
             $scope.$on('$ionicView.enter', function () {
                 $timeout(function () {
-                    $log.log('Set Ink');
+                    console.log('Set Ink');
                     // Set Ink
                     ionicMaterialInk.displayEffect();
                 }, 300);
@@ -338,16 +339,16 @@ angular.module('tabletops.controllers', [])
             //Cleanup the popover when we're done with it!
             $scope.$on('$destroy', function () {
                 $scope.SearchModal.remove();
-                $scope.$parent.hasHeaderFabRight = false;
+                $rootScope.hasHeaderFabRight = false;
             });
 
             $scope.$on('$ionicView.enter', function () {
-                $scope.$parent.hasHeaderFabRight = true;
+                $rootScope.hasHeaderFabRight = true;
                 document.getElementById('fab-search').classList.toggle('hide');
             });
 
             $scope.$on('$ionicView.leave', function () {
-                $scope.$parent.hasHeaderFabRight = false;
+                $rootScope.hasHeaderFabRight = false;
                 document.getElementById('fab-search').classList.toggle('hide');
             });
 
@@ -411,84 +412,85 @@ angular.module('tabletops.controllers', [])
             });
 
         }])
-    .controller('MapCtrl', ['$scope', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage', '$state', '_', 'GoogleMaps', '$document', '$log',
-        function ($scope, $cordovaGeolocation, Listing, $ionicModal, $localForage, $state, _, GoogleMaps, $document, $log) {
+    .controller('MapCtrl', ['$rootScope', '$scope', '$cordovaGeolocation', 'Listing', '$ionicModal', '$localForage', '$state', '_', 'GoogleMaps',
+        function ($rootScope, $scope, $cordovaGeolocation, Listing, $ionicModal, $localForage, $state, _, GoogleMaps) {
             'use strict';
 
-            $scope.isIOS = ionic.Platform.isIOS();
-            $scope.isAndroid = ionic.Platform.isAndroid();
-            $scope.showDirections = false;
+            //$scope.isAndroid = ionic.Platform.isAndroid();
             $scope.gMap = undefined;
 
             $scope.createMap = function () {
-                //$log.log($scope.gMap);
-                if (angular.isUndefined($scope.gMap)) {
-                    // Set map div
-                    $scope.mapDiv = $document.getElementById('map');
-                    // force $scope.mapDiv height to avoid tabs
-                    //$scope.mapDiv.style.height = ($scope.mapDiv.offsetHeight - 49) + 'px';
-                    ///$scope.gMap.setDiv($scope.mapDiv);
+                $localForage.getItem('province').then(function (province) {
+                    // Check for province immediately
+                    if (!angular.isObject(province)) {
+                        if ( angular.isObject($scope.gMap) ) $scope.gMap.setClickable( false );
+                        $scope.openProvinceModal();
+                        return false;
+                    }
 
-                    //$log.log('creating map');
-                    // Initialize the map plugin
-                    $scope.gMap = GoogleMaps.Map.getMap($scope.mapDiv, {
-                        'mapType': GoogleMaps.MapTypeId.ROADMAP,
-                        'controls': {
-                            'compass': false,
-                            'myLocationButton': true,
-                            'indoorPicker': true,
-                            'zoom': false
-                        },
-                        'camera': {
-                            'latLng': new GoogleMaps.LatLng(25.033965, -77.35176),
-                            'zoom': 11,
-                        }
-                    });
+                    //console.log($scope.gMap);
+                    if (angular.isUndefined($scope.gMap)) {
+                        console.log('Creating gMap');
+                        // Set map div
+                        $scope.mapDiv = document.getElementById('map');
+                        // force $scope.mapDiv height to avoid tabs
+                        //$scope.mapDiv.style.height = ($scope.mapDiv.offsetHeight - 49) + 'px';
+                        ///$scope.gMap.setDiv($scope.mapDiv);
 
-                    // You have to wait the MAP_READY event.
-                    $scope.gMap.on(GoogleMaps.event.MAP_READY, function () {
-                        // Load Listings
-                        $scope.loadListings();
-                    });
-                }
+                        // Initialize the map plugin
+                        $scope.gMap = GoogleMaps.Map.getMap($scope.mapDiv, {
+                            'mapType': GoogleMaps.MapTypeId.ROADMAP,
+                            'controls': {
+                                'compass': false,
+                                'myLocationButton': true,
+                                'indoorPicker': true,
+                                'zoom': false
+                            },
+                            'camera': {
+                                'latLng': new GoogleMaps.LatLng(province.lat || 25.033965, province.lng || -77.35176),
+                                'zoom': 11,
+                            }
+                        });
+                        $scope.gMap.setClickable( true );
+
+                        // You have to wait the MAP_READY event.
+                        $scope.gMap.on(GoogleMaps.event.MAP_READY, function () {
+                            // Load Listings restricted by province
+                            $scope.loadListings(province.id);
+                        });
+                    }
+                });
             };
 
-            $scope.loadListings = function () {
-                $scope.listings = Listing.query({}, function (res) {
-                    //$scope.showLoading();
+            $scope.loadListings = function (provinceId) {
+
+                $scope.listings = Listing.query({ province_id: provinceId }, function (res) {
                     for (var a = 0, lena = res.length; a < lena; a++) {
                         var v = res[a];
                         for (var i = 0, len = v.locations.length; i < len; i++) {
                             var loc = v.locations[i];
                             $scope.gMap.addMarker({
-                                icon: 'darkorange',
+                                icon: 'orange',
                                 title: v.name + '\n' + loc.address_1 + ' ' + loc.address_2,
                                 snippet: 'View More',
                                 position: new GoogleMaps.LatLng(loc.lat, loc.lng),
                                 styles : {
                                     'text-align': 'center',
                                     'font-weight': 'bold'
+                                },
+                                slug: v.slug,
+                                infoClick: function(marker) {
+                                    console.log(marker);
+                                    $scope.toRestaurant(marker.get("slug"));
                                 }
-                            }, function (marker) {
-                                //marker.showInfoWindow();
-
-                                marker.addEventListener(GoogleMaps.event.INFO_CLICK, function (v) {
-                                    $scope.toRestaurant(v.slug);
-                                    //alert("InfoWindow is clicked");
-                                });
                             });
-
                         }
                     }
-                    //$scope.hideLoading();
-
                 });
             };
 
-            //$scope.createMap();
-
             $scope.toRestaurant = function (slug) {
-                $log.log('going to: ', slug);
+                console.log('going to: ', slug);
                 var obj = _.findWhere($scope.listings, {slug: slug});
                 $localForage.setItem('currentListing', obj).then(function () {
                     $scope.$broadcast('loading:show');
@@ -496,18 +498,14 @@ angular.module('tabletops.controllers', [])
                 });
             };
 
-            // Default Center
-            $scope.center = {
-                lat: 25.033965,
-                lng: -77.35176,
-                zoom: 11
+            $scope.openMapProvinceModal = function ($event) {
+                if ( angular.isObject($scope.gMap) ) $scope.gMap.setClickable( false );
+                $scope.openProvinceModal($event);
             };
 
-            $scope.height = window.screen.height;
-
             $scope.$on('$ionicView.enter', function (event) {
-                //$log.log('entering');
-                var MView = $document.getElementById('main-view');
+                console.log('entering');
+                var MView = document.getElementById('main-view');
                 MView.classList.toggle('bg-food');
 
                 $scope.createMap();
@@ -539,15 +537,28 @@ angular.module('tabletops.controllers', [])
             });
 
             $scope.$on('$ionicView.leave', function (event) {
-                //$log.log('leaving');
+                console.log('leaving');
                 //$scope.gMap.removeEventListener($scope.gMap.event.MAP_WILL_MOVE);
-                $scope.gMap.remove();
+                if ( angular.isObject($scope.gMap) ) {
+                    $scope.gMap.setClickable( false );
+                    $scope.gMap.remove();
+                }
                 $scope.gMap = undefined;
 
-                var MView = $document.getElementById('main-view');
+                var MView = document.getElementById('main-view');
                 MView.classList.toggle('bg-food');
 
                 //$scope.mapDiv.style.height = ($scope.mapDiv.offsetHeight + 49) + 'px';
+            });
+
+            $scope.$on('province:set', function (event, p) {
+                console.log(p);
+                if ( angular.isUndefined($scope.gMap) ) {
+                    $scope.createMap();
+                } else {
+                    $scope.gMap.setCenter(new GoogleMaps.LatLng(p.lat, p.lng));
+                    $scope.loadListings(p.id);
+                }
 
             });
 
@@ -644,8 +655,8 @@ angular.module('tabletops.controllers', [])
             };
 
         }])
-    .controller('RestaurantsCtrl', ['$scope', '$rootScope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state', '_', 'ionicMaterialInk', 'ionicMaterialMotion', '$ionicSlideBoxDelegate',
-        function ($scope, $rootScope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state, _, ionicMaterialInk, ionicMaterialMotion, $ionicSlideBoxDelegate) {
+    .controller('RestaurantsCtrl', ['$rootScope', '$scope', 'Listing', 'Cuisine', '$stateParams', 'ListingRepository', '$ionicModal', '$localForage', '$timeout', '$state', '_', 'ionicMaterialInk', 'ionicMaterialMotion', '$ionicSlideBoxDelegate',
+        function ($rootScope, $scope, Listing, Cuisine, $stateParams, ListingRepository, $ionicModal, $localForage, $timeout, $state, _, ionicMaterialInk, ionicMaterialMotion, $ionicSlideBoxDelegate) {
             'use strict';
             Cuisine.query({}, function (res) {
                 $scope.cuisines = res;
@@ -656,8 +667,8 @@ angular.module('tabletops.controllers', [])
             $scope.filters = {
                 app_search: true,
                 search: $stateParams.search || undefined,
-                province: $scope.settings.province.slug,
-                province_id: $scope.settings.province.id,
+                province: $rootScope.settings.province ? $rootScope.settings.province.slug : undefined,
+                province_id: $rootScope.settings.province ? $rootScope.settings.province.id : undefined,
                 sort: 'name',
                 cuisine: $stateParams.cuisine || undefined,
                 price_range: undefined,
@@ -1002,8 +1013,8 @@ angular.module('tabletops.controllers', [])
                 }
             };
         }])
-    .controller('RestaurantMapCtrl', ['$scope', '$localForage', 'GoogleMaps',
-        function ($scope, $localForage, GoogleMaps) {
+    .controller('RestaurantMapCtrl', ['$rootScope', '$scope', '$localForage', 'GoogleMaps',
+        function ($rootScope, $scope, $localForage, GoogleMaps) {
             'use strict';
             $scope.directionsSet = false;
             $scope.showDirections = false;
@@ -1139,7 +1150,7 @@ angular.module('tabletops.controllers', [])
 
             $scope.rateApp = function () {
                 $cordovaAppRate.promptForRating(true).then(function (result) {
-                    $log.log(result);
+                    console.log(result);
                 });
             };
 

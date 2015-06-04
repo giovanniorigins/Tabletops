@@ -42,13 +42,11 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                 $ionicLoading.hide();
             });
 
-            /*$ionicDeploy.watch().then(function () {
-             }, function () {
-
-             },
-             function (hasUpdate) {
-             // Handle response
-             });*/
+            $ionicDeploy.watch().then(function() {}, function() {},
+                function(hasUpdate) {
+                    // Handle response
+                    $ionicDeploy.update();
+                });
 
             $rootScope.$on('$stateChangeSuccess', function (e, toState/*, toParams, fromState, fromParams, a*/) {
                 //console.log('To: ', toState);
@@ -65,6 +63,7 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
             $rootScope.filters = {
                 toggles: {}
             };
+
             $rootScope.directionsSet = false;
 
             $rootScope.cuisines = $rootScope.sorts = $rootScope.favorites = $rootScope.been = [];

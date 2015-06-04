@@ -40,7 +40,6 @@ angular.module('GoogleMaps', [])
 angular.module('tabletops.services', [])
     .constant('ApiEndpoint', {
         api: 'http://flamingo.gorigins.com/api/v1',
-        url: 'http://flamingo.gorigins.com/api/v1',
         auth: 'http://flamingo.gorigins.com/api/v1/auth',
         feed: 'http://flamingo.gorigins.com/api/v1/feed'
     })
@@ -144,13 +143,14 @@ angular.module('tabletops.services', [])
 
                     if (angular.isDefined($window.pushNotification)) {
                         $ionicPush.register({
-                            canShowAlert: false, //Should new pushes show an alert on your screen?
-                            canSetBadge: true, //Should new pushes be allowed to update app icon badges?
-                            canPlaySound: true, //Should notifications be allowed to play a sound?
-                            canRunActionsOnWake: true, // Whether to run auto actions outside the app,
+                            canShowAlert: true, //Can pushes show an alert on your screen?
+                            canSetBadge: true, //Can pushes update app icon badges?
+                            canPlaySound: true, //Can notifications play a sound?
+                            canRunActionsOnWake: true, //Can run actions outside the app,
                             onNotification: function (notification) {
-                                // Called for each notification.
-                                console.log(notification);
+                                // Handle new push notifications here
+                                console.log('Notification: ', notification);
+                                return true
                             }
                         });
                     }
