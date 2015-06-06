@@ -423,10 +423,14 @@ angular.module('tabletops.controllers', [])
                 $localForage.getItem('province').then(function (province) {
                     // Check for province immediately
                     if (!angular.isObject(province)) {
-                        if ( angular.isObject($scope.gMap) ) $scope.gMap.setClickable( false );
+                        if ( angular.isObject($scope.gMap) ) {
+                            $scope.gMap.setClickable( false );
+                        }
                         $scope.openProvinceModal();
                         return false;
                     }
+                    $scope.gMap.setClickable( true );
+
 
                     //console.log($scope.gMap);
                     if (angular.isUndefined($scope.gMap)) {
@@ -451,6 +455,7 @@ angular.module('tabletops.controllers', [])
                                 'zoom': 11,
                             }
                         });
+
                         $scope.gMap.setClickable( true );
 
                         // You have to wait the MAP_READY event.
@@ -464,13 +469,18 @@ angular.module('tabletops.controllers', [])
 
             $scope.loadListings = function (provinceId) {
 
-                $scope.listings = Listing.query({ province_id: provinceId }, function (res) {
+                var infoClickFunc = function(marker) {
+                    console.log(marker);
+                    $scope.toRestaurant(marker.get("slug"));
+                };
+
+                $scope.listings = Listing.query({ province_id: provinceId, app_search: true }, function (res) {
                     for (var a = 0, lena = res.length; a < lena; a++) {
                         var v = res[a];
                         for (var i = 0, len = v.locations.length; i < len; i++) {
                             var loc = v.locations[i];
                             $scope.gMap.addMarker({
-                                icon: 'orange',
+                                icon: 'img/Cafe.png',
                                 title: v.name + '\n' + loc.address_1 + ' ' + loc.address_2,
                                 snippet: 'View More',
                                 position: new GoogleMaps.LatLng(loc.lat, loc.lng),
@@ -479,10 +489,7 @@ angular.module('tabletops.controllers', [])
                                     'font-weight': 'bold'
                                 },
                                 slug: v.slug,
-                                infoClick: function(marker) {
-                                    console.log(marker);
-                                    $scope.toRestaurant(marker.get("slug"));
-                                }
+                                infoClick: infoClickFunc
                             });
                         }
                     }
@@ -499,7 +506,9 @@ angular.module('tabletops.controllers', [])
             };
 
             $scope.openMapProvinceModal = function ($event) {
-                if ( angular.isObject($scope.gMap) ) $scope.gMap.setClickable( false );
+                if ( angular.isObject($scope.gMap) ) {
+                    $scope.gMap.setClickable( false );
+                }
                 $scope.openProvinceModal($event);
             };
 
@@ -558,6 +567,7 @@ angular.module('tabletops.controllers', [])
                 } else {
                     $scope.gMap.setCenter(new GoogleMaps.LatLng(p.lat, p.lng));
                     $scope.loadListings(p.id);
+                    $scope.gMap.setClickable( true );
                 }
 
             });
@@ -661,7 +671,6 @@ angular.module('tabletops.controllers', [])
             Cuisine.query({}, function (res) {
                 $scope.cuisines = res;
                 $scope.cuisineList = angular.copy(res);
-                $scope.cuisineList.push({slug: null, name: 'Any'});
             });
 
             $scope.filters = {
@@ -723,7 +732,10 @@ angular.module('tabletops.controllers', [])
                         });
                     }
 
-                    $scope.restaurants = Listing.query($scope.filters);
+                    var filtersCopy = angular.copy($scope.filters);
+                    filtersCopy.cuisine = angular.isDefined(filtersCopy.cuisine) ? filtersCopy.cuisine.toString() : undefined;
+
+                    $scope.restaurants = Listing.query(filtersCopy);
 
                     $scope.restaurants.$promise.finally(function () {
                         $timeout(function () {
@@ -773,17 +785,26 @@ angular.module('tabletops.controllers', [])
                 $scope.filerModalSlider.slide(0);
                 $scope.modal.show();
             };
-            $scope.closeFiltersModal = function () {
+            $scope.closeFiltersModal = function (canceled) {
+                canceled = canceled || false;
+                console.log($scope.filters);
                 if ($scope.filerModalSlider.currentIndex() === 0) {
                     $scope.modal.hide();
+                    if (!canceled) {
+                        $scope.refresh();
+                    }
                 } else {
-                    $scope.filerModalSlider.previous();
+                    $scope.filerModalSlider.slide(0);
                     $scope.scrollHandleTop('modalSlider');
                 }
             };
 
             $scope.toProvinceSelect = function () {
                 $scope.filerModalSlider.slide(1);
+            };
+
+            $scope.toCuisineSelect = function () {
+                $scope.filerModalSlider.slide(2);
             };
 
             $scope.$on('province:set', function (event, p) {

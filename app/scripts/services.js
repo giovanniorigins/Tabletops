@@ -46,7 +46,7 @@ angular.module('tabletops.services', [])
     .factory('Listing', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
         'use strict';
         return $resource(ApiEndpoint.api + '/listings/:id', {}, {
-            query: {url: ApiEndpoint.api + '/listings/:cuisine', method: 'GET', isArray: true, cache: false},
+            query: { method: 'GET', isArray: true, cache: false},
             update: {method: 'PUT'}
         });
     }])
@@ -150,7 +150,7 @@ angular.module('tabletops.services', [])
                             onNotification: function (notification) {
                                 // Handle new push notifications here
                                 console.log('Notification: ', notification);
-                                return true
+                                return true;
                             }
                         });
                     }

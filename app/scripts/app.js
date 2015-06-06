@@ -7,8 +7,8 @@ var valById = function (arr, id) {
 
 angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'GoogleMaps', 'angularMoment', 'ion-affix', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'ngCordova.plugins.googleplus', 'LocalForageModule', 'http-auth-interceptor', 'ionicLazyLoad', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
 
-    .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$localForage', 'ionicMaterialInk',
-        function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $localForage, ionicMaterialInk) {
+    .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$ionicPopup', '$localForage', 'ionicMaterialInk',
+        function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $ionicPopup, $localForage, ionicMaterialInk) {
             'use strict';
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -42,11 +42,24 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                 $ionicLoading.hide();
             });
 
-            $ionicDeploy.watch().then(function() {}, function() {},
-                function(hasUpdate) {
-                    // Handle response
-                    $ionicDeploy.update();
-                });
+            $ionicDeploy.check().then(function (hasUpdate) {
+                // A confirm dialog
+                if (hasUpdate) {
+                    var confirmPopup = $ionicPopup.confirm({
+                        title: 'Update Available',
+                        template: 'Would you like to update the app now?'
+                    });
+                    confirmPopup.then(function (res) {
+                        if (res) {
+                            $ionicDeploy.update();
+                        } else {
+                            console.log('Fine, we will ask later...');
+                        }
+                    });
+                }
+            }, function (err) {
+                console.error('Unable to check for updates:', err);
+            });
 
             $rootScope.$on('$stateChangeSuccess', function (e, toState/*, toParams, fromState, fromParams, a*/) {
                 //console.log('To: ', toState);

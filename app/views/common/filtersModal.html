@@ -1,8 +1,9 @@
-<ion-modal-view >
+<ion-modal-view>
     <ion-header-bar class="bar-assertive-900">
         <div class="buttons buttons-left">
             <span class="left-buttons">
-                <button class="button button-clear button-icon icon ion-ios-arrow-left assertive" ng-click="closeFiltersModal()"></button>
+                <button class="button button-clear button-icon icon ion-ios-arrow-left assertive"
+                        ng-click="closeFiltersModal(true)"></button>
             </span>
         </div>
 
@@ -10,7 +11,8 @@
 
         <div class="buttons buttons-right">
             <span class="right-buttons">
-                <button class="button button-clear button-icon icon ion-checkmark balanced" ng-click="refresh();closeFiltersModal()"></button>
+                <button class="button button-clear button-icon icon ion-checkmark balanced"
+                        ng-click="closeFiltersModal()"></button>
             </span>
         </div>
 
@@ -22,61 +24,78 @@
                     Province
                     <span class="item-note" ng-bind="settings.province.name"></span>
                 </div>
-                <label class="item item-input item-select">
-                    <div class="input-label">
-                        Cuisine
-                    </div>
-                    <select ng-model="filters.cuisine" ng-init="filters.cuisine=null" ng-options="c.slug as c.name for c in cuisineList|orderBy:'name'"></select>
-                </label>
+
+                <div class="item" ng-click="toCuisineSelect()">
+                    Cuisines
+                    <span class="item-note" ng-show="filters.cuisine" ng-bind="filters.cuisine.toString()"></span>
+                    <span class="item-note" ng-show="!filters.cuisine">All Cuisines</span>
+                </div>
 
                 <div class="item item-divider">Sort By</div>
-
                 <div class="tabs tabs-icon-top tabs static">
-                    <a class="tab-item" ng-click="filters.sort = 'name'" ng-class="{true:'active balanced'}[filters.sort == 'name']">
+                    <a class="tab-item" ng-click="filters.sort = 'name'"
+                       ng-class="{true:'active balanced'}[filters.sort == 'name']">
                         <i class="icon ion-ios-arrow-down"></i> Name
                     </a>
-                    <a class="tab-item" ng-click="filters.sort = 'restaurant.price_range'" ng-class="{true:'active balanced'}[filters.sort == 'restaurant.price_range']">
+                    <a class="tab-item" ng-click="filters.sort = 'restaurant.price_range'"
+                       ng-class="{true:'active balanced'}[filters.sort == 'restaurant.price_range']">
                         <i class="icon ion-social-usd"></i> Price
                     </a>
-                    <a class="tab-item" ng-click="filters.sort = '-rating_cache'" ng-class="{true:'active balanced'}[filters.sort == '-rating_cache']">
+                    <a class="tab-item" ng-click="filters.sort = '-rating_cache'"
+                       ng-class="{true:'active balanced'}[filters.sort == '-rating_cache']">
                         <i class="icon ion-star"></i> Rating
                     </a>
-                    <a class="tab-item" ng-click="filters.sort = '-like_count'" ng-class="{true:'active balanced'}[filters.sort == '-like_count']">
+                    <a class="tab-item" ng-click="filters.sort = '-like_count'"
+                       ng-class="{true:'active balanced'}[filters.sort == '-like_count']">
                         <i class="icon ion-thumbsup"></i> Popularity
                     </a>
-                    <a class="tab-item" ng-click="filters.sort = '-distance'" ng-class="{true:'active balanced'}[filters.sort == '-distance']">
+                    <a class="tab-item" ng-click="filters.sort = '-distance'"
+                       ng-class="{true:'active balanced'}[filters.sort == '-distance']">
                         <i class="icon ion-location"></i> Distance
                     </a>
                 </div>
 
                 <div class="item item-divider">Price Range</div>
                 <div class="button-bar">
-                    <a ng-click="togglePriceRange(1)" class="button button-raised ink-dark" ng-class="{true:'balanced'}[filters.price_range == 1]">$</a>
-                    <a ng-click="togglePriceRange(2)" class="button button-raised ink-dark" ng-class="{true:'balanced'}[filters.price_range == 2]">$$</a>
-                    <a ng-click="togglePriceRange(3)" class="button button-raised ink-dark" ng-class="{true:'balanced'}[filters.price_range == 3]">$$$</a>
-                    <a ng-click="togglePriceRange(4)" class="button button-raised ink-dark" ng-class="{true:'balanced'}[filters.price_range == 4]">$$$$</a>
+                    <a ng-click="togglePriceRange(1)" class="button button-raised ink-dark"
+                       ng-class="{true:'balanced'}[filters.price_range == 1]">$</a>
+                    <a ng-click="togglePriceRange(2)" class="button button-raised ink-dark"
+                       ng-class="{true:'balanced'}[filters.price_range == 2]">$$</a>
+                    <a ng-click="togglePriceRange(3)" class="button button-raised ink-dark"
+                       ng-class="{true:'balanced'}[filters.price_range == 3]">$$$</a>
+                    <a ng-click="togglePriceRange(4)" class="button button-raised ink-dark"
+                       ng-class="{true:'balanced'}[filters.price_range == 4]">$$$$</a>
                 </div>
 
-                <div class="item item-divider">
-                    Services
-                </div>
-
+                <div class="item item-divider">Services</div>
                 <ion-checkbox class="item-icon-right item-checkbox" ng-model="filters[(toggle.slug)]"
                               ng-false-value="undefined" ng-repeat="toggle in toggles">
                     {{::toggle.name}}
                     <i class="icon" ng-class="::toggle.icon"></i>
                 </ion-checkbox>
+
             </ion-slide>
             <ion-slide>
                 <ion-list>
-                    <ion-radio ng-repeat="p in provinces" ng-model="settings.province" ng-value="p" ng-change="setProvince(p);closeFiltersModal()">{{::p.name}}</ion-radio>
+                    <ion-radio ng-repeat="p in provinces" ng-model="settings.province" ng-value="p"
+                               ng-change="setProvince(p);closeFiltersModal()">{{::p.name}}
+                    </ion-radio>
                 </ion-list>
             </ion-slide>
             <ion-slide>
-                <ion-checkbox class="item-icon-right item-checkbox" ng-model="filters[(toggle.slug)]" ng-repeat="c in cuisineList|orderBy:'name'">
-                    {{::c.name}}
-                    <i class="icon" ng-class="::c.icon"></i>
-                </ion-checkbox>
+                <button ng-show="filters.cuisine.length" class="button button-dark button-block"
+                        ng-click="filters.cuisine = undefined">Clear Selected
+                </button>
+
+                <ion-list>
+                    <li class="item item-checkbox" auto-list-divider auto-list-divider-value="{{c.name}}"
+                        ng-repeat="c in cuisineList|orderBy:'name'">
+                        <label class="checkbox">
+                            <input type="checkbox" checklist-model="filters.cuisine" checklist-value="c.slug">
+                        </label>
+                        {{::c.name}}
+                    </li>
+                </ion-list>
             </ion-slide>
         </ion-slide-box>
     </ion-content>

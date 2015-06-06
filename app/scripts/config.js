@@ -23,6 +23,7 @@ angular.module('tabletops.config', [])
     }])
 
     .config(['$provide', function ($provide) {
+        'use strict';
         $provide.decorator('$exceptionHandler', ['$delegate', function ($delegate) {
             return function (exception, cause) {
                 //exception.message = '';
@@ -30,8 +31,8 @@ angular.module('tabletops.config', [])
                 $delegate(exception, cause);
                 console.log('Exception: ', exception);
                 console.log('Cause: ', cause);
-            }
-        }])
+            };
+        }]);
     }])
 
     /*.config(['$cordovaFacebookProvider', 'CIDs', function($cordovaFacebookProvider, CIDs) {
