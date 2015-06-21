@@ -141,7 +141,7 @@ angular.module('tabletops.services', [])
                         console.log('Identified user: ', IoUser);
                     });
 
-                    if (angular.isDefined($window.pushNotification)) {
+                    if ($window.plugins && $window.plugins.pushNotification) {
                         $ionicPush.register({
                             canShowAlert: true, //Can pushes show an alert on your screen?
                             canSetBadge: true, //Can pushes update app icon badges?
@@ -171,7 +171,7 @@ angular.module('tabletops.services', [])
                                 });
                                 break;
                             default:
-                                $state.go('signin');
+                                false; //$state.go('tabs.dashboard');
                         }
                     });
                 },
@@ -185,7 +185,7 @@ angular.module('tabletops.services', [])
                             case 'email':
                                 return service.Me();
                             default:
-                                return $state.go('signin');
+                                return false; //$state.go('tabs.dashboard');
                         }
                     });
                 },
@@ -253,7 +253,7 @@ angular.module('tabletops.services', [])
                                     if (angular.isDefined(res.error)) {
                                         console.log('Auth Error');
                                         console.log(res.error);
-                                        return $state.go('signin');
+                                        return false; //$state.go('tabs.dashboard');
                                     }
                                     console.log('Auth Success');
                                     console.log(res);
@@ -274,13 +274,13 @@ angular.module('tabletops.services', [])
                                     $rootScope.$broadcast('event:auth-loginConfirmed');
                                     return service.Me();
                                 } else {
-                                    return $state.go('signin');
+                                    return false; //$state.go('tabs.dashboard');
                                 }
                             })
                             .error(function (res) {
                                 console.log('Auth Error');
                                 console.log(res);
-                                return $state.go('signin');
+                                return false; //$state.go('tabs.dashboard');
                             });
                     });
                 },
@@ -293,7 +293,8 @@ angular.module('tabletops.services', [])
                                 $localForage.setItem('providerToken', obj.oauthToken).then(function () {
                                     return service.authHandler('google');
                                 });
-                            });                        }, function (msg) {
+                            });
+                        }, function (msg) {
                             console.log('error: ',  msg);
                             return service.authHandler();
                         });
@@ -301,6 +302,8 @@ angular.module('tabletops.services', [])
                 GoogleLogin: function () {
                     window.plugins.googleplus.isAvailable(
                         function (available) {
+                            // info.plist CFBundleURLTypes issue not resolved
+                            //available = false;
                             if (available) {
                                 // show the Google+ sign-in button
                                 $cordovaGooglePlus.login('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
@@ -338,7 +341,7 @@ angular.module('tabletops.services', [])
                             .then(function (msg) {
                                 console.log(msg);
                                 $localForage.removeItem('usedProvider').then(function () {
-                                    return $state.go('signin');
+                                    return false; //$state.go('tabs.dashboard');
                                 });
                             });
                     });
@@ -350,7 +353,7 @@ angular.module('tabletops.services', [])
                                 if (res.error) {
                                     console.log('Auth Error');
                                     console.log(res.error);
-                                    return $state.go('signin');
+                                    return false; //$state.go('tabs.dashboard');
                                 }
                                 console.log('Auth Success');
                                 console.log(res);
@@ -365,7 +368,7 @@ angular.module('tabletops.services', [])
                             .error(function (res) {
                                 console.log('Auth Error');
                                 console.log(res);
-                                return $state.go('signin');
+                                return false; //$state.go('tabs.dashboard');
                             });
                     });
                 },
@@ -409,7 +412,7 @@ angular.module('tabletops.services', [])
                                     });
                                 });
                             } else {
-                                return $state.go('signin');
+                                return false; //$state.go('tabs.dashboard');
                             }
                         });
                     });
@@ -628,7 +631,7 @@ angular.module('tabletops.services', [])
                     }
                     return $sce.trustAsHtml(str);
                 },
-                showStars: function (count, rating) {
+                showStars: function (count, rating, text) {
                     var str = '';
                     if (count > 0) {
                         for (var i = 1; i <= 5; i++) {
@@ -636,7 +639,11 @@ angular.module('tabletops.services', [])
                             str += '<i class=\'icon ion-ios-star' + ending + ' energized\'></i>';
                         }
                     } else {
-                        str = '<span class=\'icon ion-minus-round\'></span>';
+                        if (text) {
+                            str = 'No Ratings';
+                        } else {
+                            str = '<span class=\'icon ion-minus-round\'></span>';
+                        }
                     }
                     return $sce.trustAsHtml(str);
                 },
@@ -798,7 +805,7 @@ angular.module('tabletops.services', [])
                             var btnIndex = buttonIndex;
                             switch (btnIndex) {
                                 case 2:
-                                    return $state.go('signin');
+                                    return false; //$state.go('tabs.dashboard');
                             }
 
                         });

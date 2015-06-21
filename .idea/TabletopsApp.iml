@@ -16,5 +16,6 @@
     <orderEntry type="library" name="mapbox.directions" level="application" />
     <orderEntry type="library" name="offlinemap" level="application" />
     <orderEntry type="library" name="TabletopsApp node_modules" level="project" />
+    <orderEntry type="library" name="Node.js v0.12.3 Core Modules" level="application" />
   </component>
 </module>

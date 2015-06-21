@@ -10,20 +10,61 @@
             <i class="icon ion-location"></i>
         </button>-->
     </ion-nav-buttons>
-    <ion-content class="has-header padding-top" id="dashboard">
+    <ion-content class="has-header" id="dashboard">
         <ion-refresher pulling-text="Pull to refresh nearby" on-refresh="getNearby()"></ion-refresher>
 
         <div class="">
             <div class="">
-                <fieldset class="featured-header">
+                <!--<fieldset class="featured-header">
                     <legend class="assertive">PLACES NEARBY</legend>
-                </fieldset>
+                </fieldset>-->
 
-                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                <ion-slide-box auto-play="true" does-continue="true" class="loc-slider nearby-slider">
+                    <ion-slide class="slide" ng-repeat="res in restaurants|orderBy:'distance'|limitTo:5" ng-click="toRestaurant(res.slug, restaurants)">
+                        <div class="hero" style="background-image: url( {{ res.gallery.length ? res.gallery[0].path :'img/bgs/default.jpg'}});">
+                            <div class="content">
+                                <h4 ng-bind="::res.name"></h4>
+                                <span ng-show="::res.distance" class="distance-badge badge assertive">{{::res.distance|number:2}} miles away</span>
+                                <!--<h5 ng-bind="::res.distance"></h5>-->
+                                <div class="" style="background-color: rgba(0,0,0,.3);height: 47px;">
+                                    <div class="row row-no-padding text-center padding-vertical">
+                                        <div class="col">
+                                            <span ng-if="res" ng-bind-html="::showStars(res.rating_count, res.rating_cache, true)"></span>
+                                        </div>
+                                        <div class="col">
+                                            <span ng-if="res" ng-bind-html="::showDollars(res.restaurant.price_range)"></span>
+                                        </div>
+                                    </div>
+                                    <!--<button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="openReviewModal()">
+                                        <i class="icon ion-compose"></i>
+                                    </button>
+                                    &lt;!&ndash;<button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="addPhotos()">&ndash;&gt;
+                                    &lt;!&ndash;<i class="icon ion-camera"></i>&ndash;&gt;
+                                    &lt;!&ndash;</button>&ndash;&gt;
+                                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="beenHere(res)">
+                                        <i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(res.id)]"></i>
+                                    </button>
+                                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="favoriteThis(res)" id="{{::'share_button_'+res.id}}">
+                                        <i class="icon ion-heart" ng-class="{true:'lovely'}[faved(res.id)]"></i>
+                                    </button>
+                                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="toMap()">
+                                        <i class="icon ion-map light"></i>
+                                    </button>
+                                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="initCaller(res)">
+                                        <i class="icon ion-ios-telephone balanced"></i>
+                                    </button>-->
+                                </div>
+
+                            </div>
+                        </div>
+                    </ion-slide>
+                </ion-slide-box>
+
+                <!--<ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
                     <div class="loader" ng-hide="restaurants && restaurants.length"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>
                     <ion-item class="nearby-card card text-center" ng-repeat="res in restaurants|orderBy:'distance'">
                         <div class="item ink" ng-click="toRestaurant(res.slug, restaurants)">
-                            <!--<img ng-src="{{::res.logo.path}}">-->
+                            &lt;!&ndash;<img ng-src="{{::res.logo.path}}">&ndash;&gt;
                             <h2>{{::res.name}}</h2>
 
                             <div ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></div>
@@ -33,16 +74,18 @@
                             </p>
                         </div>
                     </ion-item>
-                    <!--<a class="nearby-card more-card hide" ui-sref="tabs.nearby">
+                    &lt;!&ndash;<a class="nearby-card more-card hide" ui-sref="tabs.nearby">
                         <div><i class="icon ion-plus-circled"></i> <br>View All</div>
-                    </a>-->
-                </ion-scroll>
+                    </a>&ndash;&gt;
+                </ion-scroll>-->
             </div>
 
             <div class="padding-top">
                 <fieldset class="featured-header assertive">
                     <legend class="assertive">CUISINES</legend>
                 </fieldset>
+
+
 
                 <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
                     <div class="loader" ng-hide="cuisines && cuisines.length"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>

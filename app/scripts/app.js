@@ -5,10 +5,32 @@ var valById = function (arr, id) {
     });
 };
 
-angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.service.analytics'*/, 'ionic.service.deploy', 'ionic.service.push', 'underscore', 'GoogleMaps', 'angularMoment', 'ion-affix', 'ionic.rating', 'ionic.resetfield', 'ngResource', 'ngCordova', 'ngCordova.plugins.googleplus', 'LocalForageModule', 'http-auth-interceptor', 'ionicLazyLoad', 'tabletops.config', 'tabletops.controllers', 'tabletops.directives', 'tabletops.services'])
+angular.module('tabletops', [
+    'ionic-material',
+    'ionic.service.core',
+    'ionic.service.analytics',
+    'ionic.service.deploy',
+    'ionic.service.push',
+    'underscore',
+    'GoogleMaps',
+    'angularMoment',
+    'ion-affix',
+    'ionic.rating',
+    'ionic.resetfield',
+    'ngResource',
+    'ngCordova',
+    'ngCordova.plugins.googleplus',
+    'LocalForageModule',
+    'http-auth-interceptor',
+    'ionicLazyLoad',
+    'tabletops.config',
+    'tabletops.controllers',
+    'tabletops.directives',
+    'tabletops.services'
+])
 
-    .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$ionicPopup', '$localForage', 'ionicMaterialInk',
-        function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $ionicPopup, $localForage, ionicMaterialInk) {
+    .run(['$rootScope', '$ionicPlatform', '$ionicLoading', '$ionicDeploy', '$ionicPopup', '$localForage', 'ionicMaterialInk', '$ionicAnalytics',
+        function ($rootScope, $ionicPlatform, $ionicLoading, $ionicDeploy, $ionicPopup, $localForage, ionicMaterialInk, $ionicAnalytics) {
             'use strict';
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -28,6 +50,8 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                         StatusBar.styleLightContent();
                     }
                 }
+
+                $ionicAnalytics.register();
             });
 
             $rootScope.navbarColor = function (color) {
@@ -42,24 +66,26 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                 $ionicLoading.hide();
             });
 
-            $ionicDeploy.check().then(function (hasUpdate) {
-                // A confirm dialog
-                if (hasUpdate) {
-                    var confirmPopup = $ionicPopup.confirm({
-                        title: 'Update Available',
-                        template: 'Would you like to update the app now?'
-                    });
-                    confirmPopup.then(function (res) {
-                        if (res) {
-                            $ionicDeploy.update();
-                        } else {
-                            console.log('Fine, we will ask later...');
-                        }
-                    });
-                }
-            }, function (err) {
-                console.error('Unable to check for updates:', err);
-            });
+            $rootScope.updateCheck = function () {
+                $ionicDeploy.check().then(function (hasUpdate) {
+                    // A confirm dialog
+                    if (hasUpdate) {
+                        var confirmPopup = $ionicPopup.confirm({
+                            title: 'Update Available',
+                            template: 'Would you like to update the app now?'
+                        });
+                        confirmPopup.then(function (res) {
+                            if (res) {
+                                $ionicDeploy.update();
+                            } else {
+                                console.log('Fine, we will ask later...');
+                            }
+                        });
+                    }
+                }, function (err) {
+                    console.error('Unable to check for updates:', err);
+                });
+            };
 
             $rootScope.$on('$stateChangeSuccess', function (e, toState/*, toParams, fromState, fromParams, a*/) {
                 //console.log('To: ', toState);
@@ -78,6 +104,7 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
             };
 
             $rootScope.directionsSet = false;
+            $rootScope.currentListingActive = false;
 
             $rootScope.cuisines = $rootScope.sorts = $rootScope.favorites = $rootScope.been = [];
             $rootScope.myLocation = {};
@@ -404,9 +431,8 @@ angular.module('tabletops', ['ionic-material', 'ionic.service.core'/*, 'ionic.se
                 });
 
             // if none of the above states are matched, use this as the fallback
-            //$urlRouterProvider.otherwise('/tab/dashboard');
             //$urlRouterProvider.otherwise('/sign-in');
-            $urlRouterProvider.otherwise('/splash');
+            $urlRouterProvider.otherwise('/dashboard');
 
         }
     ]);

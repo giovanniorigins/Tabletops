@@ -50,28 +50,60 @@
 
     <!-- build:js js/cordova-exts.js -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
-    <!--<script src="lib/facebook-connect-plugin/index.js"></script>-->
     <!-- endbuild -->
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <!--<script>-->
-        <!--window.fbAsyncInit = function() {-->
-            <!--FB.init({-->
-                <!--appId      : '646933472119700',-->
-                <!--xfbml      : true,-->
-                <!--version    : 'v2.1'-->
-            <!--});-->
-        <!--};-->
+    <script>
+        if (ionic.Platform.platform() === 'win32') {
+            var Script = {
+                _loadedScripts: [],
+                include: function(script){
+                    // include script only once
+                    if (this._loadedScripts.include(script)){
+                        return false;
+                    }
+                    // request file synchronous
+                    var code = new Ajax.Request(script, {
+                        asynchronous: false, method: "GET",
+                        evalJS: false, evalJSON: false
+                    }).transport.responseText;
+                    // eval code on global level
+                    if (Prototype.Browser.IE) {
+                        window.execScript(code);
+                    } else if (Prototype.Browser.WebKit){
+                        $$("head").first().insert(Object.extend(
+                                new Element("script", {type: "text/javascript"}), {text: code}
+                        ));
+                    } else {
+                        window.eval(code);
+                    }
+                    // remember included script
+                    this._loadedScripts.push(script);
+                }
+            };
 
-        <!--(function(d, s, id){-->
-            <!--var js, fjs = d.getElementsByTagName(s)[0];-->
-            <!--if (d.getElementById(id)) {return;}-->
-            <!--js = d.createElement(s); js.id = id;-->
-            <!--js.src = "//connect.facebook.net/en_US/sdk.js";-->
-            <!--fjs.parentNode.insertBefore(js, fjs);-->
-        <!--}(document, 'script', 'facebook-jssdk'));-->
-    <!--</script>-->
+            Script.load("lib/facebook-connect-plugin/index.js");
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: '646933472119700',
+                    xfbml: true,
+                    version: 'v2.1'
+                });
+            };
+
+            (function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {
+                    return;
+                }
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        }
+    </script>
 
     <!-- build:js js/app-tabletops.js -->
     <script src="scripts/app.js"></script>
@@ -91,9 +123,9 @@
 
     <script src="http://debug-software.intel.com/target/target-script-min.js#DOyLHB66Sd2vKt67uR19zFehjFHCR87waB7njjdgSw4"></script>
 </head>
-<body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak>
+<body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak ion-track-auto>
     <!--<div id="fb-root"></div>-->
-    <ion-nav-bar class="bar-assertive-900 no-border" ng-class="{expanded: isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
+    <ion-nav-bar id="main-nav-bar" class="bar-assertive-900 flat no-border" ng-class="{'expanded': isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
         <ion-nav-back-button class="no-text"></ion-nav-back-button>
     </ion-nav-bar>
 

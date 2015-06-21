@@ -27,6 +27,6 @@
     "commit": "c6827d4bb257d8d72a19b3189f8a3ed9304d3851"
   },
   "_source": "git://github.com/driftyco/ionic-service-deploy.git",
-  "_target": "0.0.6",
+  "_target": "*",
   "_originalSource": "ionic-service-deploy"
 }

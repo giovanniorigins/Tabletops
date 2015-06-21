@@ -189,8 +189,8 @@ angular.module('tabletops.controllers', [])
                 return ListingRepository.showDollars(range, noIcon);
             };
 
-            $scope.showStars = function (count, rating) {
-                return ListingRepository.showStars(count, rating);
+            $scope.showStars = function (count, rating, text) {
+                return ListingRepository.showStars(count, rating, text);
             };
 
             $scope.initCaller = function (obj) {
@@ -259,9 +259,14 @@ angular.module('tabletops.controllers', [])
                 AuthenticationService.logout();
             });
         }])
-    .controller('DashboardCtrl', ['$rootScope', '$scope', 'Province', 'Listing', 'Cuisine', '$state', '$interval', '$ionicModal', '$timeout', '$localForage', '_', 'ionicMaterialInk',
-        function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout, $localForage, _, ionicMaterialInk) {
+    .controller('DashboardCtrl', ['$rootScope', '$scope', 'Province', 'Listing', 'Cuisine', '$state', '$interval', '$ionicModal', '$timeout', '$localForage', '_', 'ionicMaterialInk', '$ionicSlideBoxDelegate',
+        function ($rootScope, $scope, Province, Listing, Cuisine, $state, $interval, $ionicModal, $timeout, $localForage, _, ionicMaterialInk, $ionicSlideBoxDelegate) {
             'use strict';
+
+            /*$ionicPlatform.ready(function () {
+                return AuthenticationService.authCheck();
+            });*/
+
             $scope.getNearby = function () {
                 $scope.qData = {app_search: true, range: 5, limit: 5};
                 if (angular.isDefined($scope.myLocation) && angular.isObject($scope.myLocation.coords)) {
@@ -273,6 +278,7 @@ angular.module('tabletops.controllers', [])
                 $scope.restaurants = Listing.query($scope.qData);
                 $scope.restaurants.$promise.finally(function () {
                     $scope.$broadcast('scroll.refreshComplete');
+                    $ionicSlideBoxDelegate.update();
                 });
             };
 
@@ -388,7 +394,7 @@ angular.module('tabletops.controllers', [])
             // FiltersModal
             $ionicModal.fromTemplateUrl('views/common/filtersModal.html', {
                 scope: $scope,
-                animation: 'slide-in-up'
+                animation: 'am-fade-and-scale'
             }).then(function (modal) {
                 $scope.modal = modal;
             });
@@ -429,8 +435,6 @@ angular.module('tabletops.controllers', [])
                         $scope.openProvinceModal();
                         return false;
                     }
-                    $scope.gMap.setClickable( true );
-
 
                     //console.log($scope.gMap);
                     if (angular.isUndefined($scope.gMap)) {
@@ -456,13 +460,16 @@ angular.module('tabletops.controllers', [])
                             }
                         });
 
-                        $scope.gMap.setClickable( true );
+
 
                         // You have to wait the MAP_READY event.
                         $scope.gMap.on(GoogleMaps.event.MAP_READY, function () {
                             // Load Listings restricted by province
                             $scope.loadListings(province.id);
+                            $scope.gMap.setClickable( true );
                         });
+                    } else {
+                        $scope.gMap.setClickable( true );
                     }
                 });
             };
@@ -480,7 +487,8 @@ angular.module('tabletops.controllers', [])
                         for (var i = 0, len = v.locations.length; i < len; i++) {
                             var loc = v.locations[i];
                             $scope.gMap.addMarker({
-                                icon: 'img/Cafe.png',
+                                icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAwCAMAAADXYfGSAAACGVBMVEUODg5erw9esQ5fsA5fsQ1gsQ5gswxhtAtiswxitQpitQ1mvgZnvwX///8ODg5ktwxjtg0ODg5gswxmvgZmvgYODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4ODg4TFA8nQBNiswwfMBEiNBJjuAtgswxnvQdnvwVitQplvQdnvwUwURNgsQ48ahResQ4/bhNhtg1gswxitwxjuAtfsQ1QkhNnvwVhtAtmvAhmvgZmvgZnvwVnvwVgswxmvgZmvgZmvgZZoRFesQ5nvwVnvQdnvQdluQpitQ1ktwxnvwVhtAtfsQ1mvAhgswxcqBBjtg1dqw5nvwVluQpiswxcrBFluwlluwlgswxjuAtitQpnvwVnvwVlvQdnvwVnvQdkugpgsQ5erw9esQ5luwlnvwVmugpgswxluwlfsQ1itwxhtg1esQ5fsA5fsQ1gsQ5gswxhtAthtg1iswxitQpitQ1itwxjtg1juAtktwxkugpluQpluwllvQdmugpmvAhmvgZnvQdnvQtnvwVovBlvvSZ7xTZ7xTeAxj2CxkSExkWEyEWKyVOLyFWNyVWTzWCf0nGg0nOh03Wm1nqp14Cs14Ou2Yiv2oq13ZG+4J/A4aLB46PC46TD5KTG5arK5q/L57Hd78ve78ze787f78/g8NDg8NHn89vp9d/q9eDt9uPt9uTu9ub2+vL4+/T4/PT6/fj9/vv9/vz+/v3///87qQCJAAAAanRSTlMAAAAAAAAAAAAAAAAAAAICBAUFBwgPEBIVFhcYGRobHBwfICEjJSUmJiYoKDQ1N0FFRlVbXV5gYmNkZGV9iouOj5CTlJWZm52ho6Wls7W4wM/U1dna29/h4uXn6Onq7u/x8fT09fb2+fn7uoJOMwAAAjpJREFUeNpt0vdT02AAxvHXWto6EihaipQAsofs5UCWspGlsocgs1j3rNowFC1LloCIgwoO0Grfv9B3NU3TfH7I+97zvcs1dwUck5Jf3dR9s7upOj/lOMFxrCWWd0x6dZQnytv5zkm5zgtSO1HsUCo+eYy2i45AJbSddag5h1tCj4i9doozX/58nRGdr0SsJwG1S/g28fHfrvgdQvhD/PZ3awJPlzmQ3PUc+QDhthNizm0It/DUlQwKX2IeCF3LpC27IPSQrRDUkdON1p8eiOZf6OEmWx24ZsfWodw62a6DATvxSZY+02kADNspl5R22TIMBl9Qb9wsud+yZRD0PqWmFhZX1t6vrSwuTLGlFzQ/o+b3NleX3i2tbu7Ns6UZVLDbLPSaZUsFyHlMzUltji05IK6N3qY3dvYPfh/s72xM06EtDgRXPVFXFQy47NGHakazOcCFNDxS0xCCGpc5djfQWCb9v1Q+CFR5lLak9vtK7UlHcEMK7igV6PW4YTWKVKP3tZiWe3ItMQaDATcia+i2z1CWDsGNKpK1Ip1/C62XUn2o1Jj4VpZa43W+xuSO3MJGcrWUvGlrSavVqrSgtD6bzdaXFsTIm0ZTZrVayzRe3gYQjSa939qfrtqMpujG8cZok/Ew5Wu8WRCE0vFS9DTz/o2PEJC8G3n4OMX7tTABy7iaQc6wQ4jUIsmWeiWVnJEqLfZMLDktuCneGXU6SvFO9lt8Ini6yr+BMfNAatK3h1sES7jJCABr/wErzoeWTrAkSQAAAABJRU5ErkJggg==',
+                                //icon: '/img/Cafe.png',
                                 title: v.name + '\n' + loc.address_1 + ' ' + loc.address_2,
                                 snippet: 'View More',
                                 position: new GoogleMaps.LatLng(loc.lat, loc.lng),
@@ -633,7 +641,7 @@ angular.module('tabletops.controllers', [])
             // FiltersModal
             $ionicModal.fromTemplateUrl('views/common/filtersModal.html', {
                 scope: $scope,
-                animation: 'slide-in-up'
+                animation: 'am-fade-and-scale'
             }).then(function (modal) {
                 $scope.modal = modal;
             });
@@ -750,7 +758,7 @@ angular.module('tabletops.controllers', [])
                          });*/
                     });
                 });
-            }, 5000);
+            }, 3000);
 
             /*$scope.$on('province:set', function (event, p) {
                 console.log(p);
@@ -775,7 +783,7 @@ angular.module('tabletops.controllers', [])
             // FiltersModal
             $ionicModal.fromTemplateUrl('views/common/filtersModal.html', {
                 scope: $scope,
-                animation: 'slide-in-up'
+                animation: 'am-fade-and-scale'
             }).then(function (modal) {
                 $scope.modal = modal;
                 $scope.filerModalSlider = $ionicSlideBoxDelegate.$getByHandle('modalSlider');
@@ -811,6 +819,7 @@ angular.module('tabletops.controllers', [])
                 console.log(p);
                 $scope.filters.province = p.slug;
                 $scope.filters.province_id = p.id;
+                $scope.refresh();
             });
 
             //Cleanup the modal when we're done with it!
@@ -1183,7 +1192,6 @@ angular.module('tabletops.controllers', [])
                 AuthenticationService.GoogleLogin();
             };
 
-
             $scope.toggleThisGroup = function (group) {
                 if ($scope.isGroupShown(group)) {
                     $scope.shownGroup = null;
@@ -1191,6 +1199,7 @@ angular.module('tabletops.controllers', [])
                     $scope.shownGroup = group;
                 }
             };
+
             $scope.isGroupShown = function (group) {
                 return $scope.shownGroup === group;
             };

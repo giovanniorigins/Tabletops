@@ -303,6 +303,12 @@ ion-nav-view {
     bottom: auto;
 }
 
+.nearby-slider {}
+
+.nearby-slider .slider-pager .slider-pager-page {
+    color: #ffffff;
+}
+
 .services-list p.padding {
     padding: 4px 8px !important;
 }

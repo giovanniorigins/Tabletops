@@ -17,7 +17,7 @@
                     <i class="icon ion-ios-arrow-right stable"></i>
                 </div>
 
-                <a class="item item-icon-left item-button-right" ng-show="!!facebookProfile">
+                <a class="item item-icon-left item-button-right" ng-show="facebookProfile">
                     <i class="icon ion-social-facebook calm calm"></i>
                     Facebook Connected
                     <button class="button button-stable button-icon flat" ng-click="signOutFacebook()">
@@ -25,13 +25,13 @@
                     </button>
                 </a>
 
-                <a class="item item-icon-left item-icon-right" ng-hide="!!facebookProfile" ng-click="signInFacebook()">
+                <a class="item item-icon-left item-icon-right" ng-hide="facebookProfile" ng-click="signInFacebook()">
                     <i class="icon ion-social-facebook calm calm"></i>
                     Connect Facebook account
                     <i class="icon ion-log-in stable"></i>
                 </a>
 
-                <a class="item item-icon-left item-button-right" ng-show="!!googleProfile">
+                <a class="item item-icon-left item-button-right" ng-show="googleProfile">
                     <i class="icon ion-social-google energized-900"></i>
                     Google Connected
                     <button class="button button-stable button-icon flat" ng-click="signOutGoogle()">
@@ -39,7 +39,7 @@
                     </button>
                 </a>
 
-                <a class="item item-icon-left item-icon-right" ng-hide="!!googleProfile" ng-click="signInGoogle()">
+                <a class="item item-icon-left item-icon-right" ng-hide="googleProfile" ng-click="signInGoogle()">
                     <i class="icon ion-social-google energized-900"></i>
                     Connect Google account
                     <i class="icon ion-log-in stable"></i>
@@ -103,15 +103,13 @@
                     Privacy Policy
                     <i class="icon ion-ios-arrow-right stable"></i>
                 </a>
-                <a class="item" ui-sref="intro">
-                    Show Tutorial
-                </a>
-                <a class="item">
-                    App Version: 1.0.0
-                </a>
-                <a class="item">
-                    Copyright &copy; 2015 Tabletops
-                </a>
+                <a class="item" ui-sref="intro">Show Tutorial</a>
+            </div>
+
+            <div class="card">
+                <a class="item">App Version: 1.0.0</a>
+                <a class="item">Copyright &copy; 2015 Tabletops</a>
+                <a class="item" ng-click="updateCheck()">Check for Updates</a>
                 <a class="item" ng-click="refreshTokens()">Refresh Tokens</a>
             </div>
         </div>

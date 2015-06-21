@@ -15,7 +15,7 @@
         "angular-sanitize": "1.4.0",
         "ionic-service-core": "*",
         "ionic-service-analytics": "*",
-        "ionic-service-deploy": "~0.0.6",
+        "ionic-service-deploy": "*",
         "ionic-service-push": "*",
         "underscore": "~1.8.3",
         "angular-moment": "~0.10.1",

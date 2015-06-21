@@ -1,14 +1,17 @@
 <ion-view >
-    <ion-nav-title>
+    <!--<ion-nav-bar align-title="left" class="bar-light">
+        <ion-nav-back-button class="button-icon no-text">
+            <i class="ion-ios-arrow-left"></i>
+        </ion-nav-back-button>
+    </ion-nav-bar>-->
+    <ion-nav-title class="">
         <img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}}</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
-        <button class="button button-clear button-icon" ng-click="shareThis(listing)">
-            <i class="icon ion-ios-upload"></i>
-        </button>
+        <button class="button button-clear button-icon icon ion-ios-upload" ng-click="shareThis(listing)"></button>
     </ion-nav-buttons>
     <ion-content class="has-header">
-        <div class="hero has-mask" style="background-image: url( {{ listing.gallery.length ? listing.gallery[0].path :'img/bgs/cs21.jpg'}});">
+        <div class="hero has-mask" style="background-image: url( {{ listing.gallery.length ? listing.gallery[0].path :'img/bgs/default.jpg'}});">
             <div class="content">
                 <div class="" style="background-color: rgba(0,0,0,.3);height: 47px;">
                     <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="openReviewModal()">

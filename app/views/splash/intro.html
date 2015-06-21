@@ -1,28 +1,22 @@
-<ion-view hide-back-button="true" class="">
-    <ion-nav-bar class="nav-title-slide-ios7 bar-light transparent-nav">
-        <ion-nav-back-button class="button-icon ion-arrow-left-c">
-        </ion-nav-back-button>
-    </ion-nav-bar>
+<ion-view hide-back-button="true" class="bg-food">
+    <!--<ion-nav-bar class="nav-title-slide-ios7 bar-light transparent-nav">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c"></ion-nav-back-button>
+    </ion-nav-bar>-->
     <ion-nav-buttons side="left">
-        <button class="button button-positive button-clear no-animation"
-                ng-click="startApp()" ng-if="!slideIndex">
-            Skip Intro
-        </button>
-        <button class="button button-positive button-clear no-animation"
-                ng-click="previous()" ng-if="slideIndex > 0">
-            Previous Slide
-        </button>
+        <button class="button button-clear button-icon icon ion-skip-forward"
+                ng-click="startApp()" ng-if="!slideIndex"></button>
+        <button class="button button-clear button-icon icon ion-ios-arrow-left"
+                ng-click="previous()" ng-if="slideIndex > 0"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <button class="button button-positive button-clear no-animation"
+        <button class="button button-clear button-icon icon ion-ios-arrow-right"
                 ng-click="next()" ng-if="slideIndex != 2">
-            Next
         </button>
-        <button class="button button-positive button-clear no-animation"
+        <button class="button button-clear button-icon icon ion-checkmark"
                 ng-click="startApp()" ng-if="slideIndex == 2">
-            Start using Tabletops
         </button>
     </ion-nav-buttons>
+
     <ion-slide-box on-slide-changed="slideChanged(index)">
         <ion-slide>
             <h3>Thank you for choosing the Tabletops App!</h3>
@@ -55,4 +49,10 @@
             </p>
         </ion-slide>
     </ion-slide-box>
+    <div class="button-bar" style="position: fixed;bottom: 0;">
+        <button class="button button-small button-border button-dark" ui-sref="tabs.dashboard">
+            CONTINUE WITHOUT LOGIN
+            <i class="icon ion-ios-arrow-right"></i>
+        </button>
+    </div>
 </ion-view>

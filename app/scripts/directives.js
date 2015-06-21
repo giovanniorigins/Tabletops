@@ -73,6 +73,7 @@ angular.module('tabletops.directives', [])
         };
     }])
     .directive('dynamicHeightSlideBox', function() {
+        'use strict';
         return {
             require: ['^ionSlideBox'],
             link: function(scope, elem, attrs, slider) {
@@ -89,6 +90,7 @@ angular.module('tabletops.directives', [])
         };
     })
     .directive('checklistModel', ['$parse', '$compile', function($parse, $compile) {
+        'use strict';
         // contains
         function contains(arr, item, comparator) {
             if (angular.isArray(arr)) {
