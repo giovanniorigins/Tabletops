@@ -8,14 +8,12 @@
                 ng-hide="$exposeAside.active"></button>
     </div>
     <ion-content class="has-subheader">
-        <ion-refresher
-                pulling-text="Pull to refresh..."
-                on-refresh="refresh()">
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
         </ion-refresher>
         <ion-list>
             <ion-item ng-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" class="item-avatar" ui-sref="tabs.restaurant({id: res.slug})">
                 <img ng-src="{{::res.logo.path}}">
-                <h2>{{::res.name}}</h2>
+                <h2 ng-bind="::res.name"></h2>
                 <p class="row row-no-padding">
                     <span class="col col-50">
                         <span ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></span>
@@ -25,7 +23,7 @@
                     </span>
                 </p>
                 <p>
-                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
+                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines" ng-bind="c.name"></a>
                 </p>
                 <p style="font-size: 80%">
                     <span class="distance-badge">{{::res.distance|number:2}} miles away</span>

@@ -5,7 +5,7 @@
         </ion-nav-back-button>
     </ion-nav-bar>-->
     <ion-nav-title class="">
-        <img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}"> <span class="padding-left">{{::listing.name}}</span>
+        <!--<img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}">--> <span class="padding-left">{{::listing.name}}</span>
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button button-clear button-icon icon ion-ios-upload" ng-click="shareThis(listing)"></button>
@@ -38,6 +38,13 @@
         </div>
         <div class="dark-bg z1">
             <h3 class="padding-top padding-left light" ng-bind="::listing.name"></h3>
+            <button class="button button-balanced button-outline button-block button-flat" ng-if="listing.restaurant.reservations == 1" ng-click="initCaller(listing)">
+                <i class="icon ion-ios-telephone balanced"></i>&nbsp;
+                Call for Reservations
+                <!--<span ng-if="::listing.restaurant.reservations_preferred == 0">Accepts Reservations</span>-->
+                <!--<span ng-if="::listing.restaurant.reservations_preferred == 1">Reservations Preferred</span>-->
+                <!--<span ng-if="::listing.restaurant.reservations_preferred == 2">Reservations Needed</span>-->
+            </button>
             <!--<p>$1,530 USD</p>-->
             <div class="row row-no-padding text-center padding-vertical">
                 <div class="col">
@@ -81,9 +88,25 @@
                                             <i class="icon ion-map"></i>
                                         </button>-->
                                     </div>
-                                    <div ng-if="::loc.opening_hours.length" ng-repeat="openHour in loc.opening_hours" class="dark padding-left condensed-space">
-                                        <b>{{::valById(hoursDays, openHour.day).name}}</b>: {{::valById(startHours,
-                                        openHour.open).name}} - {{::valById(endHours, openHour.close).name}}
+                                    <div ng-if="::loc.opening_hours.length" class="dark padding-left condensed-space">
+                                        <div class="row">
+                                            <b class="col col-20">Day</b>
+                                            <div class="col col-80">
+                                                <div class="row row-no-padding">
+                                                    <b class="col">Opening</b>
+                                                    <b class="col">Closing</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row border-top" ng-repeat="openHour in loc.opening_hours">
+                                            <div class="col col-20">{{::valById(hoursDays, openHour.day).name}}</div>
+                                            <div class="col col-80">
+                                                <div class="row row-no-padding">
+                                                    <div class="col">{{::valById(startHours, openHour.open).name}}</div>
+                                                    <div class="col">{{::valById(endHours, openHour.close).name}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="item" ng-if="::!loc.opening_hours.length">
                                         Open hours currently unavailable.
@@ -114,7 +137,7 @@
                     <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->
                     <span ng-if="::listing.restaurant.reservations_preferred == 0">Accepts Reservations</span>
                     <span ng-if="::listing.restaurant.reservations_preferred == 1">Reservations Preferred</span>
-                    <span ng-if="::listing.restaurant.reservations_preferred == 2"><i class="icon ion-alert"></i> Reservations Only</span>
+                    <span ng-if="::listing.restaurant.reservations_preferred == 2">Reservations Only</span>
                 </p>
                 <p class="outline padding balanced-bg inline img-rounded" ng-if="::listing.restaurant.parking == 1">
                     <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->Parking Available</p>
@@ -155,7 +178,7 @@
             <h4 class="content padding double-padding-x text-center" ng-if="listing.gallery.length==0">No photos yet</h4>
             <ion-scroll ng-if="listing.gallery.length" direction="x" class="available-scroller gallery-prev-scroller wide-as-needed">
                 <div class="nearby-card" collection-repeat="photo in listing.gallery|limitTo:6" item-height="100" item-width="110">
-                    <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{::photo.path}});min-height: 100px" ></div>
+                    <div class="photo-btn gallery-btn" ng-click="showImage(photo.path)" style="background-image: url({{photo.path}});min-height: 100px" ></div>
                 </div>
 
             </ion-scroll>

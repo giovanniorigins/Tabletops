@@ -12,7 +12,24 @@ var sourceFiles = [
 module.exports = exports = function(grunt) {
     'use strict';
 
+    var BANNER = '/*!\n' +
+                 '    localForage -- Offline Storage, Improved\n' +
+                 '    Version ' + grunt.file.readJSON('package.json').version + '\n' +
+                 '    https://mozilla.github.io/localForage\n' +
+                 '    (c) 2013-2015 Mozilla, Apache License 2.0\n' +
+                 '*/\n';
+
     grunt.initConfig({
+        browserify: {
+            client: {
+                src: [
+                    'bower_components/es6-promise/promise.js',
+                    'src/**/*.js',
+                    'test/runner.browserify.js'
+                ],
+                dest: 'test/localforage.browserify.js'
+            }
+        },
         concat: {
             options: {
                 separator: ''
@@ -22,22 +39,18 @@ module.exports = exports = function(grunt) {
                     'dist/localforage.js': [
                         // https://github.com/jakearchibald/es6-promise
                         'bower_components/es6-promise/promise.js',
+                        'src/utils/**/*.js',
                         'src/drivers/**/*.js',
                         'src/localforage.js'
                     ],
                     'dist/localforage.nopromises.js': [
+                        'src/utils/**/*.js',
                         'src/drivers/**/*.js',
                         'src/localforage.js'
                     ]
                 },
                 options: {
-                    banner:
-                        '/*!\n' +
-                        '    localForage -- Offline Storage, Improved\n' +
-                        '    Version 1.2.0\n' +
-                        '    http://mozilla.github.io/localForage\n' +
-                        '    (c) 2013-2014 Mozilla, Apache License 2.0\n' +
-                        '*/\n'
+                    banner: BANNER
                 }
             }
         },
@@ -95,6 +108,8 @@ module.exports = exports = function(grunt) {
                         'http://localhost:9999/test/test.main.html',
                         'http://localhost:9999/test/test.min.html',
                         'http://localhost:9999/test/test.require.html',
+                        'http://localhost:9999/test/test.require.unbundled.html',
+                        'http://localhost:9999/test/test.browserify.html',
                         'http://localhost:9999/test/test.callwhenready.html',
                         'http://localhost:9999/test/test.customdriver.html'
                     ]
@@ -144,6 +159,9 @@ module.exports = exports = function(grunt) {
                         'dist/localforage.nopromises.js'
                     ],
                     'site/localforage.min.js': ['dist/localforage.js']
+                },
+                options: {
+                    banner: BANNER
                 }
             }
         },
@@ -159,7 +177,7 @@ module.exports = exports = function(grunt) {
                     'test/runner.js',
                     'test/test.*.*'
                 ],
-                tasks: ['jshint', 'jscs', 'shell:component', 'mocha:unit']
+                tasks: ['jshint', 'jscs', 'shell:component', 'browserify', 'mocha:unit']
             }
         }
     });
@@ -178,6 +196,7 @@ module.exports = exports = function(grunt) {
         'jshint',
         'jscs',
         'shell:component',
+        'browserify',
         'connect:test',
         'mocha'
     ];

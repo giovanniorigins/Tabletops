@@ -1,6 +1,10 @@
 <ion-view hide-back-button="true">
     <ion-nav-title>
         <img class="title-image" src="img/logo2.png" style="width: auto;display: block; height: 40px"/>
+        <!--<div class="button-bar button-bar-assertive-900">
+            <a class="button button-outline">First</a>
+            <a class="button button-outline">Second</a>
+        </div>-->
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button button-energized-900 button-fab hide" id="fab-search" ng-click="openSearchModal()">
@@ -19,7 +23,7 @@
                     <legend class="assertive">PLACES NEARBY</legend>
                 </fieldset>-->
 
-                <ion-slide-box auto-play="true" does-continue="true" class="loc-slider nearby-slider">
+                <ion-slide-box auto-play="true" does-continue="true" class="loc-slider nearby-slider" delegate-handle="DashboardSlider">
                     <ion-slide class="slide" ng-repeat="res in restaurants|orderBy:'distance'|limitTo:5" ng-click="toRestaurant(res.slug, restaurants)">
                         <div class="hero" style="background-image: url( {{ res.gallery.length ? res.gallery[0].path :'img/bgs/default.jpg'}});">
                             <div class="content">
@@ -85,17 +89,60 @@
                     <legend class="assertive">CUISINES</legend>
                 </fieldset>
 
+                <div>
+                    <div class="list half">
+                        <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines_1">
+                            <img ng-src="{{::c.img}}" width="100%">
+                        </a>
+                        <!--<div ui-sref="" class="card card-gallery item item-text-wrap" ng-repeat="c in cuisines_1">
+                            <div class="ink dark-bg">
+                                <h2>Where's Elsa?</h2>
+                                <img class="full-image" src="img/sansa-snowcastle3.jpg">
+                            </div>
+                            <div class="item tabs tabs-secondary tabs-icon-left in">
+                                <a class="tab-item stable-bg assertive">
+                                    <i class="icon ion-heart"></i>
+                                    4
+                                </a>
+                                <a class="tab-item stable-bg positive-900">
+                                    <i class="icon ion-chatbubbles"></i>
+                                    2
+                                </a>
+                            </div>
+                        </div>-->
+                    </div>
+                    <div class="list half">
+                        <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines_2">
+                            <img ng-src="{{::c.img}}" width="100%">
+                        </a>
+                        <!--<div ui-sref="" class="card card-gallery item item-text-wrap" ng-repeat="c in cuisines_2">
+                            <div class="ink dark-bg">
+                                <h2>Where's Elsa?</h2>
+                                <img class="full-image" src="img/sansa-snowcastle3.jpg">
+                            </div>
+                            <div class="item tabs tabs-secondary tabs-icon-left in">
+                                <a class="tab-item stable-bg assertive">
+                                    <i class="icon ion-heart"></i>
+                                    4
+                                </a>
+                                <a class="tab-item stable-bg positive-900">
+                                    <i class="icon ion-chatbubbles"></i>
+                                    2
+                                </a>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
 
-
-                <ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
+                <!--<ion-scroll direction="x" class="available-scroller nearby-scroller wide-as-needed">
                     <div class="loader" ng-hide="cuisines && cuisines.length"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>
-                    <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines">
+                    <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines_1">
                         <img ng-src="{{::c.img}}">
                     </a>
                     <a class="nearby-card more-card" ui-sref="tabs.cuisines">
                         <div><i class="icon ion-plus-circled"></i> <br>View All</div>
                     </a>
-                </ion-scroll>
+                </ion-scroll>-->
             </div>
 
             <div class="padding-top hide">

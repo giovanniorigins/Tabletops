@@ -6,6 +6,7 @@ var valById = function (arr, id) {
 };
 
 angular.module('tabletops', [
+    'ionic',
     'ionic-material',
     'ionic.service.core',
     'ionic.service.analytics',
@@ -51,7 +52,18 @@ angular.module('tabletops', [
                     }
                 }
 
-                $ionicAnalytics.register();
+                $localForage.getItem('analytics').then(function (a) {
+                    if (angular.isUndefined(a) || !!a) {
+                        $localForage.setItem('analytics', true);
+                        $ionicAnalytics.register();
+                        $rootScope.settings.analytics = true;
+                    } else {
+                        $localForage.setItem('analytics', false);
+                        $rootScope.settings.analytics = false;
+                    }
+                });
+
+                navigator.splashscreen.hide();
             });
 
             $rootScope.navbarColor = function (color) {
@@ -87,9 +99,9 @@ angular.module('tabletops', [
                 });
             };
 
-            $rootScope.$on('$stateChangeSuccess', function (e, toState/*, toParams, fromState, fromParams, a*/) {
+            $rootScope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams, a) {
                 //console.log('To: ', toState);
-                //console.log('Params: ', fromParams);
+                console.log('Params: ', fromParams);
                 $rootScope.filtersMenu = toState.name === 'restaurants';
                 ionicMaterialInk.displayEffect();
             });
@@ -147,7 +159,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.results', {
-                    url: '/dashboard/search/:cuisine?search&takeout&delivery',
+                    url: '/dashboard/search?cuisine&search&takeout&delivery',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/listings/restaurants.html',
@@ -206,7 +218,7 @@ angular.module('tabletops', [
                 })
                 // Common Restaurant Pages
                 .state('tabs.restaurant', {
-                    url: '/dashboard/restaurants/:id',
+                    url: '/dashboard/search/:id',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/common/restaurant.html',
@@ -215,7 +227,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.restaurant-map', {
-                    url: '/dashboard/restaurants/:id/map',
+                    url: '/dashboard/search/:id/map',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/common/restaurant-map.html',
@@ -227,7 +239,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.restaurant-reviews', {
-                    url: '/dashboard/restaurants/:id/reviews',
+                    url: '/dashboard/search/:id/reviews',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/common/restaurant-reviews.html',
@@ -236,7 +248,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.restaurant-gallery', {
-                    url: '/dashboard/restaurants/:id/gallery',
+                    url: '/dashboard/search/:id/gallery',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/common/restaurant-gallery.html',
@@ -363,6 +375,15 @@ angular.module('tabletops', [
                         }
                     }
                 })
+                .state('tabs.about', {
+                    url: '/settings/about',
+                    views: {
+                        'settings-tab': {
+                            templateUrl: 'views/settings/about.html',
+                            controller: 'SettingsCtrl'
+                        }
+                    }
+                })
                 .state('tabs.faq', {
                     url: '/settings/faq',
                     views: {
@@ -392,11 +413,11 @@ angular.module('tabletops', [
                 })
 
                 // Splash
-                .state('splash', {
+                /*.state('splash', {
                     url: '/splash',
                     templateUrl: 'views/splash/splash.html',
                     controller: 'SplashCtrl'
-                })
+                })*/
                 .state('intro', {
                     url: '/intro',
                     templateUrl: 'views/splash/intro.html',
@@ -404,7 +425,7 @@ angular.module('tabletops', [
                 })
 
                 // Sign In
-                .state('signin', {
+                /*.state('signin', {
                     url: '/sign-in',
                     templateUrl: 'views/sign-in/sign-in.html',
                     controller: 'SignInCtrl'
@@ -428,11 +449,11 @@ angular.module('tabletops', [
                     url: '/forgot-password',
                     templateUrl: 'views/sign-in/forgot-password.html',
                     controller: 'ForgotCtrl'
-                });
+                })*/;
 
             // if none of the above states are matched, use this as the fallback
             //$urlRouterProvider.otherwise('/sign-in');
-            $urlRouterProvider.otherwise('/dashboard');
+            $urlRouterProvider.otherwise('/tab/dashboard');
 
         }
     ]);

@@ -1,6 +1,5 @@
 {
   "name": "localforage",
-  "version": "1.2.0",
   "main": [
     "dist/localforage.js"
   ],
@@ -14,7 +13,8 @@
     "LICENSE",
     "docs*",
     "examples*",
-    "test*"
+    "test*",
+    "site*"
   ],
   "dependencies": {},
   "devDependencies": {
@@ -26,13 +26,14 @@
     "modernizr": "~2.8.1"
   },
   "homepage": "https://github.com/mozilla/localForage",
-  "_release": "1.2.0",
+  "version": "1.2.4",
+  "_release": "1.2.4",
   "_resolution": {
     "type": "version",
-    "tag": "1.2.0",
-    "commit": "ccf019200b9cfa0948c6884537e109eadcaf5240"
+    "tag": "1.2.4",
+    "commit": "236bbc11b106267e7a956128af06d6bcc5048988"
   },
   "_source": "git://github.com/mozilla/localForage.git",
-  "_target": "1.2.0",
+  "_target": "1.2.4",
   "_originalSource": "localforage"
 }

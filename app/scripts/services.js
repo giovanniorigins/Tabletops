@@ -34,14 +34,18 @@ angular.module('underscore', [])
 angular.module('GoogleMaps', [])
     .factory('GoogleMaps', ['$window', function ($window) {
         'use strict';
+        if (angular.isUndefined($window.plugin)) {
+            return {};
+        }
         return $window.plugin.google.maps;
     }]);
 
 angular.module('tabletops.services', [])
     .constant('ApiEndpoint', {
-        api: 'http://flamingo.gorigins.com/api/v1',
-        auth: 'http://flamingo.gorigins.com/api/v1/auth',
-        feed: 'http://flamingo.gorigins.com/api/v1/feed'
+        api: 'http://tabletops.io/api/v1/mobile',
+        auth: 'http://tabletops.io/api/v1/auth',
+        feed: 'http://tabletops.io/api/v1/feed',
+        base: 'http://tabletops.io'
     })
     .factory('Listing', ['$resource', 'ApiEndpoint', function ($resource, ApiEndpoint) {
         'use strict';
@@ -74,13 +78,13 @@ angular.module('tabletops.services', [])
             query: {method: 'GET', isArray: true, cache: true}
         });
     }])
-    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaGooglePlus', '$cordovaOauth', '$cordovaDevice', '$ionicUser', '$ionicPush', '$window', '_',
-        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaGooglePlus, $cordovaOauth, $cordovaDevice, $ionicUser, $ionicPush, $window, _) {
+    .factory('AuthenticationService', ['$rootScope', '$q', '$http', 'authService', '$localForage', 'ApiEndpoint', '$state', '$cordovaInAppBrowser', '$cordovaFacebook', '$cordovaGooglePlus', '$cordovaOauth', '$cordovaDevice', '$ionicUser', '$ionicPush', '$window', '_', '$cordovaAppAvailability',
+        function ($rootScope, $q, $http, authService, $localForage, ApiEndpoint, $state, $cordovaInAppBrowser, $cordovaFacebook, $cordovaGooglePlus, $cordovaOauth, $cordovaDevice, $ionicUser, $ionicPush, $window, _, $cordovaAppAvailability) {
             'use strict';
             var service = {
                 login: function (user) {
                     $localForage.setItem('userCreds', user);
-                    $http.post(ApiEndpoint.api + '/auth/authenticate', {
+                    $http.post(ApiEndpoint.auth + '/authenticate', {
                         email: user.email,
                         password: user.password
                     }, {ignoreAuthModule: true})
@@ -116,7 +120,7 @@ angular.module('tabletops.services', [])
                         });
                 },
                 logout: function () {
-                    $http.post(ApiEndpoint.api + '/auth/logout', {}, {ignoreAuthModule: true})
+                    $http.post(ApiEndpoint.auth + '/logout', {}, {ignoreAuthModule: true})
                         .finally(function () {
                             $localForage.removeItem('authorizationToken');
                             delete $http.defaults.headers.common.Authorization;
@@ -171,7 +175,7 @@ angular.module('tabletops.services', [])
                                 });
                                 break;
                             default:
-                                false; //$state.go('tabs.dashboard');
+                                return false; //$state.go('tabs.dashboard');
                         }
                     });
                 },
@@ -211,23 +215,46 @@ angular.module('tabletops.services', [])
                         });
                 },
                 FbLogin: function () {
-                    $cordovaFacebook
-                        .login(['public_profile', 'email', 'user_friends'])
-                        .then(function (success) {
-                            console.log('Login');
-                            console.log(success);
-                            if (success.status === 'connected') {
-                                var accessToken = success.authResponse.accessToken;
-                                $localForage.setItem('usedProvider', 'Facebook').then(function () {
-                                    $localForage.setItem('providerToken', accessToken).then(function () {
-                                        return service.authHandler('facebook');
-                                    });
+                    $cordovaAppAvailability.check('fb://')
+                        .then(function() {
+                            //FB App is available
+                            $cordovaFacebook
+                                .login(['public_profile', 'email', 'user_friends'])
+                                .then(function (success) {
+                                    console.log('Login');
+                                    console.log(success);
+                                    if (success.status === 'connected') {
+                                        var accessToken = success.authResponse.accessToken;
+                                        $localForage.setItem('usedProvider', 'Facebook').then(function () {
+                                            $localForage.setItem('providerToken', accessToken).then(function () {
+                                                return service.authHandler('facebook');
+                                            });
+                                        });
+                                    }
+                                }, function (error) {
+                                    // error
+                                    console.log(error);
                                 });
-                            }
-                        }, function (error) {
-                            // error
-                            console.log(error);
+                        }, function () {
+                            //FB App not available
+                            $cordovaOauth.facebook("646933472119700", ['public_profile', 'email', 'user_friends']).then(function(success) {
+                                // results
+                                console.log('Login');
+                                console.log(success);
+                                if (success.status === 'connected') {
+                                    var accessToken = success.authResponse.accessToken;
+                                    $localForage.setItem('usedProvider', 'Facebook').then(function () {
+                                        $localForage.setItem('providerToken', accessToken).then(function () {
+                                            return service.authHandler('facebook');
+                                        });
+                                    });
+                                }
+                            }, function(error) {
+                                // error
+                                console.log(error);
+                            });
                         });
+
                 },
                 FbLogout: function () {
                     $localForage.getItem('user').then(function (user) {
@@ -304,7 +331,7 @@ angular.module('tabletops.services', [])
                         function (available) {
                             // info.plist CFBundleURLTypes issue not resolved
                             //available = false;
-                            if (available) {
+                            if (available && !1) {
                                 // show the Google+ sign-in button
                                 $cordovaGooglePlus.login('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
                                     .then(function (obj) {
@@ -404,9 +431,9 @@ angular.module('tabletops.services', [])
                                     // Check if this is first run
                                     $localForage.getItem('pastInitialStart').then(function (res) {
                                         if (!!res) {
-                                            return $state.go('tabs.dashboard', null, {location: 'replace'});
+                                            return true; //$state.go('tabs.dashboard', null, {location: 'replace'});
                                         } else {
-                                            return $state.go('tabs.dashboard', null, {location: 'replace'});
+                                            return false; //$state.go('tabs.dashboard', null, {location: 'replace'});
                                             //return $state.go('intro', null, {location: 'replace'});
                                         }
                                     });
@@ -454,8 +481,8 @@ angular.module('tabletops.services', [])
             }
         };
     })
-    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$cordovaFacebook', '$sce', 'CIDs', '_',
-        function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $cordovaFacebook, $sce, CIDs, _) {
+    .factory('ListingRepository', ['$rootScope', '$ionicActionSheet', '$localForage', '$cordovaSocialSharing', '$cordovaToast', '$cordovaFacebook', '$sce', 'CIDs', '_', 'ApiEndpoint',
+        function ($rootScope, $ionicActionSheet, $localForage, $cordovaSocialSharing, $cordovaToast, $cordovaFacebook, $sce, CIDs, _, ApiEndpoint) {
             'use strict';
             var repo = {
                 // Call Handling
@@ -550,7 +577,7 @@ angular.module('tabletops.services', [])
                     var message = '',
                         subject = 'Tabletops App: ' + obj.name,
                         file = angular.isObject(obj.logo) ? obj.logo.path : null,
-                        link = 'http://flamingo.gorigins.com/np-pi/' + obj.slug;
+                        link = ApiEndpoint.base + '/' + obj.slug;
                     $cordovaSocialSharing
                         .share(message, subject, file, link) // Share via native share sheet
                         .then(function (result) {
@@ -579,12 +606,10 @@ angular.module('tabletops.services', [])
                                 });
                                 $localForage.setItem('favorites', newData);
                                 $rootScope.favorites = newData;
-                                //$cordovaToast.showShortBottom(' Awww, unfav\'d...');
                             } else { // add it
                                 data.push(obj.id);
                                 $localForage.setItem('favorites', data);
                                 $rootScope.favorites = data;
-                                //$cordovaToast.showShortBottom('Added to Favorites!');
                             }
                         }
                     });
@@ -705,7 +730,7 @@ angular.module('tabletops.services', [])
                                     return $localForage.getItem('user').then(function (user) {
                                         if (user.provider === 'Facebook' && review.facebook) {
                                             var message = angular.toJson(review.body);
-                                            return $cordovaFacebook.api('/me/bahamastabletops:review?method=post&message=' + message + '&restaurant=http://flamingo.gorigins.com/np-pi/' + listing.slug, ['publish_actions'])
+                                            return $cordovaFacebook.api('/me/bahamastabletops:review?method=post&message=' + message + '&restaurant=' + ApiEndpoint.base + '/' + listing.slug, ['publish_actions'])
                                                 .then(function (success) {
                                                     // success
                                                     console.log(success);
@@ -767,6 +792,7 @@ angular.module('tabletops.services', [])
                                 })
                                 .error(function (err, status) {
                                     console.log(err);
+                                    console.log(status);
                                     deferred.reject(err);
                                 });
                         } else {
@@ -794,22 +820,83 @@ angular.module('tabletops.services', [])
             };
             return repo;
         }])
-    .factory('Dialogs', ['$cordovaDialogs', '$state',
-        function ($cordovaDialogs, $state) {
+    .factory('Dialogs', ['$cordovaDialogs', '$state', '$ionicModal', '$q', '$rootScope', '$ionicSlideBoxDelegate', '$ionicScrollDelegate',
+        function ($cordovaDialogs, $state, $ionicModal, $q, $rootScope, $ionicSlideBoxDelegate, $ionicScrollDelegate) {
             'use strict';
-            var repo = {
+            var $scope = $rootScope.$new();
+            return {
                 promptToLogin: function (action) {
+                    var deferred = $q.defer();
                     $cordovaDialogs.confirm('You must login, before you can ' + action, 'Must Login', ['Cancel', 'Login'])
                         .then(function (buttonIndex) {
                             // no button = 0, 'Cancel' = 1, 'Login' = 2
                             var btnIndex = buttonIndex;
                             switch (btnIndex) {
+                                case 0:
+                                case 1:
+                                    deferred.reject(false);
+                                    break;
                                 case 2:
-                                    return false; //$state.go('tabs.dashboard');
+                                    $ionicModal.fromTemplateUrl('views/sign-in/LoginModal.html', {
+                                        scope: $scope,
+                                        //animation: 'am-fade-and-scale'
+                                    }).then(function (modal) {
+                                        console.log('Opening Modal');
+                                        $scope.loginModal = modal;
+
+                                        //Init Slider to firt slide
+                                        $scope.loginModalSlider = $ionicSlideBoxDelegate.$getByHandle('loginModalSlideBox')._instances[$ionicSlideBoxDelegate.$getByHandle('loginModalSlideBox')._instances.length-1];
+                                        $scope.loginModalSlider.enableSlide(false);
+
+                                        $scope.loginModal.show();
+
+                                        console.log(modal);
+                                        $scope.closeLoginModal = function (canceled) {
+                                            canceled = canceled || false;
+                                            if ($scope.loginModalSlider.currentIndex() === 0) {
+                                                $scope.loginModal.hide();
+                                                if (canceled) {
+                                                    deferred.reject('Canceled');
+                                                    $scope.loginModal.remove();
+                                                }
+                                            } else {
+                                                $scope.loginModalSlider.slide(0);
+                                                $ionicScrollDelegate.$getByHandle('loginModal').scrollTop();
+                                            }
+                                        };
+
+                                        $scope.toForgotPassword = function () {
+                                            $scope.filerModalSlider.slide(1);
+                                        };
+
+                                        $scope.$on('$destroy', function() {
+                                            $scope.loginModal.remove();
+                                        });
+                                    });
                             }
 
                         });
+
+                    return deferred.promise;
+                },
+                confirmAction: function (action) {
+                    var deferred = $q.defer();
+                    $cordovaDialogs.confirm('Are you sure you want to ' + action, ['Cancel', 'Yes'])
+                        .then(function (buttonIndex) {
+                            // no button = 0, 'Cancel' = 1, 'Login' = 2
+                            var btnIndex = buttonIndex;
+                            switch (btnIndex) {
+                                case 0:
+                                case 1:
+                                    deferred.reject(false);
+                                    break;
+                                case 2:
+                                    deferred.resolve(true);
+                            }
+                        });
+
+                    return deferred.promise;
+
                 }
             };
-            return repo;
         }]);

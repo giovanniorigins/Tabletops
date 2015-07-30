@@ -79,21 +79,21 @@ ion-nav-view {
     height: 105px;
 }
 .nearby-card {
-    height: 125px;
+    height: auto;
     max-width: 200px;
     display: inline-block;
-    margin: 0 5px;
+    margin: auto 5px;
     border-radius: 2px;
     overflow: hidden;
 }
 
-.nearby-card:nth-child(1) {
+/*.nearby-card/!*:nth-child(1)*!/ {
     margin-left: 10px;
 }
 
 .nearby-card:last-child {
     margin-right: 10px;
-}
+}*/
 
 .more-card {
     width: 125px;
@@ -412,7 +412,7 @@ ion-nav-view {
 }
 
 .bg-food {
-    background-image: url('../img/bgs/cs21.jpg');
+    /*background-image: url('../img/bgs/cs21.jpg');*/
     background-position: center center;
     background-size: cover;
 }

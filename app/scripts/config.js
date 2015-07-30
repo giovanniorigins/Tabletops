@@ -35,15 +35,6 @@ angular.module('tabletops.config', [])
         }]);
     }])
 
-    /*.config(['$cordovaFacebookProvider', 'CIDs', function($cordovaFacebookProvider, CIDs) {
-        'use strict';
-        var appID = CIDs.facebook;
-        var version = 'v2.0'; // or leave blank and default is v2.0
-        ionic.Platform.ready(function () {
-            $cordovaFacebookProvider.browserInit(appID, version);
-        });
-    }])*/
-
     // HTTP Defaults
     .config(['$httpProvider', function ($httpProvider) {
         'use strict';
@@ -54,7 +45,7 @@ angular.module('tabletops.config', [])
         $httpProvider.interceptors.push(['$rootScope', function ($rootScope) {
             return {
                 request: function (config) {
-                    if (config.url.indexOf('https://analytics.ionic.io') === -1 || config.url.indexOf('https://apps.ionic.io') === -1 || config.url.indexOf('https://push.ionic.io') === -1) {
+                    if (config.url.indexOf('analytics.ionic.io') === -1 && config.url.indexOf('apps.ionic.io') === -1 && config.url.indexOf('push.ionic.io') === -1) {
                         $rootScope.$broadcast('loading:show');
                     }
                     return config;
@@ -176,19 +167,19 @@ angular.module('tabletops.config', [])
     }, {id: '22.5', name: '10:30 PM'}, {id: '23.0', name: '11:00 PM'}, {
         id: '23.5',
         name: '11:30 PM'
-    }, {id: '24.0', name: '12:00 AM- Midnight'}, {id: '24.5', name: '12:30 AM- Next Day'}, {
+    }, {id: '24.0', name: '12:00 AM 2MOR'}, {id: '24.5', name: '12:30 AM 2MOR'}, {
         id: '25.0',
-        name: '1:00 AM- Next Day'
-    }, {id: '25.5', name: '1:30 AM- Next Day'}, {id: '26.0', name: '2:00 AM- Next Day'}, {
+        name: '1:00 AM 2MOR'
+    }, {id: '25.5', name: '1:30 AM 2MOR'}, {id: '26.0', name: '2:00 AM 2MOR'}, {
         id: '26.5',
-        name: '2:30 AM- Next Day'
-    }, {id: '27.0', name: '3:00 AM- Next Day'}, {id: '27.5', name: '3:30 AM- Next Day'}, {
+        name: '2:30 AM 2MOR'
+    }, {id: '27.0', name: '3:00 AM 2MOR'}, {id: '27.5', name: '3:30 AM 2MOR'}, {
         id: '28.0',
-        name: '4:00 AM- Next Day'
-    }, {id: '28.5', name: '4:30 AM- Next Day'}, {id: '29.0', name: '5:00 AM- Next Day'}, {
+        name: '4:00 AM 2MOR'
+    }, {id: '28.5', name: '4:30 AM 2MOR'}, {id: '29.0', name: '5:00 AM 2MOR'}, {
         id: '29.5',
-        name: '5:30 AM- Next Day'
-    }, {id: '30.0', name: '6:00 AM- Next Day'}])
+        name: '5:30 AM 2MOR'
+    }, {id: '30.0', name: '6:00 AM 2MOR'}])
 
     .filter('groupBy', ['_', function (_) {
         'use strict';
@@ -196,3 +187,15 @@ angular.module('tabletops.config', [])
             return _.groupBy(items, group);
         };
     }]);
+
+if (ionic.Platform.platform() === 'win32') {
+    /*angular.module('tabletops.config')
+        .config(['$cordovaFacebookProvider', 'CIDs', function ($cordovaFacebookProvider, CIDs) {
+            'use strict';
+            var appID = CIDs.facebook;
+            var version = 'v2.0'; // or leave blank and default is v2.0
+            ionic.Platform.ready(function () {
+                $cordovaFacebookProvider.browserInit(appID, version);
+            });
+        }]);*/
+}

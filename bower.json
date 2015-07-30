@@ -7,7 +7,7 @@
     ],
     "description": "Tabletops helps you to find and explore great foods and share your experiences with others.",
     "dependencies": {
-        "ionic": "~v1.0.0",
+        "ionic": "~1.0.0",
         "ionic-material": "*",
         "angular-localforage": "~1.2.2",
         "angular-resource": "~1.4.0",

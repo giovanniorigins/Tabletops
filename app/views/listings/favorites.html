@@ -8,24 +8,24 @@
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list class="">
-            <li ng-repeat="res in faves|orderBy:filters.sort" ng-show="([res] | filter:filters.search).length > 0" class="item ink" data-ink-color="#B71C1C" ng-click="toFavorite(res.slug)">
-                <!--<span class="avatar" style="background-image: url('{{::res.logo.path}}');"></span>-->
-                <h2 class="assertive-900" ng-bind="::res.name"></h2>
+            <li collection-repeat="res in faves|filter:filters.search|orderBy:filters.sort" item-render-buffer="6" ng-show="([res] | filter:filters.search).length > 0" class="item" data-ink-color="#B71C1C" ng-click="toFavorite(res.slug)">
+                <!--<span class="avatar" style="background-image: url('{{res.logo.path}}');"></span>-->
+                <h2 class="assertive-900" ng-bind="res.name"></h2>
                 <p class="row row-no-padding">
                     <span class="col col-75 item-text-wrap">
-                        <span ng-if="::res.locations.length==1">{{::res.locations[0].address_1}}, {{::res.locations[0].locality}}</span>
-                        <span ng-if="::res.locations.length>1">{{::res.locations[0].address_1}}, {{::res.locations[0].locality}} <br/><span style="font-size: 80%" class="subdued">+ {{::res.locations.length-1}} more</span>  </span>
+                        <span ng-if="res.locations.length==1">{{res.locations[0].address_1}}, {{res.locations[0].locality}}</span>
+                        <span ng-if="res.locations.length>1">{{res.locations[0].address_1}}, {{res.locations[0].locality}} <br/><span style="font-size: 80%" class="subdued">+ {{res.locations.length-1}} more</span>  </span>
                         <br/>
-                        <span ng-if="res.distance" style="font-size: 80%" class="distance-badge badge badge-calm">{{::res.distance|number:2}} miles away</span>
+                        <span ng-if="res.distance" style="font-size: 80%" class="distance-badge badge badge-calm">{{res.distance|number:2}} miles away</span>
                    </span>
                     <span class="col col-25 text-right">
-                        <span ng-bind-html="::showStars(res.rating_count, res.rating_cache)"></span>
+                        <span ng-bind-html="showStars(res.rating_count, res.rating_cache)"></span>
                         <br/>
-                        <span ng-bind-html="::showDollars(res.restaurant.price_range)"></span>
+                        <span ng-bind-html="showDollars(res.restaurant.price_range)"></span>
                     </span>
                 </p>
                 <p>
-                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{::c.name}}</a>
+                    <a href="#" class="subdued" ng-repeat="c in res.restaurant.cuisines">{{c.name}}</a>
                 </p>
             </li>
             <li ng-hide="faves.length" class="ionic item">

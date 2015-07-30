@@ -19,6 +19,10 @@ angular.module('tabletops.controllers')
                 password: null
             };
 
+            $scope.login = function () {
+                return AuthenticationService.login($scope.user);
+            };
+
             $scope.signInFacebook = function () {
                 AuthenticationService.FbLogin();
             };

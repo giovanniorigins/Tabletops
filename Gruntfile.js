@@ -246,8 +246,8 @@ module.exports = function (grunt) {
                         '<%= yeoman.images %>/**/*.{png,jpg,jpeg,gif,webp,svg}',
                         '*.html',
                         //'views/**/*.html',
-                        'vendor/**/*',
-                        'lib/**/*.{css,js,png,gif,jpg,jpeg,svg}',
+                        //'vendor/**/*',
+                        //'lib/**/*.{css,js,png,gif,jpg,jpeg,svg}',
                         //'lib/**/**/*.{css,js,png,gif,jpg,jpeg,svg}',
                         //'lib/**/**/**/*.{css,js,png,gif,jpg,jpeg,svg}',
                         'fonts/*'

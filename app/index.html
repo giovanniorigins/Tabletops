@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="lib/ionic-rating/ionic-rating.css">
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href='vendor/mapbox.directions.css' type='text/css' />
     <!-- endbuild -->
 
     <!-- build:js js/underscore.js -->
@@ -19,10 +18,12 @@
     <!-- endbuild -->
 
     <!-- build:js js/moment.js -->
-    <script src="lib/moment/moment.js"></script>
+    <script src="lib/moment/min/moment.min.js"></script>
     <!-- endbuild -->
 
+    <!-- build:js js/ionic.js -->
     <script src="lib/ionic/release/js/ionic.bundle.js"></script>
+    <!-- endbuild -->
 
     <!-- build:js js/ionic-ext.js -->
     <!--<script src="lib/angular/angular.js"></script>-->
@@ -31,21 +32,24 @@
     <!--<script src="lib/angular-sanitize/angular-sanitize.js"></script>-->
     <!--<script src="lib/angular-ui-router/release/angular-ui-router.js"></script>-->
     <!--<script src="lib/ionic/release/js/ionic-angular.js"></script>-->
-    <script src="lib/ionic-service-core/ionic-core.js"></script>
+    <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
+    <script src="lib/angular-resource/angular-resource.min.js"></script>
+    <script src="lib/angular-http-auth/src/http-auth-interceptor.js"></script>
     <script src="vendor/ionic-image-lazy-load.js"></script>
     <script src="lib/angular-websocket/angular-websocket.js"></script>
-    <script src="lib/ionic-service-push/ionic-push.js"></script>
-    <script src="lib/ionic-service-deploy/ionic-deploy.js"></script>
-    <script src="lib/ionic-service-analytics/ionic-analytics.js"></script>
-    <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
     <script src="lib/angular-moment/angular-moment.js"></script>
     <script src="lib/ion-affix/ion-affix.js"></script>
     <script src="lib/ionic-rating/ionic-rating.js"></script>
     <script src="lib/ionic-resetfield/dist/ionic.resetfield.js"></script>
     <script src="lib/localforage/dist/localforage.min.js"></script>
     <script src="lib/angular-localforage/dist/angular-localForage.min.js"></script>
-    <script src="lib/angular-resource/angular-resource.min.js"></script>
-    <script src="lib/angular-http-auth/src/http-auth-interceptor.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js js/ionic-services.js -->
+    <script src="lib/ionic-service-core/ionic-core.js"></script>
+    <script src="lib/ionic-service-push/ionic-push.js"></script>
+    <script src="lib/ionic-service-deploy/ionic-deploy.js"></script>
+    <script src="lib/ionic-service-analytics/ionic-analytics.js"></script>
     <!-- endbuild -->
 
     <!-- build:js js/cordova-exts.js -->
@@ -54,36 +58,9 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
+    <script src="lib/facebook-connect-plugin/index.js"></script>
     <script>
         if (ionic.Platform.platform() === 'win32') {
-            var Script = {
-                _loadedScripts: [],
-                include: function(script){
-                    // include script only once
-                    if (this._loadedScripts.include(script)){
-                        return false;
-                    }
-                    // request file synchronous
-                    var code = new Ajax.Request(script, {
-                        asynchronous: false, method: "GET",
-                        evalJS: false, evalJSON: false
-                    }).transport.responseText;
-                    // eval code on global level
-                    if (Prototype.Browser.IE) {
-                        window.execScript(code);
-                    } else if (Prototype.Browser.WebKit){
-                        $$("head").first().insert(Object.extend(
-                                new Element("script", {type: "text/javascript"}), {text: code}
-                        ));
-                    } else {
-                        window.eval(code);
-                    }
-                    // remember included script
-                    this._loadedScripts.push(script);
-                }
-            };
-
-            Script.load("lib/facebook-connect-plugin/index.js");
             window.fbAsyncInit = function () {
                 FB.init({
                     appId: '646933472119700',
@@ -129,6 +106,6 @@
         <ion-nav-back-button class="no-text"></ion-nav-back-button>
     </ion-nav-bar>
 
-    <ion-nav-view id="main-view" class="bg-food"></ion-nav-view>
+    <ion-nav-view id="main-view" class=""></ion-nav-view>
 </body>
 </html>
