@@ -23,6 +23,7 @@ angular.module('tabletops', [
     'ngCordova.plugins.googleplus',
     'LocalForageModule',
     'http-auth-interceptor',
+    'jett.ionic.filter.bar',
     'ionicLazyLoad',
     'tabletops.config',
     'tabletops.controllers',
@@ -100,7 +101,7 @@ angular.module('tabletops', [
             };
 
             $rootScope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams, a) {
-                //console.log('To: ', toState);
+                console.log('To: ', toState);
                 console.log('Params: ', fromParams);
                 $rootScope.filtersMenu = toState.name === 'restaurants';
                 ionicMaterialInk.displayEffect();
@@ -158,67 +159,56 @@ angular.module('tabletops', [
                         }
                     }
                 })
+                // Results page
                 .state('tabs.results', {
-                    url: '/dashboard/search?cuisine&search&takeout&delivery',
+                    url: '/dashboard/search',
+                    abstract: true,
                     views: {
                         'dashboard-tab': {
+                            templateUrl: 'views/dashboard/search.html',
+                            controller: 'SearchCtrl'
+                        }
+                    }
+                })
+                .state('tabs.results.list', {
+                    url: '?cuisine&search&takeout&delivery&open_now',
+                    views: {
+                        'results-list-tab': {
                             templateUrl: 'views/listings/restaurants.html',
                             controller: 'RestaurantsCtrl'
                         }
                     }
                 })
-                .state('tabs.medleys', {
-                    url: '/dashboard/medleys/:slug',
+                .state('tabs.results.map', {
+                    url: '/map',
                     views: {
-                        'dashboard-tab': {
-                            templateUrl: 'views/listings/restaurants.html',
-                            controller: 'RestaurantsCtrl'
+                        'results-map-tab': {
+                            templateUrl: 'views/listings/map.html',
+                            controller: 'MapCtrl'
                         }
                     }
                 })
-                .state('tabs.cuisines', {
-                    url: '/dashboard/cuisines?search',
+                .state('tabs.map-restaurant', {
+                    url: '/map/{id}',
                     views: {
-                        'dashboard-tab': {
-                            templateUrl: 'views/dashboard/cuisines.html',
-                            controller: 'CuisinesCtrl'
-                        }
-                    }
-                })
-                .state('tabs.cuisine', {
-                    url: '/dashboard/cuisines/:id?search',
-                    views: {
-                        'dashboard-tab': {
-                            templateUrl: 'views/listings/cuisine.html',
-                            controller: 'CuisineCtrl'
-                        }
-                    }
-                })
-                // Cuisine Restaurant Pages
-                .state('tabs.cuisine-restaurant', {
-                    url: '/dashboard/cuisines/:cuisine_id/restaurants/:id',
-                    views: {
-                        'dashboard-tab': {
+                        'map-tab': {
                             templateUrl: 'views/common/restaurant.html',
                             controller: 'RestaurantCtrl'
                         }
                     }
                 })
-                .state('tabs.cuisine-restaurant-map', {
-                    url: '/dashboard/cuisines/:cuisine_id/restaurants/:id/map',
+                .state('tabs.medleys', {
+                    url: '/dashboard/medleys/{slug}',
                     views: {
                         'dashboard-tab': {
-                            templateUrl: 'views/common/restaurant-map.html',
-                            params: [
-                                'target'
-                            ],
-                            controller: 'RestaurantMapCtrl'
+                            templateUrl: 'views/listings/restaurants.html',
+                            controller: 'RestaurantsCtrl'
                         }
                     }
                 })
                 // Common Restaurant Pages
                 .state('tabs.restaurant', {
-                    url: '/dashboard/search/:id',
+                    url: '/dashboard/search/{id}',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/common/restaurant.html',
@@ -227,7 +217,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.restaurant-map', {
-                    url: '/dashboard/search/:id/map',
+                    url: '/dashboard/search/{id}/map',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/common/restaurant-map.html',
@@ -239,7 +229,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.restaurant-reviews', {
-                    url: '/dashboard/search/:id/reviews',
+                    url: '/dashboard/search/{id}/reviews',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/common/restaurant-reviews.html',
@@ -248,7 +238,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.restaurant-gallery', {
-                    url: '/dashboard/search/:id/gallery',
+                    url: '/dashboard/search/{id}/gallery',
                     views: {
                         'dashboard-tab': {
                             templateUrl: 'views/common/restaurant-gallery.html',
@@ -266,7 +256,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.favorite', {
-                    url: '/favorites/:id',
+                    url: '/favorites/{id}',
                     views: {
                         'favorites-tab': {
                             templateUrl: 'views/common/restaurant.html',
@@ -275,7 +265,7 @@ angular.module('tabletops', [
                     }
                 })
                 .state('tabs.favorite-map', {
-                    url: '/favorites/:id/map',
+                    url: '/favorites/{id}/map',
                     views: {
                         'favorites-tab': {
                             templateUrl: 'views/common/restaurant-map.html',
@@ -286,26 +276,6 @@ angular.module('tabletops', [
                         }
                     }
                 })
-
-                .state('tabs.map', {
-                    url: '/map',
-                    views: {
-                        'map-tab': {
-                            templateUrl: 'views/map/map.html',
-                            controller: 'MapCtrl'
-                        }
-                    }
-                })
-                .state('tabs.map-restaurant', {
-                    url: '/map/:id',
-                    views: {
-                        'map-tab': {
-                            templateUrl: 'views/common/restaurant.html',
-                            controller: 'RestaurantCtrl'
-                        }
-                    }
-                })
-
                 // Account Tab
                 .state('tabs.activity', {
                     url: '/activity',
@@ -325,29 +295,6 @@ angular.module('tabletops', [
                         }
                     }
                 })
-                /*.state('tabs.restaurants', {
-                 url: '/restaurants',
-                 views: {
-                 'restaurants-tab': {
-                 templateUrl: 'restaurants/index.html',
-                 controller: 'RestaurantsCtrl'
-                 }
-                 }
-                 })*/
-                /*.state('tabs.restaurant', {
-                 url: '/restaurants/:id',
-                 views: {
-                 'restaurants-tab': {
-                 templateUrl: 'restaurants/restaurant.html',
-                 controller: 'RestaurantCtrl',
-                 resolve: {
-                 listing: function (Listing, $stateParams, $http) {
-                 return $http.get('http://flamingo.gorigins.com/api/v1/listings/' + $stateParams.id)
-                 }
-                 }
-                 }
-                 }
-                 })*/
                 .state('tabs.settings', {
                     url: '/settings',
                     views: {

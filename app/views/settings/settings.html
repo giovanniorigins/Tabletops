@@ -26,9 +26,9 @@
                 <a class="item item-icon-left item-button-right" ng-show="facebookProfile">
                     <i class="icon ion-social-facebook calm calm"></i>
                     Facebook Connected
-                    <button class="button button-stable button-icon flat" ng-click="signOutFacebook()">
+                    <!--<button class="button button-stable button-icon flat" ng-click="signOutFacebook()">
                         <i class="icon ion-log-out"></i>
-                    </button>
+                    </button>-->
                 </a>
 
                 <a class="item item-icon-left item-icon-right" ng-hide="facebookProfile" ng-click="signInFacebook()">
@@ -40,9 +40,9 @@
                 <a class="item item-icon-left item-button-right" ng-show="googleProfile">
                     <i class="icon ion-social-google energized-900"></i>
                     Google Connected
-                    <button class="button button-stable button-icon flat" ng-click="signOutGoogle()">
+                    <!--<button class="button button-stable button-icon flat" ng-click="signOutGoogle()">
                         <i class="icon ion-log-out"></i>
-                    </button>
+                    </button>-->
                 </a>
 
                 <a class="item item-icon-left item-icon-right" ng-hide="googleProfile" ng-click="signInGoogle()">
@@ -63,7 +63,7 @@
             <div class="card">
                 <a class="item item-icon-left" ng-click="openProvinceModal($event)">
                     <i class="icon ion-ios-navigate"></i>
-                    Set Province
+                    Province
                     <span class="item-note" ng-bind="$parent.settings.province.name"></span>
                 </a>
                 <!--<a class="item item-icon-right" ng-click="openProvinceModal($event)">

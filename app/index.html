@@ -8,6 +8,7 @@
     <!-- build:css css/bundled.css -->
     <link rel="stylesheet" href="lib/ionic/release/css/ionic.min.css">
     <link rel="stylesheet" href="lib/ionic-material/dist/ionic.material.min.css">
+    <link rel="stylesheet" href="lib/ionic-filter-bar/dist/ionic.filter.bar.min.css">
     <link rel="stylesheet" href="lib/ionic-rating/ionic-rating.css">
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/style.css">
@@ -34,6 +35,7 @@
     <!--<script src="lib/ionic/release/js/ionic-angular.js"></script>-->
     <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
     <script src="lib/angular-resource/angular-resource.min.js"></script>
+    <script src="lib/ionic-filter-bar/dist/ionic.filter.bar.min.js"></script>
     <script src="lib/angular-http-auth/src/http-auth-interceptor.js"></script>
     <script src="vendor/ionic-image-lazy-load.js"></script>
     <script src="lib/angular-websocket/angular-websocket.js"></script>
@@ -58,8 +60,8 @@
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <script src="lib/facebook-connect-plugin/index.js"></script>
-    <script>
+    <!--<script src="lib/facebook-connect-plugin/index.js"></script>-->
+    <!--<script>
         if (ionic.Platform.platform() === 'win32') {
             window.fbAsyncInit = function () {
                 FB.init({
@@ -80,7 +82,7 @@
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         }
-    </script>
+    </script>-->
 
     <!-- build:js js/app-tabletops.js -->
     <script src="scripts/app.js"></script>
@@ -98,7 +100,7 @@
     <script src="controllers/ActivityCtrl.js"></script>
     <!-- endbuild -->
 
-    <script src="http://debug-software.intel.com/target/target-script-min.js#DOyLHB66Sd2vKt67uR19zFehjFHCR87waB7njjdgSw4"></script>
+    <!--<script src="http://debug-software.intel.com/target/target-script-min.js#DOyLHB66Sd2vKt67uR19zFehjFHCR87waB7njjdgSw4"></script>-->
 </head>
 <body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak ion-track-auto>
     <!--<div id="fb-root"></div>-->

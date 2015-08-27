@@ -1,10 +1,14 @@
 <ion-view hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button button-clear button-icon icon ion-ios-location" ng-click="openProvinceModal($event)"></button>
+    </ion-nav-buttons>
     <ion-nav-title>
-        <img class="title-image" src="img/logo2.png" style="width: auto;display: block; height: 40px"/>
+        <!--<img class="title-image" src="img/logo2.png" style="width: auto;display: block; height: 40px"/>-->
         <!--<div class="button-bar button-bar-assertive-900">
             <a class="button button-outline">First</a>
             <a class="button button-outline">Second</a>
         </div>-->
+        {{selectedProvinceTitle().name}}
     </ion-nav-title>
     <ion-nav-buttons side="right">
         <button class="button button-energized-900 button-fab hide" id="fab-search" ng-click="openSearchModal()">
@@ -25,15 +29,18 @@
 
                 <ion-slide-box auto-play="true" does-continue="true" class="loc-slider nearby-slider" delegate-handle="DashboardSlider">
                     <ion-slide class="slide" ng-repeat="res in restaurants|orderBy:'distance'|limitTo:5" ng-click="toRestaurant(res.slug, restaurants)">
-                        <div class="hero" style="background-image: url( {{ res.gallery.length ? res.gallery[0].path :'img/bgs/default.jpg'}});">
+                        <div class="hero has-mask" style="background-image: url( {{ res.gallery.length ? res.gallery[0].path :'img/bgs/default.jpg'}});">
                             <div class="content">
+                                <!--<div class="avatar" ng-if="::res.logo" style="background-image: url({{::res.logo.path}});"></div>-->
                                 <h4 ng-bind="::res.name"></h4>
-                                <span ng-show="::res.distance" class="distance-badge badge assertive">{{::res.distance|number:2}} miles away</span>
                                 <!--<h5 ng-bind="::res.distance"></h5>-->
                                 <div class="" style="background-color: rgba(0,0,0,.3);height: 47px;">
                                     <div class="row row-no-padding text-center padding-vertical">
                                         <div class="col">
                                             <span ng-if="res" ng-bind-html="::showStars(res.rating_count, res.rating_cache, true)"></span>
+                                        </div>
+                                        <div class="col" ng-show="::res.distance">
+                                            <span class="">{{::res.distance|number:2}} mi.</span>
                                         </div>
                                         <div class="col">
                                             <span ng-if="res" ng-bind-html="::showDollars(res.restaurant.price_range)"></span>
@@ -91,7 +98,7 @@
 
                 <div>
                     <div class="list half">
-                        <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines_1">
+                        <a class="nearby-card" ui-sref="tabs.results.list({cuisine: c.slug})" ng-repeat="c in cuisines_1">
                             <img ng-src="{{::c.img}}" width="100%">
                         </a>
                         <!--<div ui-sref="" class="card card-gallery item item-text-wrap" ng-repeat="c in cuisines_1">
@@ -112,7 +119,7 @@
                         </div>-->
                     </div>
                     <div class="list half">
-                        <a class="nearby-card" ui-sref="tabs.cuisine({id: c.slug})" ng-repeat="c in cuisines_2">
+                        <a class="nearby-card" ui-sref="tabs.results.list({cuisine: c.slug})" ng-repeat="c in cuisines_2">
                             <img ng-src="{{::c.img}}" width="100%">
                         </a>
                         <!--<div ui-sref="" class="card card-gallery item item-text-wrap" ng-repeat="c in cuisines_2">

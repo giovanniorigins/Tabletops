@@ -491,3 +491,10 @@ ion-nav-view {
         animation:400ms zoomOut;
     }
 }
+
+.bar-assertive-900 .tabs,
+.tabs-assertive-900 .tabs,
+.tabs-assertive-900.tabs{
+    background-color: #B71C1C !important;
+    border: none;
+}

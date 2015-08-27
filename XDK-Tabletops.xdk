@@ -4,7 +4,7 @@
     "creationData": {
       "projectTypeName": "com.intel.xdk.projecttype.jsapp",
       "projectGuid": "e89770f5-4734-48c2-969d-7ab318740763",
-      "lastModifiedDate": 1438147879555,
+      "lastModifiedDate": 1439879315711,
       "creationDate": 1433130813511
     },
     "XDK-app-designer": "false",
@@ -203,17 +203,6 @@
         "sourceLocation": ""
       },
       {
-        "id": "com.phonegap.plugins.facebookconnect",
-        "selectedState": "Included",
-        "data": {},
-        "paramvals": {
-          "APP_ID": "646933472119700",
-          "APP_NAME": "Tabletops"
-        },
-        "dependsOn": [],
-        "dependedBy": []
-      },
-      {
         "id": "org.apache.cordova.media",
         "version": "0.2.15",
         "selectedState": "Included",
@@ -235,6 +224,17 @@
         "origin": "https://github.com/phonegap-build/PushPlugin.git#2.4.0",
         "originType": "repo",
         "sourceLocation": ""
+      },
+      {
+        "id": "com.phonegap.plugins.facebookconnect",
+        "selectedState": "Included",
+        "data": {},
+        "paramvals": {
+          "APP_ID": "646933472119700",
+          "APP_NAME": "Tabletops"
+        },
+        "dependsOn": [],
+        "dependedBy": []
       }
     ],
     "buildConfigurations": {
@@ -253,6 +253,9 @@
         "appName_": "Tabletops",
         "appID_": "com.gorigins.tabletops",
         "appAccess_": [
+          {
+            "origin": "*"
+          },
           {
             "launch-external": "yes",
             "origin": "*"
@@ -342,15 +345,15 @@
             "orientation": "landscape"
           }
         ],
-        "addlPermissions_": "",
+        "addlPermissions_": "INTERNET",
         "excludedLibraries_": "",
         "iosProvs_": [],
         "cordovaCLIVersion_": "4.1.2",
         "crosswalkVersion_": "14",
-        "appVersion_": "1.0.0",
+        "appVersion_": "1.1.1",
         "appDescription_": "Tabletops helps you to find and explore great foods and share your experiences with others.",
         "appAuthor_": "Jerez Bain",
-        "appVersionCode_": "1"
+        "appVersionCode_": "3"
       },
       "Android": {
         "platform_": "android",
@@ -363,7 +366,7 @@
           "android-signed": true,
           "Orientation": "portrait"
         },
-        "isActive_": true,
+        "isActive_": false,
         "appName_": "Tabletops",
         "appID_": "com.gorigins.tabletops",
         "appAccess_": [
@@ -461,7 +464,7 @@
         "iosProvs_": [],
         "cordovaCLIVersion_": "4.1.2",
         "crosswalkVersion_": "11",
-        "appVersion_": "1.0.0",
+        "appVersion_": "1.1.0",
         "appDescription_": "Tabletops helps you to find and explore great foods and share your experiences with others.",
         "appAuthor_": "Jerez Bain",
         "appVersionCode_": "1"
@@ -479,6 +482,9 @@
         "appName_": "Tabletops",
         "appID_": "com.gorigins.tabletops",
         "appAccess_": [
+          {
+            "origin": "*"
+          },
           {
             "launch-external": "yes",
             "origin": "*"
@@ -594,7 +600,7 @@
         "cordovaCLIVersion_": "4.1.2",
         "appAuthor_": "Jerez Bain",
         "crosswalkVersion_": "11",
-        "appVersion_": "1.0.0",
+        "appVersion_": "1.1.1",
         "appDescription_": "Tabletops helps you find and explore great foods and share your experiences with others.",
         "appVersionCode_": ""
       },

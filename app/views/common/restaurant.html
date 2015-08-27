@@ -7,6 +7,9 @@
     <ion-nav-title class="">
         <!--<img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}">--> <span class="padding-left">{{::listing.name}}</span>
     </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button class="button button-clear light button-icon icon ion-ios-arrow-left" ng-click="$ionicGoBack()"></button>
+    </ion-nav-buttons>
     <ion-nav-buttons side="right">
         <button class="button button-clear button-icon icon ion-ios-upload" ng-click="shareThis(listing)"></button>
     </ion-nav-buttons>
@@ -20,7 +23,7 @@
                     <!--<button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="addPhotos()">-->
                         <!--<i class="icon ion-camera"></i>-->
                     <!--</button>-->
-                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="beenHere(listing)">
+                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="beenHereToggle(listing)">
                         <i class="icon ion-checkmark" ng-class="{true:'energized'}[visited(listing.id)]"></i>
                     </button>
                     <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="favoriteThis(listing)" id="{{::'share_button_'+listing.id}}">
@@ -133,7 +136,7 @@
                 <legend class="assertive">Services Available</legend>
             </fieldset>
             <div class="padding-horizontal services-list text-center" ng-if="listing">
-                <p class="outline padding inline img-rounded" ng-if="::listing.restaurant.reservations == 1" ng-class="{0:'balanced-bg',1:'energized-bg', 2:'assertive-bg'}[listing.restaurant.reservations_preferred]">
+                <p class="outline padding inline img-rounded" ng-if="::listing.restaurant.reservations == 1" ng-class="{0:'balanced-bg',1:'energized-bg', 2:'energized-bg'}[listing.restaurant.reservations_preferred]">
                     <!--<i class="icon ion-checkmark-circled balanced"></i>&nbsp;-->
                     <span ng-if="::listing.restaurant.reservations_preferred == 0">Accepts Reservations</span>
                     <span ng-if="::listing.restaurant.reservations_preferred == 1">Reservations Preferred</span>

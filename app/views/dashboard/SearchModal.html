@@ -31,12 +31,13 @@
     <ion-content class="has-subheader">
         <ion-list>
             <div class="item item-divider">Quick Searches</div>
-            <a class="item" ui-sref="tabs.results()" ng-click="closeSearchModal()">Browse {{settings.province.name}}</a>
-            <a class="item" ui-sref="tabs.results({search: 'Paradise Island'})" ng-click="closeSearchModal()">Paradise Island</a>
-            <a class="item" ui-sref="tabs.results({search: 'Downtown'})" ng-click="closeSearchModal()">Downtown</a>
+            <a class="item" ui-sref="tabs.results.list()" ng-click="closeSearchModal()">Browse {{settings.province.name}}</a>
+            <a class="item" ui-sref="tabs.results.list({search: 'Paradise Island'})" ng-click="closeSearchModal()">Paradise Island</a>
+            <a class="item" ui-sref="tabs.results.list({search: 'Downtown'})" ng-click="closeSearchModal()">Downtown</a>
+                <a class="item" ui-sref="tabs.results.list({open_now: true})" ng-click="closeSearchModal()">Takeout</a>
             <!--<a class="item" ui-sref="tabs.results({search: 'breakfast'})" ng-click="closeSearchModal()">Breakfast</a>
             <a class="item" ui-sref="tabs.results({search: 'lunch'})" ng-click="closeSearchModal()">Lunch</a>
-            <a class="item" ui-sref="tabs.results({search: 'dinner'})" ng-click="closeSearchModal()">Dinner</a>
+            <a class="item" ui-sref="tabs.results({search: 'dinner'})" ng-click="closeSearchoseSearchModal()">Takeout</a>
             <a class="item" ui-sref="tabs.results({takeout: true})" ng-click="closeSearchModal()">Takeout</a>
             <a class="item" ui-sref="tabs.results({delivery: true})" ng-click="closeSearchModal()">Delivery</a>-->
         </ion-list>

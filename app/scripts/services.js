@@ -83,6 +83,7 @@ angular.module('tabletops.services', [])
             'use strict';
             var service = {
                 login: function (user) {
+                    var deferred = $q.defer();
                     $localForage.setItem('userCreds', user);
                     $http.post(ApiEndpoint.auth + '/authenticate', {
                         email: user.email,
@@ -100,6 +101,7 @@ angular.module('tabletops.services', [])
                             $localForage.setItem('providerToken', data.token);
                             $http.defaults.headers.common.Authorization = 'Bearer ' + data.token;
 
+                            deferred.resolve(true);
                             service.authHandler('email');
                             // Step 1
 
@@ -117,7 +119,9 @@ angular.module('tabletops.services', [])
                         .error(function (data, status) {
                             $localForage.removeItem('userCreds', user);
                             $rootScope.$broadcast('event:auth-login-failed', status);
+                            deferred.reject(false);
                         });
+                    return deferred.promise;
                 },
                 logout: function () {
                     $http.post(ApiEndpoint.auth + '/logout', {}, {ignoreAuthModule: true})
@@ -262,7 +266,9 @@ angular.module('tabletops.services', [])
                             .then(function(success) {
                                 // success
                                 console.log(success);
-                                return success;
+                                $localForage.removeItem('usedProvider');
+                                $localForage.removeItem('providerToken');
+                                return $localForage.removeItem('user');
                             }, function (error) {
                                 // error
                                 console.log(error);
@@ -313,63 +319,94 @@ angular.module('tabletops.services', [])
                 },
                 // Google Auth
                 GoogleCheckLogin: function () {
-                    $cordovaGooglePlus.silentLogin('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
-                        .then(function (obj) {
-                            console.log(obj); // do something useful instead of alerting
+                    if( ionic.Platform.isAndroid() ) {
+                        $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function (result) {
+                            // results
+                            console.log(result);
                             $localForage.setItem('usedProvider', 'Google').then(function () {
-                                $localForage.setItem('providerToken', obj.oauthToken).then(function () {
+                                $localForage.setItem('providerToken', result.access_token).then(function () {
                                     return service.authHandler('google');
                                 });
                             });
-                        }, function (msg) {
-                            console.log('error: ',  msg);
+                        }, function (error) {
+                            // error
+                            console.log(error);
                             return service.authHandler();
                         });
+                    } else {
+                        $cordovaGooglePlus.silentLogin('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
+                            .then(function (obj) {
+                                console.log(obj); // do something useful instead of alerting
+                                $localForage.setItem('usedProvider', 'Google').then(function () {
+                                    $localForage.setItem('providerToken', obj.oauthToken).then(function () {
+                                        return service.authHandler('google');
+                                    });
+                                });
+                            }, function (msg) {
+                                console.log('error: ', msg);
+                                return service.authHandler();
+                            });
+                    }
                 },
                 GoogleLogin: function () {
-                    window.plugins.googleplus.isAvailable(
-                        function (available) {
-                            // info.plist CFBundleURLTypes issue not resolved
-                            //available = false;
-                            if (available && !1) {
-                                // show the Google+ sign-in button
-                                $cordovaGooglePlus.login('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
-                                    .then(function (obj) {
-                                        console.log(obj); // do something useful instead of alerting
+                    if( ionic.Platform.isAndroid() ) {
+                        $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function (result) {
+                            // results
+                            console.log(result);
+                            $localForage.setItem('usedProvider', 'Google').then(function () {
+                                $localForage.setItem('providerToken', result.access_token).then(function () {
+                                    return service.authHandler('google');
+                                });
+                            });
+                        }, function (error) {
+                            // error
+                            console.log(error);
+                        });
+                    } else {
+                        window.plugins.googleplus.isAvailable(
+                            function (available) {
+                                // info.plist CFBundleURLTypes issue not resolved
+                                //available = false;
+                                if (available && !1) {
+                                    // show the Google+ sign-in button
+                                    $cordovaGooglePlus.login('861030047808-1q78j4ajr4ikg772bu82fdlpnrn7ai2p.apps.googleusercontent.com')
+                                        .then(function (obj) {
+                                            console.log(obj); // do something useful instead of alerting
+                                            $localForage.setItem('usedProvider', 'Google').then(function () {
+                                                $localForage.setItem('providerToken', obj.oauthToken).then(function () {
+                                                    return service.authHandler('google');
+                                                });
+                                            });
+                                        }, function (msg) {
+                                            console.log('error: ', msg);
+                                            return service.authHandler();
+                                        });
+                                } else {
+                                    $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function (result) {
+                                        // results
+                                        console.log(result);
                                         $localForage.setItem('usedProvider', 'Google').then(function () {
-                                            $localForage.setItem('providerToken', obj.oauthToken).then(function () {
+                                            $localForage.setItem('providerToken', result.access_token).then(function () {
                                                 return service.authHandler('google');
                                             });
                                         });
-                                    }, function (msg) {
-                                        console.log('error: ',  msg);
-                                        return service.authHandler();
+                                    }, function (error) {
+                                        // error
+                                        console.log(error);
                                     });
-                            } else {
-                                $cordovaOauth.google('861030047808-iemphej4buprgmptu0jehfs4tjdsr73p.apps.googleusercontent.com', ['https://www.googleapis.com/auth/plus.login', 'email']).then(function(result) {
-                                    // results
-                                    console.log(result);
-                                    $localForage.setItem('usedProvider', 'Google').then(function () {
-                                        $localForage.setItem('providerToken', result.access_token).then(function () {
-                                            return service.authHandler('google');
-                                        });
-                                    });
-                                }, function(error) {
-                                    // error
-                                    console.log(error);
-                                });
+                                }
                             }
-                        }
-                    );
+                        );
+                    }
                 },
                 GoogleLogout: function () {
                     $localForage.getItem('user').then(function (user) {
                         $cordovaGooglePlus.logout()
                             .then(function (msg) {
                                 console.log(msg);
-                                $localForage.removeItem('usedProvider').then(function () {
-                                    return false; //$state.go('tabs.dashboard');
-                                });
+                                $localForage.removeItem('usedProvider');
+                                $localForage.removeItem('providerToken');
+                                return $localForage.removeItem('user');
                             });
                     });
                 },
@@ -657,11 +694,16 @@ angular.module('tabletops.services', [])
                     return $sce.trustAsHtml(str);
                 },
                 showStars: function (count, rating, text) {
+                    //text = true;
                     var str = '';
                     if (count > 0) {
-                        for (var i = 1; i <= 5; i++) {
-                            var ending = i <= rating ? '' : (i > rating && rating > (i - 1)) ? '-half' : '-outline';
-                            str += '<i class=\'icon ion-ios-star' + ending + ' energized\'></i>';
+                        if (text) {
+                            str = rating;
+                        } else {
+                            for (var i = 1; i <= 5; i++) {
+                                var ending = i <= rating ? '' : (i > rating && rating > (i - 1)) ? '-half' : '-outline';
+                                str += '<i class=\'icon ion-ios-star' + ending + ' energized\'></i>';
+                            }
                         }
                     } else {
                         if (text) {
@@ -866,7 +908,7 @@ angular.module('tabletops.services', [])
                                         };
 
                                         $scope.toForgotPassword = function () {
-                                            $scope.filerModalSlider.slide(1);
+                                            $scope.loginModalSlider.slide(1);
                                         };
 
                                         $scope.$on('$destroy', function() {

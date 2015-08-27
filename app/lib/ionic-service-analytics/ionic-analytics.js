@@ -6,16 +6,15 @@
 (function(){
 angular.module('ionic.service.analytics', ['ionic.service.core'])
 
+.value('IONIC_ANALYTICS_VERSION', '0.2.5')
+
 /**
  * @ngdoc service
  * @name $ionicAnalytics
  * @module ionic.services.analytics
  * @description
  *
- * A simple yet powerful analytics tracking system.
- *
- * The simple format is eventName, eventData. Both are arbitrary but the eventName
- * should be the same as previous events if you wish to query on them later.
+ * Ionic Analytics' main service. See http://docs.ionic.io/docs/analytics-auto-tracking for details.
  *
  * @usage
  * ```javascript
@@ -28,35 +27,56 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
 .provider('$ionicAnalytics', function() {
 
   this.$get = [
-    '$q', 
-    '$timeout', 
-    '$state', 
-    '$ionicApp', 
-    '$ionicUser', 
+    '$q',
+    '$timeout',
+    '$rootScope',
+    '$ionicApp',
+    '$ionicCoreSettings',
+    '$ionicUser',
     '$interval',
-    '$http', 
+    '$http',
+    'bucketStorage',
     'persistentStorage',
-  function($q, $timeout, $state, $ionicApp, $ionicUser, $interval, $http, persistentStorage) {
+  function($q, $timeout, $rootScope, $ionicApp, $ionicCoreSettings, $ionicUser, $interval, $http, bucketStorage, persistentStorage) {
 
     var options = {};
 
-    function log(message) {
-      if (options.silent) {
-        return;
+    function maybeLog() {
+      if (!options.silent) {
+        console.log.apply(console, arguments);
       }
-
-      console.log.apply(console, arguments);
     }
+
+    var get_ionic_app_id = function() {
+      if ($ionicCoreSettings.get('app_id')) {
+        return $ionicCoreSettings.get('app_id')
+      } else if ($ionicApp.getApp().app_id) {
+        return $ionicApp.getApp().app_id
+      } else {
+        return null;
+      }
+    };
+
 
     var api = {
       getAppId: function() {
-        return $ionicApp.getApp().app_id;
+        return get_ionic_app_id();
       },
       getApiKey: function() {
-        return $ionicApp.getApiKey();
+        if($ionicCoreSettings.get('api_key')) {
+          return $ionicCoreSettings.get('api_key');
+        } else {
+          return $ionicApp.getApiKey();
+        }
       },
       getApiServer: function() {
-        var server = $ionicApp.getValue('analytics_api_server');
+        var server = false;
+        if($ionicCoreSettings.get('analytics_api_server')) {
+          server = $ionicCoreSettings.get('analytics_api_server');
+        } else {
+          server = $ionicApp.getValue('analytics_api_server');
+        }
+
         if (!server) {
           var msg = 'Ionic Analytics: You are using an old version of ionic-service-core. Update by running:\n    ' +
                     'ionic rm ionic-service-core\n    ' +
@@ -75,14 +95,19 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
         return !!this.analyticsKey;
       },
       requestAnalyticsKey: function() {
-
+        var host = '';
+        if($ionicCoreSettings.get('api_server')) {
+          host = $ionicCoreSettings.get('api_server');
+        } else {
+          host = $ionicApp.getApiUrl();
+        }
         var req = {
           method: 'GET',
-          url: $ionicApp.getApiUrl() + '/api/v1/app/' + this.getAppId() + '/keys/write',
+          url: host + '/api/v1/app/' + this.getAppId() + '/keys/write',
           headers: {
             'Authorization': "basic " + btoa(this.getAppId() + ':' + this.getApiKey())
           },
-		      withCredentials: false
+          withCredentials: false
         };
         return $http(req);
       },
@@ -104,7 +129,7 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
             "Authorization": analyticsKey,
             "Content-Type": "application/json"
           },
-		  withCredentials: false
+		      withCredentials: false
         }
 
         return $http(req);
@@ -123,26 +148,14 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
             "Authorization": analyticsKey,
             "Content-Type": "application/json"
           },
-		  withCredentials: false
+		      withCredentials: false
         }
 
         return $http(req);
       }
     }
 
-    var cache = {
-      get: function(key) {
-        key = this.scopeKey(key);
-        return persistentStorage.retrieveObject(key);
-      },
-      set: function(key, value) {
-        key = this.scopeKey(key);
-        return persistentStorage.storeObject(key, value);
-      },
-      scopeKey: function(key) {
-        return 'ionic_analytics_' + key + '_' + api.getAppId();
-      }
-    };
+    var cache = bucketStorage.bucket('ionic_analytics');
 
     var useEventCaching = true,
         dispatchInterval,
@@ -181,7 +194,7 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
       }).then(function(data) {
 
         // Success from proxy server. Erase event queue.
-        log('sent events', eventQueue);
+        maybeLog('Ionic Analytics: sent events', eventQueue);
         cache.set('event_queue', {});
 
       }, function(err) {
@@ -210,11 +223,11 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
 
     function enqueueEvent(collectionName, eventData) {
       if (options.dryRun) {
-        log('event recieved but not sent (dryRun active):', collectionName, eventData);
+        maybeLog('Ionic Analytics: event recieved but not sent (dryRun active):', collectionName, eventData);
         return;
-      } 
+      }
 
-      log('enqueuing event to send later:', collectionName, eventData);
+      maybeLog('Ionic Analytics: enqueuing event to send later:', collectionName, eventData);
 
       // Add timestamp property to the data
       if (!eventData.keen) {
@@ -235,7 +248,7 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
 
     function setDispatchInterval(value) {
       // Set how often we should send batch events to Keen, in seconds.
-      // Set this to a nonpositive number to disable event caching
+      // Set this to 0 to disable event caching
       dispatchIntervalTime = value;
 
       // Clear the existing interval and set a new one.
@@ -255,6 +268,8 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
       return dispatchIntervalTime;
     }
 
+    var globalProperties = {};
+    var globalPropertiesFns = [];
 
     return {
 
@@ -269,7 +284,7 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
 
         options = optionsParam || {};
         if (options.dryRun) {
-          log('dryRun mode is active. Analytics will not send any events.')
+          maybeLog('Ionic Analytics: dryRun mode is active. Analytics will not send any events.')
         }
 
         // Request Analytics key from server.
@@ -298,9 +313,7 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
 
         var self = this;
         promise.then(function() {
-          log('successfully registered analytics key');
-
-          self.track('load');
+          maybeLog('Ionic Analytics: successfully registered analytics key');
 
           setDispatchInterval(30);
           $timeout(function() {
@@ -310,13 +323,45 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
 
         return promise;
       },
+      unsetGlobalProperty: function(prop) {
+        if (typeof prop === 'string') {
+          delete globalProperties[prop];
+        }
+        else if (typeof prop === 'function') {
+          var i = globalPropertiesFns.indexOf(prop);
+          if (i == -1) {
+            throw Error('Ionic Analytics: The function passed to unsetGlobalProperty was not a global property.');
+          }
+          globalPropertiesFns.splice(i, 1);
+        }
+        else {
+          throw Error('Ionic Analytics: unsetGlobalProperty parameter must be a string or function.');
+        }
+      },
+      setGlobalProperties: function(prop) {
+        if (typeof prop === 'object') {
+          for (var key in prop) {
+            if (!prop.hasOwnProperty(key)) {
+              continue;
+            }
+
+            globalProperties[key] = prop[key];
+          }
+        }
+        else if (typeof prop === 'function') {
+          globalPropertiesFns.push(prop);
+        }
+        else {
+          throw Error('Ionic Analytics: setGlobalProperties parameter must be an object or function.');
+        }
+      },
       setDispatchInterval: function(v) {
         return setDispatchInterval(v);
       },
       getDispatchInterval: function() {
         return getDispatchInterval();
       },
-      track: function(eventName, data) {
+      track: function(eventCollection, eventData) {
 
         if (!api.getAppId() || !api.getApiKey()) {
           var msg = 'You must provide an app id and api key to identify your app before tracking analytics data.\n    ' +
@@ -324,173 +369,300 @@ angular.module('ionic.service.analytics', ['ionic.service.core'])
           throw new Error(msg)
         }
 
-        if (!data) data = {};
-        data._app = {
-          app_id: api.getAppId()
-        };
-        data._user = angular.copy($ionicUser.get());
+        if (!eventData) eventData = {};
 
-        if (!data._ui) data._ui = {};
-        data._ui.active_state = $state.current.name;
+        for (var key in globalProperties) {
+          if (!globalProperties.hasOwnProperty(key)) {
+            continue;
+          }
+
+          if (eventData[key] === void 0) {
+            eventData[key] = globalProperties[key];
+          }
+        };
+
+        for (var i = 0; i < globalPropertiesFns.length; i++) {
+          var fn = globalPropertiesFns[i];
+          fn.call($rootScope, eventCollection, eventData);
+        };
 
         if (useEventCaching) {
-          enqueueEvent(eventName, data);
+          $timeout(function() {
+            enqueueEvent(eventCollection, eventData);
+          })
         } else {
-          if (options.dryRun) {
-            console.log('dryRun active, will not send event: ', eventName, data);
-          } else {
-            api.postEvent(eventName, data);            
-          }
+          $timeout(function() {
+            if (options.dryRun) {
+              maybeLog('Ionic Analytics: dryRun active, will not send event: ', eventCollection, eventData);
+            } else {
+              api.postEvent(eventCollection, eventData);
+            }
+          })
         }
       },
     };
   }];
 })
 
+//=============================================================================
+// Global events
+//=============================================================================
+
+.run([
+  '$ionicAnalytics',
+  '$ionicApp',
+  '$ionicCoreSettings',
+  '$ionicUser',
+  'IONIC_ANALYTICS_VERSION',
+function($ionicAnalytics, $ionicApp, $ionicCoreSettings, $ionicUser, IONIC_ANALYTICS_VERSION) {
+
+  var get_ionic_app_id = function() {
+    if ($ionicCoreSettings.get('app_id')) {
+      return $ionicCoreSettings.get('app_id')
+    } else if ($ionicApp.getApp().app_id) {
+      return $ionicApp.getApp().app_id
+    } else {
+      return null;
+    }
+  };
+
+  $ionicAnalytics.setGlobalProperties(function(eventCollection, eventData) {
+
+    eventData._user = angular.copy($ionicUser.get());
+    eventData._app = {
+      app_id: get_ionic_app_id(),
+      analytics_version: IONIC_ANALYTICS_VERSION
+    };
+
+  })
+}])
+
+.run(['$ionicAnalytics', '$state', function($ionicAnalytics, $state) {
+  $ionicAnalytics.setGlobalProperties(function(eventCollection, eventData) {
+
+    if (!eventData._ui) eventData._ui = {};
+    eventData._ui.active_state = $state.current.name;
+
+  });
+}])
+
+
+//=============================================================================
+// Utils
+//=============================================================================
 
 .factory('domSerializer', function() {
-  var getElementTreeXPath = function(element) {
-    // Calculate the XPath of a given element
-    var paths = [];
 
-    // Use nodeName (instead of localName) so namespace prefix is included (if any).
-    for (; element && element.nodeType == 1; element = element.parentNode)
-    {
-      var index = 0;
-      for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling)
-      {
-        // Ignore document type declaration.
-        if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
-          continue;
+  function elementFullCssPath(element) {
+    // iterate up the dom
+    var selectors = [];
+    while (element.tagName !== 'HTML') {
+      var selector = element.tagName.toLowerCase();
 
-        if (sibling.nodeName == element.nodeName)
-          ++index;
+      var id = element.getAttribute('id');
+      if (id) {
+        selector += "#" + id;
       }
 
-      var tagName = element.nodeName.toLowerCase();
-      var pathIndex = (index ? "[" + (index+1) + "]" : "");
-      paths.splice(0, 0, tagName + pathIndex);
+      var className = element.className;
+      if (className) {
+        var classes = className.split(' ');
+        for (var i = 0; i < classes.length; i++) {
+          var c = classes[i];
+          if (c) {
+            selector += '.' + c;
+          }
+        };
+      }
+
+      if (!element.parentNode) {
+        return null;
+      }
+      var childIndex = Array.prototype.indexOf.call(element.parentNode.children, element);
+      selector += ':nth-child(' + (childIndex + 1) + ')';
+
+      element = element.parentNode;
+      selectors.push(selector);
     }
 
-    return paths.length ? "/" + paths.join("/") : null;
+    return selectors.reverse().join('>');
+  }
+
+  function elementIdentifierOrId(element) {
+    // 1. ion-track-name directive
+    var name = element.getAttribute('ion-track-name');
+    if (name) {
+      return name;
+    }
+
+    // 2. id
+    var id = element.getAttribute('id');
+    if (id) {
+      return id;
+    }
+
+    // 3. no unique identifier --> return null
+    return null;
   }
 
   return {
-    serializeElement: function(element) {
-      // Code appropriated from open source project FireBug
-      if (element && element.id)
-        return '//*[@id="' + element.id + '"]';
-      else
-        return getElementTreeXPath(element);
+    elementSelector: function(element) {
+      return elementFullCssPath(element);
     },
-
-    deserializeElement: function(xpath, context) {
-      var searchResult = document.evaluate(xpath, context || document);
-      return searchResult.iterateNext();
+    elementName: function(element) {
+      return elementIdentifierOrId(element);
     }
   }
 })
 
 
+//=============================================================================
+// Each bucket gets its own namespace in localStorage.
+//=============================================================================
+
 angular.module('ionic.service.analytics')
 
-/**
- * @ngdoc service
- * @name $ionicAutoTrack
- * @module ionic.service.analytics
- * @description
- *
- * Utility for auto tracking events. Every DOM event will go through a
- * list of hooks which extract meaningful data and add it to an event to Keen.
- *
- * Hooks should take a DOM event and return a dictionary of extracted properties, if any.
- *
- * @usage
- * ```javascript
- * $ionicAutoTrack.addHook(function(event) {
- *   if (event.type !== 'click') return;
- *
- *   return {
- *     my_extra_tracking_data: event.pageX
- *   };
- * });
- * ```
- */
-.factory('$ionicAutoTrack', ['domSerializer', function(domSerializer) {
+.factory('bucketStorage', [
+  'persistentStorage',
+  '$ionicCoreSettings',
+  '$ionicApp',
+function(persistentStorage, $ionicCoreSettings, $ionicApp) {
 
-  // Array of handlers that events will filter through.
-  var hooks = [];
+  function Bucket(name) {
+    this.name = name;
+  }
 
-  // Add a few handlers to start off our hooks
-  // Handler for general click events
-  hooks.push(function(event) {
+  Bucket.prototype.get = function(key) {
+    key = this.scopeKey(key);
+    return persistentStorage.retrieveObject(key);
+  }
 
-    if (event.type !== 'click') return;
+  Bucket.prototype.set = function(key, value) {
+    key = this.scopeKey(key);
+    return persistentStorage.storeObject(key, value);
+  }
 
-    // We want to also include coordinates as a percentage relative to the target element
-    var x = event.pageX,
-        y = event.pageY,
-        box = event.target.getBoundingClientRect(),
+  Bucket.prototype.scopeKey = function(key) {
+    return this.name + '_' + key + '_' + appId();
+  }
+
+  function appId() {
+    if ($ionicCoreSettings.get('app_id')) {
+      return $ionicCoreSettings.get('app_id')
+    } else if ($ionicApp.getApp().app_id) {
+      return $ionicApp.getApp().app_id
+    } else {
+      return null;
+    }
+  }
+
+  return {
+    bucket: function(name) {
+      return new Bucket(name);
+    }
+  }
+}])
+
+angular.module('ionic.service.analytics')
+
+.provider('$ionicAutoTrack',[function(){
+
+  var trackersDisabled = {},
+      allTrackersDisabled = false;
+
+  this.disableTracking = function(tracker) {
+    if (tracker) {
+     trackersDisabled[tracker] = true;
+    } else {
+      allTrackersDisabled = true;
+    }
+  }
+
+  this.$get = [function() {
+    return {
+      isEnabled: function(tracker) {
+        return !allTrackersDisabled && !trackersDisabled[tracker];
+      }
+    }
+  }]
+}])
+
+
+//================================================================================
+// Auto trackers
+//================================================================================
+
+
+.run(['$ionicAutoTrack', '$ionicAnalytics', function($ionicAutoTrack, $ionicAnalytics) {
+  if (!$ionicAutoTrack.isEnabled('Load')) {
+    return;
+  }
+  $ionicAnalytics.track('Load');    
+}])
+
+.run([
+  '$ionicAutoTrack',
+  '$document',
+  '$ionicAnalytics',
+  'domSerializer',
+function($ionicAutoTrack, $document, $ionicAnalytics, domSerializer) {
+  if (!$ionicAutoTrack.isEnabled('Tap')) {
+    return;
+  }
+
+  $document.on('click', function(event) {
+    // want coordinates as a percentage relative to the target element
+    var box = event.target.getBoundingClientRect(),
         width = box.right - box.left,
         height = box.bottom - box.top,
-        normX = (x - box.left) / width,
-        normY = (y - box.top) / height;
+        normX = (event.pageX - box.left) / width,
+        normY = (event.pageY - box.top) / height;
 
-    // Now get an xpath reference to the target element
-    var elementSerialized = domSerializer.serializeElement(event.target);
-
-    var tapData = {
-      coords: {
-        x: x,
-        y: y
+    var eventData = {
+      coordinates: {
+        x: event.pageX,
+        y: event.pageY
       },
-      element: elementSerialized
+      target: domSerializer.elementSelector(event.target),
+      target_identifier: domSerializer.elementName(event.target)
     };
 
     if (isFinite(normX) && isFinite(normY)) {
-      tapData.coords.x_norm = normX;
-      tapData.coords.y_norm = normY;
+      eventData.coordinates.x_norm = normX;
+      eventData.coordinates.y_norm = normY;
     }
 
-    return tapData;
+    $ionicAnalytics.track('Tap', {
+      _ui: eventData
+    });
+
   });
-
-  // TODO fix handler for tab-item clicks
-  // hooks.push(function(event) {
-  //   if (event.type !== 'click') return;
-
-  //   var item = ionic.DomUtil.getParentWithClass(event.target, 'tab-item', 3);
-  //   if(!item) {
-  //     return;
-  //   }
-  // });
-
-  return {
-    addHook: function(hook) {
-      hooks.push(hook);
-    },
-
-    runHooks: function(domEvent) {
-
-      // Event we'll actually send for analytics
-      var trackingEvent;
-
-      // Run the event through each hook
-      for (var i = 0; i < hooks.length; i++) {
-        var hookResponse = hooks[i](domEvent);
-        if (hookResponse) {
-
-          // Append the hook response to our tracking data
-          if (!trackingEvent) trackingEvent = {};
-          trackingEvent = angular.extend(trackingEvent, hookResponse);
-        }
-      }
-
-      return trackingEvent;
-    }
-  };
 }])
 
+.run([
+  '$ionicAutoTrack',
+  '$ionicAnalytics',
+  '$rootScope',
+function($ionicAutoTrack, $ionicAnalytics, $rootScope) {
+  if (!$ionicAutoTrack.isEnabled('State Change')) {
+    return;
+  }
+
+  $rootScope.$on('$stateChangeSuccess', 
+    function(event, toState, toParams, fromState, fromParams) 
+  {
+    $ionicAnalytics.track('State Change', {
+      from: fromState.name,
+      to: toState.name
+    })
+  });
+
+}])
+
+
+//================================================================================
+// ion-track-$EVENT
+//================================================================================
 
 /**
  * @ngdoc directive
@@ -530,45 +702,6 @@ angular.module('ionic.service.analytics')
 .directive('ionTrackPinchOut', ionTrackDirective('pinchout'))
 .directive('ionTrackRotate', ionTrackDirective('rotate'))
 
-
-/**
- * @ngdoc directive
- * @name ionTrackAuto
- * @module ionic.service.analytics
- * @restrict A
- * @parent ionic.directive:ionTrackAuto
- *
- * @description
- *
- * Automatically track events on UI elements. This directive tracks heuristics to automatically detect
- * taps and interactions on common built-in Ionic components.
- *
- * None: this element should be applied on the body tag.
- *
- * @usage
- * ```html
- * <body ion-track-auto></body>
- * ```
- */
-.directive('ionTrackAuto', ['$document', '$ionicAnalytics', '$ionicAutoTrack', function($document, $ionicAnalytics, $ionicAutoTrack) {
-  return {
-    restrict: 'A',
-    link: function($scope, $element, $attr) {
-
-      // Listen for events on the document body.
-      // In the future we can listen for all kinds of events.
-      $document.on('click', function(event) {
-        var uiData = $ionicAutoTrack.runHooks(event);
-        if (uiData) {
-          var trackingEvent = {
-            _ui: uiData
-          }
-          $ionicAnalytics.track('tap', trackingEvent);
-        }
-      });
-    }
-  }
-}]);
 
 /**
  * Generic directive to create auto event handling analytics directives like:

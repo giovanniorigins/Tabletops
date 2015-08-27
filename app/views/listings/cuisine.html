@@ -1,4 +1,5 @@
-<ion-view view-title="{{cuisine.name}} Cuisine">
+<ion-view>
+    <ion-nav-title>{{cuisine.name}} Cuisine</ion-nav-title>
     <div class="bar bar-subheader item-input-inset bar-assertive-900 no-border">
         <label class="item-input-wrapper">
             <i class="icon ion-ios7-search placeholder-icon"></i>
@@ -6,7 +7,7 @@
         </label>
         <!--<button class="button button-clear button-icon icon ion-ios-close-outline" ng-click="filters.search=''"
                 ng-show="filters.search.length"></button>-->
-        <button class="button button-clear light button-icon icon ion-ios-settings-strong" ng-click="openFiltersModal()"></button>
+        <!--<button class="button button-clear light button-icon icon ion-ios-settings-strong" ng-click="openFiltersModal()"></button>-->
     </div>
     <ion-content class="has-subheader">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
@@ -31,6 +32,25 @@
                 <!--<ion-option-button class="button-stable" ng-click="favoriteThis(res.listing)">&nbsp;<i class="icon ion-heart" ng-class="{true:'calm'}[faved(res.listing.id)]"></i></ion-option-button>
                 <ion-option-button class="button-balanced" ng-click="initCaller(res.listing)">&nbsp;<i class="icon ion-ios-telephone"></i></ion-option-button>-->
             </li>
+        </ion-list>
+        <ion-list ng-if="loaded && (cuisine.listings|filter:filters.search|orderBy:filters.sort).length==0">
+            <li class="ionic item">
+                <div class="hero no-header flat">
+                    <div class="content">
+                        <i class="ion-help icon hero-icon stable-bg"></i>
+                        <h2 class="dark padding-top">No restaurants found<span ng-if="filters.search.length"> with "{{filters.search}}"</span>.</h2>
+                    </div>
+                </div>
+            </li>
+            <!--<button class="button button-block flat button-calm" ng-click="resetFilters()">Clear Filters</button>-->
+            <button class="button button-block flat button-dark" ng-click="openProvinceModal($event)">Switch Province</button>
+            <!--<li class="item text-center" ng-show="filters.search.length" ng-click="filters.search='';">Search: {{filters.search}}</li>
+            <ion-checkbox class="item-icon-right item-checkbox" ng-model="filters[(toggle.slug)]" ng-show="filters[toggle.slug]" ng-change="resetFilters()"
+                          ng-false-value="undefined" ng-repeat="toggle in toggles">
+                {{::toggle.name}}
+                <i class="icon" ng-class="::toggle.icon"></i>
+            </ion-checkbox>
+            <li class="item" ng-click="resetFilters()"></li>-->
         </ion-list>
     </ion-content>
 

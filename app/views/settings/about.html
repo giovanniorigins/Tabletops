@@ -13,14 +13,14 @@
         <a class="item">Copyright &copy; 2015 Tabletops</a>
         <div>
             <ion-item class="item-stable"
-                      ng-click="toggleThisGroup(menu)"
-                      ng-class="{active: isGroupShown(menu)}">
-                <i class="icon" ng-class="isGroupShown(menu) ? 'ion-minus' : 'ion-plus'"></i>
+                      ng-click="toggleThisGroup(noticeShown)"
+                      ng-class="{active: isGroupShown(noticeShown)}">
+                <i class="icon" ng-class="isGroupShown(noticeShown) ? 'ion-minus' : 'ion-plus'"></i>
                 &nbsp; Legal Notices
             </ion-item>
 
-            <div class="list item-accordion" ng-show="isGroupShown(menu)" ng-init="getGoogleLegalNotice()">
-                <div class="item item-text-wrap">
+            <div class="list item-accordion" ng-show="isGroupShown(noticeShown)">
+                <div class="item item-text-wrap" ng-init="getGoogleLegalNotice()">
                     <p ng-bind="::googleLegalNotice"></p>
                 </div>
             </div>

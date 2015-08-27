@@ -69,18 +69,22 @@ angular.module('tabletops.config', [])
         }]);
     }])
 
-    /*.config(['$cordovaAppRateProvider', function ($cordovaAppRateProvider) {
+    .config(['$cordovaAppRateProvider', function ($cordovaAppRateProvider) {
+
         var prefs = {
             language: 'en',
             appName: 'Tabletops',
             openStoreInApp: true,
-            usesUntilPrompt: 500,
-            iosURL: '<my_app_id>',
-            androidURL: 'market://details?id=<package_name>',
+            usesUntilPrompt: 3,
+            iosURL: '1019199900',
+            androidURL: 'market://details?id=com.gorigins.tabletops',
             //windowsURL: 'ms-windows-store:Review?name=<...>'
         };
-        $cordovaAppRateProvider.setPreferences(prefs)
-    }])*/
+
+        document.addEventListener("deviceready", function () {
+            $cordovaAppRateProvider.setPreferences(prefs);
+        }, false);
+    }])
     .constant('CIDs', {
         facebook: '646933472119700'
     })
