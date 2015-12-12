@@ -78,7 +78,7 @@
             <ion-slide>
                 <ion-list>
                     <ion-radio ng-repeat="p in provinces" ng-model="settings.province" ng-value="p"
-                               ng-change="setProvince(p);closeFiltersModal()">{{::p.name}}
+                               ng-change="setProvinceSilent(p);closeFiltersModal()">{{::p.name}}
                     </ion-radio>
                 </ion-list>
             </ion-slide>

@@ -1,8 +1,9 @@
 <ion-view view-title="My Profile">
     <ion-nav-buttons side="right">
-        <button class="button button-clear button-icon ion-person-add" ng-click="inviteFbFriends()"></button>
+        <button class="button button-clear button-icon ion-person-add" ng-show="::canInviteFacebook" ng-click="inviteFbFriends()"></button>
+        <button class="button button-clear button-icon ion-log-out" ng-click="logout()"></button>
     </ion-nav-buttons>
-    <ion-content class="has-header">
+    <ion-content class="has-header" ng-class="{'expanded': isExpanded}">
         <div class="hero" image-lazy-src="{{ coverPhoto }}" image-lazy-background-image="true" image-lazy-loader="bubbles">
             <div ng-if="user" class="content">
                 <div class="avatar" style="background-image: url('{{::user.avatar ? user.avatar : '/resources/icon.png'}}');"></div>
@@ -14,11 +15,11 @@
                 <h4 class="light" ng-bind="'Foodie'"></h4>
             </div>
 
-            <div ng-if="user" ng-hide="user.id" class="content">
+            <!--<div ng-if="user" ng-hide="user.id" class="content">
                 <a class="button button-calm button-block icon ion-log-in button-large ink-button" ui-sref="signin">
                     Sign in
                 </a>
-            </div>
+            </div>-->
         </div>
         <div class="button-bar">
             <a class="button button-raised ink-dark">

@@ -408,7 +408,7 @@ ion-nav-view {
 }
 
 .leaflet-marker-pane > img {
-    display: none;
+    /*display: none;*/
 }
 
 .bg-food {
@@ -497,4 +497,18 @@ ion-nav-view {
 .tabs-assertive-900.tabs{
     background-color: #B71C1C !important;
     border: none;
+}
+
+/* FilterBar */
+.bar .filter-bar-clear {
+    box-shadow: none !important;
+}
+
+/* ng-Walkthrough Bug Hack for iOS9*/
+.walkthrough-hole {
+    position: absolute;
+    -moz-box-shadow: 1px 1px 3px 1997px rgba(0, 0, 0, .8);
+    -webkit-box-shadow: 1px 1px 3px 1997px rgba(0, 0, 0, .8);
+    box-shadow: 1px 1px 3px 1997px rgba(0, 0, 0, .8);
+    -webkit-appearance: none;
 }

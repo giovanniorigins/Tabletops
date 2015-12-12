@@ -1,21 +1,15 @@
 <ion-view >
-    <!--<ion-nav-bar align-title="left" class="bar-light">
-        <ion-nav-back-button class="button-icon no-text">
-            <i class="ion-ios-arrow-left"></i>
-        </ion-nav-back-button>
-    </ion-nav-bar>-->
     <ion-nav-title class="">
         <!--<img ng-if="::listing.logo" class="title-image pull-left" ng-src="{{::listing.logo.path}}">--> <span class="padding-left">{{::listing.name}}</span>
     </ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button class="button button-clear light button-icon icon ion-ios-arrow-left" ng-click="$ionicGoBack()"></button>
-    </ion-nav-buttons>
+
     <ion-nav-buttons side="right">
-        <button class="button button-clear button-icon icon ion-ios-upload" ng-click="shareThis(listing)"></button>
+        <button class="button button-clear button-icon icon ion-ios-upload" id="share_button_{{::listing.id}}" ng-click="shareThis(listing, $event)"></button>
     </ion-nav-buttons>
-    <ion-content class="has-header">
+    <ion-content class="has-header" ng-class="{'expanded': isExpanded}">
         <div class="hero has-mask" style="background-image: url( {{ listing.gallery.length ? listing.gallery[0].path :'img/bgs/default.jpg'}});">
             <div class="content">
+                <h4 ng-bind="::listing  .name"></h4>
                 <div class="" style="background-color: rgba(0,0,0,.3);height: 47px;">
                     <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="openReviewModal()">
                         <i class="icon ion-compose"></i>
@@ -29,7 +23,7 @@
                     <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="favoriteThis(listing)" id="{{::'share_button_'+listing.id}}">
                         <i class="icon ion-heart" ng-class="{true:'lovely'}[faved(listing.id)]"></i>
                     </button>
-                    <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="toMap()">
+                    <button ng-if="::directionsExist" class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="toMap()">
                         <i class="icon ion-map light"></i>
                     </button>
                     <button class="button button-clear flat waves-effect waves-button waves-light padding-left padding-right pull-right text-white" ng-click="initCaller(listing)">
@@ -40,7 +34,7 @@
             </div>
         </div>
         <div class="dark-bg z1">
-            <h3 class="padding-top padding-left light" ng-bind="::listing.name"></h3>
+            <!--<h3 class="padding-top padding-left light" ng-bind="::listing.name"></h3>-->
             <button class="button button-balanced button-outline button-block button-flat" ng-if="listing.restaurant.reservations == 1" ng-click="initCaller(listing)">
                 <i class="icon ion-ios-telephone balanced"></i>&nbsp;
                 Call for Reservations
@@ -51,10 +45,10 @@
             <!--<p>$1,530 USD</p>-->
             <div class="row row-no-padding text-center padding-vertical">
                 <div class="col">
-                    <span ng-if="listing" ng-bind-html="::showStars(listing.rating_count, listing.rating_cache)"></span>
+                    <span ng-if="listing" ng-bind-html="::res.quickParts.stars"></span>
                 </div>
                 <div class="col">
-                    <span ng-if="listing" ng-bind-html="::showDollars(listing.restaurant.price_range)"></span>
+                    <span ng-if="listing" ng-bind-html="::res.quickParts.dollars"></span>
                 </div>
             </div>
         </div>
@@ -82,7 +76,7 @@
                     <ion-slide-box class="loc-slider">
                         <ion-slide class="slide" ng-repeat="loc in listing.locations">
                             <div class="item card-item double-padding-y">
-                                <div class="card stable-bg ink ink-dark">
+                                <div class="card stable-bg">
                                     <div class="item">
                                         <h2 ng-bind="::loc.name"></h2>
                                         {{::loc.address_1}}, {{::loc.locality}}<br/>
@@ -117,7 +111,7 @@
                                     <div class="item no-padding padding-top">
                                         <div class="button-bar">
                                             <button ng-click="callLocation(listing.locations, $index)" class="button button-raised button-balanced icon ion-ios-telephone"></button>
-                                            <button ng-click="toMap(loc.id)" class="button button-raised button-positive icon ion-map"></button>
+                                            <button ng-if="::directionsExist" ng-click="toMapDirections(loc)" class="button button-raised button-positive icon ion-navigate"></button>
                                         </div>
                                     </div>
                                 </div>

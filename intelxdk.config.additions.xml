@@ -8,15 +8,26 @@
 <!-- <preference name="SplashScreenDelay" value="2000" /> -->
 <preference name="ShowSplashScreenSpinner" value="false"/>
 
-<!-- +iOS --><preference name="KeyboardDisplayRequiresUserAction" value="false"/>
+<preference name="DisallowOverscroll" value="true"/>
 
-<intelxdk:plugin intelxdk:name="com.google.maps" intelxdk:value="https://github.com/wf9a5m75/phonegap-googlemaps-plugin.git#v1.2.5">
-    <intelxdk:param intelxdk:name="API_KEY_FOR_ANDROID" intelxdk:value="AIzaSyB6z5sTg00-WkIv29ELBxBDQRPKs39viHU" />
-    <intelxdk:param intelxdk:name="API_KEY_FOR_IOS" intelxdk:value="AIzaSyDQRPMo2a-SUfuZGJZQL-SM3ByFidGy7FU" />
-</intelxdk:plugin>
+<!-- WKWebView Setting -->
+<preference name="KeyboardDisplayRequiresUserAction" value="false"/>
 
-<!-- +iOS --><intelxdk:plugin intelxdk:name="nl.x-services.plugins.googleplus" intelxdk:value="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git#2.0.2"/>
-<!--<intelxdk:plugin intelxdk:name="cordova-plugin-facebook4" intelxdk:value="https://github.com/jeduan/cordova-plugin-facebook4">
+<!-- +Android-Crosswalk --><intelxdk:plugin intelxdk:name="cordova-plugin-googleplus" intelxdk:value="https://github.com/tehmaestro/cordova-plugin-googleplus.git"/>
+<!-- +iOS --><intelxdk:plugin intelxdk:name="cordova-plugin-googleplus" intelxdk:value="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git#2.0.2"/>
+
+<!-- +iOS --><intelxdk:plugin intelxdk:name="com.telerik.plugins.wkwebview" intelxdk:value="https://github.com/Telerik-Verified-Plugins/WKWebView.git#0.6.3"/>
+
+<!-- +Android-Crosswalk --><intelxdk:plugin intelxdk:name="cordova-plugin-facebook4" intelxdk:value="https://github.com/giovanniorigins/cordova-plugin-facebook4">
     <intelxdk:param intelxdk:name="APP_ID" intelxdk:value="646933472119700"/>
     <intelxdk:param intelxdk:name="APP_NAME" intelxdk:value="Tabletops"/>
+</intelxdk:plugin>
+
+<!-- +iOS --><intelxdk:plugin intelxdk:name="cordova-plugin-facebook4" intelxdk:value="https://github.com/jeduan/cordova-plugin-facebook4.git#v0.11.0">
+    <intelxdk:param intelxdk:name="APP_ID" intelxdk:value="646933472119700"/>
+    <intelxdk:param intelxdk:name="APP_NAME" intelxdk:value="Tabletops"/>
+</intelxdk:plugin>
+
+<!--<intelxdk:plugin intelxdk:name="cordova-plugin-mapbox" intelxdk:value="https://github.com/Telerik-Verified-Plugins/Mapbox#1.1.1">
+    <intelxdk:param intelxdk:name="ACCESS_TOKEN" intelxdk:value="pk.eyJ1Ijoiamdpb3Zhbm5pIiwiYSI6Ilc3RUJiVlEifQ.Xlx3a_O01kmy5InBXq3BaQ"/>
 </intelxdk:plugin>-->

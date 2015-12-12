@@ -26,7 +26,8 @@ module.exports = function (grunt) {
             styles: 'css',
             images: 'img',
             test: 'test',
-            dist: 'www'
+            dist: 'www',
+            temp: '.temp'
         },
 
         // Environment Variables for Angular App
@@ -187,6 +188,7 @@ module.exports = function (grunt) {
         usemin: {
             html: ['<%= yeoman.dist %>/**/*.html'],
             css: ['<%= yeoman.dist %>/<%= yeoman.styles %>/**/*.css'],
+            js: [],
             options: {
                 assetsDirs: ['<%= yeoman.dist %>/vendor']
             }
@@ -243,7 +245,7 @@ module.exports = function (grunt) {
                     cwd: '<%= yeoman.app %>',
                     dest: '<%= yeoman.dist %>',
                     src: [
-                        '<%= yeoman.images %>/**/*.{png,jpg,jpeg,gif,webp,svg}',
+                        '<%= yeoman.images %>/**/*.{png,jpg,jpeg,gif,webp,svg,sh}',
                         '*.html',
                         //'views/**/*.html',
                         //'vendor/**/*',
@@ -437,9 +439,9 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     //cwd: '.temp/concat/<%= yeoman.scripts %>',
-                    src: '.temp/concat/<%= yeoman.scripts %>/*.js',
+                    src: '.temp/concat/js/*.js',
                     //src: ['.temp/concat/<%= yeoman.app %>/**/*.js',],
-                    dest: '.temp/concat/<%= yeoman.scripts %>'
+                    dest: '.temp/concat/js'
                 }]
             }
         },

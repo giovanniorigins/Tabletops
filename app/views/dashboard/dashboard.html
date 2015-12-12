@@ -11,14 +11,12 @@
         {{selectedProvinceTitle().name}}
     </ion-nav-title>
     <ion-nav-buttons side="right">
-        <button class="button button-energized-900 button-fab hide" id="fab-search" ng-click="openSearchModal()">
-            <i class="icon ion-ios-search"></i>
-        </button>
         <!--<button class="button button-dark button-fab" ng-click="openProvinceModal($event)">
             <i class="icon ion-location"></i>
         </button>-->
     </ion-nav-buttons>
-    <ion-content class="has-header" id="dashboard">
+
+    <ion-content class="has-header" id="dashboard" ng-class="{'expanded': isExpanded}">
         <ion-refresher pulling-text="Pull to refresh nearby" on-refresh="getNearby()"></ion-refresher>
 
         <div class="">
@@ -89,6 +87,13 @@
                         <div><i class="icon ion-plus-circled"></i> <br>View All</div>
                     </a>&ndash;&gt;
                 </ion-scroll>-->
+
+                <ion-item class="item-icon-left item-icon-right item-text-wrap" ui-sref="tabs.results({view: 'map'})">
+                    <i class="icon ion-map"></i>
+                    <h2>Explore Map</h2>
+                    <p>Find restaurants near you or on a specific island.</p>
+                    <i class="icon ion-ios-arrow-right"></i>
+                </ion-item>
             </div>
 
             <div class="padding-top">
@@ -98,7 +103,7 @@
 
                 <div>
                     <div class="list half">
-                        <a class="nearby-card" ui-sref="tabs.results.list({cuisine: c.slug})" ng-repeat="c in cuisines_1">
+                        <a class="nearby-card" ui-sref="tabs.results({cuisine: c.slug})" ng-repeat="c in cuisines_1">
                             <img ng-src="{{::c.img}}" width="100%">
                         </a>
                         <!--<div ui-sref="" class="card card-gallery item item-text-wrap" ng-repeat="c in cuisines_1">
@@ -119,7 +124,7 @@
                         </div>-->
                     </div>
                     <div class="list half">
-                        <a class="nearby-card" ui-sref="tabs.results.list({cuisine: c.slug})" ng-repeat="c in cuisines_2">
+                        <a class="nearby-card" ui-sref="tabs.results({cuisine: c.slug})" ng-repeat="c in cuisines_2">
                             <img ng-src="{{::c.img}}" width="100%">
                         </a>
                         <!--<div ui-sref="" class="card card-gallery item item-text-wrap" ng-repeat="c in cuisines_2">

@@ -16,11 +16,11 @@
             <ion-item ng-repeat="loc in listing.locations">
                 <h4 ng-bind="::loc.name"></h4>
                 <p>
-                    <a ng-show="::loc.phone_1" ng-href="tel:{{::loc.phone_1}}" class="button button-outline button-balanced button-small">
+                    <a ng-show="::loc.phone_1" target="_blank" ng-href="tel:{{::loc.phone_1}}" class="button button-outline button-balanced button-small">
                         <i class="icon ion-ios-telephone"></i>&nbsp;
                         {{::loc.phone_1}}
                     </a>
-                    <a ng-show="::loc.phone_2" ng-href="tel:{{::loc.phone_2}}" class="button button-outline button-balanced button-small">
+                    <a ng-show="::loc.phone_2" target="_blank"  ng-href="tel:{{::loc.phone_2}}" class="button button-outline button-balanced button-small">
                         <i class="icon ion-ios-telephone"></i>&nbsp;
                         {{::loc.phone_2}}
                     </a>

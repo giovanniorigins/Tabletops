@@ -1,12 +1,12 @@
 <ion-view view-title="Share Usage Data">
-    <ion-content class="padding">
+    <ion-content class="padding" ng-class="{'expanded': isExpanded}">
         <div class="list">
             <div class="item item-icon-left item-toggle">
                 <i class="icon ion-ios-analytics"></i>
                 Share Usage Data
                 <label class="toggle toggle-assertive">
                     <input type="checkbox"
-                           local-forage="{key: 'analytics', scopeKey: 'settings.analytics', defaultValue: false}"
+                           local-forage="{key: 'analytics', scopeKey: 'settings.analytics'}"
                            ng-model="settings.analytics">
 
                     <div class="track">

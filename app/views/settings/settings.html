@@ -1,5 +1,5 @@
 <ion-view view-title="Settings">
-    <ion-content>
+    <ion-content ng-class="{'expanded': isExpanded}">
         <div class="list">
 
             <div class="card" ng-show="userDataLoaded">
@@ -77,6 +77,10 @@
             </div>
 
             <div class="card">
+                <a class="item item-icon-left" ng-show="::canInviteFacebook" ng-click="inviteFbFriends()">
+                    <i class="icon ion-person-add"></i>
+                    Invite Facebook friends
+                </a>
                 <a class="item item-icon-left" ng-click="rateApp()">
                     <i class="icon ion-heart"></i>
                     Rate Tabletops App
@@ -91,10 +95,10 @@
                     FAQs
                     <i class="icon ion-ios-arrow-right stable"></i>
                 </a>
-                <a class="item item-icon-left" ng-click="openFeedbackModal($event)">
+                <!--<a class="item item-icon-left" ng-click="openFeedbackModal($event)">
                     <i class="icon ion-chatbox"></i>
                     Send Feedback
-                </a>
+                </a>-->
                 <!--<a class="item item-icon-left item-icon-right" ui-sref="tabs.terms">
                     <i class="icon ion-ios-book"></i>
                     Terms & Conditions

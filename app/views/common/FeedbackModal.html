@@ -6,9 +6,11 @@
     <ion-content class="">
         <ion-list>
             <label class="item item-input">
-                <textarea ng-model="myReview.body" ng-enter placeholder="Any details? (optional)" ng-keyup="expandText()"
+                <textarea ng-model="myFeedback.body" ng-enter placeholder="Tell us what you think..." ng-keyup="expandText()"
                           ng-keydown="expandText()"></textarea>
             </label>
         </ion-list>
+        <button class="button button-dark button-block" ng-disabled="myFeedback.body.length<3" ng-click="sendFeedback()">Send
+        </button>
     </ion-content>
 </ion-modal-view>

@@ -1,14 +1,17 @@
-<ion-view view-title="Restaurants">
-    <ion-nav-buttons side="left">
-        <button class="button button-clear light button-icon icon ion-ios-arrow-left" ui-sref="tabs.dashboard" nav-direction="back"></button>
-    </ion-nav-buttons>
+<ion-view view-title="List">
 
-    <ion-nav-buttons side="right">
-        <button class="button button-clear button-icon icon ion-ios-search-strong" ng-click="showFilterBar()"></button>
-        <button class="button button-clear light button-icon icon ion-ios-settings-strong" ng-click="openFiltersModal()"></button>
-    </ion-nav-buttons>
+    <!--<div class="tabs-striped tabs-top tabs-assertive tabs-assertive-900 tabs-icon-left no-border">
+        <div class="tabs">
+            <a class="tab-item" ui-sref="tabs.results.list" ui-sref-active="tab-item-active">
+                <i class="icon ion ion-ios-list-outline"></i> List
+            </a>
+            <a class="tab-item" ui-sref="tabs.results.map" ui-sref-active="tab-item-active" ng-if="ionic.Platform.platform() == 'ios'">
+                <i class="icon ion ion-map"></i> Map
+            </a>
+        </div>
+    </div>-->
 
-    <ion-content class="">
+    <ion-content class="padding has-tabs-top" ng-class="{'expanded': isExpanded}">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list>
             <li collection-repeat="res in restaurants|filter:filters.search|orderBy:filters.sort" item-render-buffer="6" class="item" data-ink-color="#B71C1C" ng-click="toRestaurant(res.slug)">

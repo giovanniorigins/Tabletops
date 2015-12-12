@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="lib/ionic-material/dist/ionic.material.min.css">
     <link rel="stylesheet" href="lib/ionic-filter-bar/dist/ionic.filter.bar.min.css">
     <link rel="stylesheet" href="lib/ionic-rating/ionic-rating.css">
+    <link rel="stylesheet" href="lib/mapbox.js/mapbox.css">
+    <!--<link rel="stylesheet" href="lib/mapbox.js/mapbox.directions.css">-->
+    <!--<link rel="stylesheet" href="lib/ng-walkthrough/css/ng-walkthrough.css">-->
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/style.css">
     <!-- endbuild -->
@@ -27,12 +30,6 @@
     <!-- endbuild -->
 
     <!-- build:js js/ionic-ext.js -->
-    <!--<script src="lib/angular/angular.js"></script>-->
-    <!--<script src="lib/ionic/release/js/ionic.js"></script>-->
-    <!--<script src="lib/angular-animate/angular-animate.js"></script>-->
-    <!--<script src="lib/angular-sanitize/angular-sanitize.js"></script>-->
-    <!--<script src="lib/angular-ui-router/release/angular-ui-router.js"></script>-->
-    <!--<script src="lib/ionic/release/js/ionic-angular.js"></script>-->
     <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
     <script src="lib/angular-resource/angular-resource.min.js"></script>
     <script src="lib/ionic-filter-bar/dist/ionic.filter.bar.min.js"></script>
@@ -45,6 +42,11 @@
     <script src="lib/ionic-resetfield/dist/ionic.resetfield.js"></script>
     <script src="lib/localforage/dist/localforage.min.js"></script>
     <script src="lib/angular-localforage/dist/angular-localForage.min.js"></script>
+    <!--<script src="lib/ng-walkthrough/ng-walkthrough.js"></script>-->
+    <script src="lib/mapbox.js/mapbox.js"></script>
+    <script src="lib/mapbox.js/turf.min.js"></script>
+    <!--<script src="lib/mapbox.js/mapbox.directions.js"></script>-->
+    <!--<script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script>-->
     <!-- endbuild -->
 
     <!-- build:js js/ionic-services.js -->
@@ -102,12 +104,14 @@
 
     <!--<script src="http://debug-software.intel.com/target/target-script-min.js#DOyLHB66Sd2vKt67uR19zFehjFHCR87waB7njjdgSw4"></script>-->
 </head>
-<body ng-app="tabletops" ng-controller="MainCtrl" ng-cloak ion-track-auto>
+<body ng-app="tabletops" ng-controller="MainCtrl" ng-strict-di ng-cloak ion-track-auto>
     <!--<div id="fb-root"></div>-->
-    <ion-nav-bar id="main-nav-bar" class="bar-assertive-900 flat no-border" ng-class="{'expanded': isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
+    <ion-nav-bar id="main-nav-bar" class="bar-dark flat no-border" ng-class="{'expanded': isExpanded, 'has-header-fab-left': hasHeaderFabLeft, 'has-header-fab-right': hasHeaderFabRight}" align-title="left">
         <ion-nav-back-button class="no-text"></ion-nav-back-button>
     </ion-nav-bar>
-
+    <button class="button button-assertive-900 button-fab hide button-fab-top-right" ng-show="isState('tabs.dashboard')" ng-class="{'expanded': isExpanded}" id="fab-search" ui-sref="tabs.results({search: search})">
+        <i class="icon ion-ios-search"></i>
+    </button>
     <ion-nav-view id="main-view" class=""></ion-nav-view>
 </body>
 </html>

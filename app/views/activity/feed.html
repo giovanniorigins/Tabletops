@@ -4,7 +4,7 @@
             <i class="icon ion-person"></i>
         </button>
     </ion-nav-buttons>
-    <ion-content class="has-header">
+    <ion-content class="has-header" ng-class="{'expanded': isExpanded}">
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <ion-list class="">
             <div class="item card-item" ng-repeat="activity in feed | orderBy:'-time'">
